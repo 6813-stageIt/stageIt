@@ -27,8 +27,8 @@ img.img-nav{
 
 img.img-dancer{
 	padding: 5px;
-	width: 80px;
-	height: 80px;
+	width: 40px;
+	height: 40px;
 }
 
 img.img-prop{
@@ -424,10 +424,10 @@ li.color-selected > img {
     margin-left: 0px;
 }
 
-.option img{
-    padding: 3px;
-    width:130px;
-    height:130px;
+.option img{ /*DON'T CHANGE */
+    padding: 5px;
+    width:70px;
+    height:70px;
     box-sizing:border-box;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
