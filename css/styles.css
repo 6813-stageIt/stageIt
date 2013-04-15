@@ -413,7 +413,7 @@ ul#stages li, ul#props li{
 }
 li.stage-selected > img, li.prop-selected > img, li.dancer-selected > img,
 li.color-selected > img {
-    border:1px solid blue;
+    border:1px solid gray;
 }
 
 #stages li, #props li, ul#dancers li {
@@ -424,14 +424,21 @@ li.color-selected > img {
     margin-left: 0px;
 }
 
-.option img{ /*DON'T CHANGE */
+.option img{ 
     padding: 5px;
-    width:70px;
-    height:70px;
+    width:130px;
+    height:130px;
     box-sizing:border-box;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
 }
+
+.option img.img-dancer{
+	width:70px;
+    height:70px;
+}
+
+
 
 /****************** modal form for dancers ***********/
 ul#dancers, ul#colors, ul#props{
