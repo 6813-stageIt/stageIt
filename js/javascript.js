@@ -37,6 +37,13 @@ $('#addDancersModal input[type="radio"]').click(function(){
 	}
 });
 
+
+$('#spinner_numDancers').keyup(function (e) {
+    	if (e.keyCode == 13 && $("#spinner_numDancers")){ //enter and spinner field in focus
+    		addDancers();
+    	}
+    });
+
 function changeColorOfImage(color){
 	var curr = $('#preview-img').attr('src');
 	if (curr.search('square')!=-1){ //in src ->current image is square
@@ -174,9 +181,18 @@ function addDancerAt(imageDiv,posX,posY){
 		'cursor':'move'
 	});
 	imageDiv.addClass("added");
+	imageDiv.addClass('animated bounceIn');
     imageDiv.draggable({
             zIndex:100,
             containment:'#canvasWrapper',
+            start: function(e, ui) {
+		        $(ui.helper).width($(ui.helper).width()+10);
+		        $(ui.helper).height($(ui.helper).height()+10);
+		    },
+		    stop: function(e, ui) {
+		        $(ui.helper).width($(ui.helper).width()-10);
+		        $(ui.helper).height($(ui.helper).height()-10);
+		    }
         });
     //imageDiv.resizable();
     imageDiv.dblclick(function(){

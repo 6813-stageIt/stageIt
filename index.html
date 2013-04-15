@@ -5,7 +5,9 @@
 	<title>StageIt</title>
 	<link rel="stylesheet" href="css/bootstrap.min.css" />
 	<link rel="stylesheet" href="css/styles.css" />
-	  <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" /> 
+	<link rel="stylesheet" href="css/animate.min.css" />
+
+
 	  
 
 
@@ -23,7 +25,7 @@
 		</div>
 		<div id="wrapper">
 			<div id="subHeader">
-				<div id="pageTitle"><h1><a id="projectName" data-toggle="tooltip" title="Double click to change">Project Name</a></h1></div>
+				<div id="pageTitle"><h1><a id="projectName" class="tool" data-toggle="tooltip" title="Double click to change">Project Name</a></h1></div>
 				<ul id="pageActionsNav">
 					<li><a id="addFormation"><img src="img/plus_blue.png" class="img-nav"/> New</a></li>
 					<li><a id="undo"><img src="img/arrow_undo.png" class="img-nav"/> Undo</a></li>
@@ -65,7 +67,7 @@
 						<canvas id="canvas-stage"><p>Your browser does not support HTML5 canvas</canvas>
 
 					</div>
-					<div id="delete-container" class="content"></div>
+					<div id="delete-container" class="content tool" data-toggle="tooltip" title="Drag items on the stage here to delete"></div>
 					<!-- <div id="preview"><label>Preview</label></div> -->
 				</div>
 			</div>
@@ -156,8 +158,9 @@
 	</div>
 
 	<script src="js/jquery-1.9.1.min.js"></script>
-	<script src="js/bootstrap.min.js"></script>
+	
 	<script src="js/jquery-ui.js"></script>
+	<script src="js/bootstrap.min.js"></script>
 	<script src="js/javascript.js"></script>
 	
 	<script>
@@ -167,7 +170,7 @@
 		if(!debug){
 		$('#chooseStage').modal();
 	}
-		$('#projectName').tooltip();
+		$('.tool').tooltip();
 	})();
 	
 	</script>
