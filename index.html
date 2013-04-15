@@ -7,7 +7,7 @@
 	<link rel="stylesheet" href="css/styles.css" />
 
 
-	  <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" />
+	  <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" /> 
 	  <script type="text/javascript" src="jquery/ui.spinner.js"></script>
 
 
@@ -40,9 +40,9 @@
 					<label><h5>Tasks</h5></label></div>
 					<div id="tasks-container">
 					<table id="tasks">
-					<tr><td><a id="editStage"><label>Edit Stage</label></a></td></tr>
-					<tr><td><a id="addDancers"><label>Add Dancers</label></a></td></tr>
-					<tr class="last"><td><a id="addProps"><label>Add Props</label></a></td></tr>
+					<tr><td><a id="editStage" href="#chooseStage" data-toggle="modal"><label>Edit Stage</label></a></td></tr>
+					<tr><td><a id="addDancers" href="#addDancersModal" data-toggle="modal"><label>Add Dancers</label></a></td></tr>
+					<tr class="last"><td><a id="addProps" href="#choosePropModal" data-toggle="modal"><label>Add Props</label></a></td></tr>
 					<tr><td><a id="arrangeDancers"><label>Arrange Dancers</label></a></td></tr>
 					<!-- <div id="comments"><label id="commentsLabel">Comments</label><textarea class="input-small"></textarea></div> -->
 				</table></div>
@@ -98,16 +98,27 @@
 	<div id="addDancersModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="addDancersLabel" aria-hidden="false">
 	  <div class="modal-header">
 	    <button type="button" class="close" data-dismiss="modal" aria-hidden="false"><i class="icon-remove"></i></button>
-	    <h4 id="addDancersLabel">Add Dancers</h4>
+	    <h4 id="addDancersLabel">Add Dancers to the Stage</h4>
 	  </div>
 	  <div class="modal-body">
 		<p>
-		  <ul id="dancers">
-		    <li id="dancer1"><img src="img/ballet_dancer1.png" alt="dancer1" class="img-dancer"/></li>
-			<li id="dancer2"><img src="img/dancer2.jpg" alt="dancer2" class="img-dancer"/></li>
-		    <li id="dancer3"><img src="img/dancer3.jpg" alt="dancer3" class="img-dancer"/></li>
-		  </ul>
-		  <label for="spinner">Number of Dancers to Add: </label><input id="spinner_numDancers" type="number" value="0" min="0"/>
+			<ol>
+				<li><label for="dancers">Select dancer shape</label>
+				  <ul id="dancers">
+				    <li id="dancer1"><img alt="circle" class="img-dancer"/></li>
+					<li id="dancer2"><img alt="triangle" class="img-dancer"/></li>
+				    <li id="dancer3"><img alt="square" class="img-dancer"/></li>
+				  </ul>
+				</li>
+				<li><label for="colors">Select dancer color</label>
+					<ul id="colors">
+						<li id="red" class="color">Red</li>
+						<li id="blue" class="color">Blue</li>
+						<li id="green" class="color">Green</li>
+					</ul>
+				</li>
+				  <li><label for="spinner">Number of Dancers to Add: </label><input id="spinner_numDancers" type="number" value="0" min="0"/></li>
+			</ol>
 		</p>
 
 	  </div>
@@ -141,7 +152,7 @@
 	<script src="js/bootstrap.min.js"></script>
 	<script src="js/javascript.js"></script>
 	<script>
-	var debug = false;
+	var debug = true;
 	var stageHasBeenPicked = false;
 	(function(){
 		if(!debug){

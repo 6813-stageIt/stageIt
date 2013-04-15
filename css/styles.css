@@ -27,8 +27,8 @@ img.img-nav{
 
 div img.img-dancer{
 	padding: 5px;
-	width:40px;
-	height: 40px;
+	width:60px;
+	height: 60px;
 }
 
 
@@ -406,7 +406,7 @@ ul#stages{
 ul#stages li, ul#props li{
 	border:none;
 }
-li.stage-selected > img, li.prop-selected > img {
+li.stage-selected > img, li.prop-selected > img, li.dancer-selected > img {
     border:1px solid blue;
 }
 
@@ -415,9 +415,18 @@ li.stage-selected > img, li.prop-selected > img {
     cursor: pointer;
 }
 
-#stages img , #props img{
+#stages img , #props img, #dancer img{
     padding: 3px;
     width:130px;
     height:130px;
     box-sizing:border-box;
+}
+
+/****************** modal form for dancers ***********/
+ul#dancers, ul#colors{
+	list-style-type: none;
+}
+ul#dancers li{
+	display: inline-block;
+	padding-right: 15px;
 }

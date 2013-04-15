@@ -6,10 +6,14 @@ $('#props li').click(function(){
     $(this).addClass('prop-selected').siblings().removeClass('prop-selected');
 });
 
-$('#editStage').click(function(){
-	$('#chooseStage').modal();
+$('#dancers li').click(function(){
+	$(this).addClass('dancer-selected').siblings().removeClass('dancer-selected');
+})
 
-});
+// $('#editStage').click(function(){
+// 	$('#chooseStage').modal();
+
+// });
 
 // things that need to be reset when stageModal is hidden
 $('#chooseStage').on('hidden', function(){
@@ -24,16 +28,15 @@ $('#choosePropModal').on('hidden', function(){
 })
 
 //shows the dancer modal
-$('#addDancers').click(function(){
-	$('#addDancersModal').modal();
-	$('#spinner').spinner();
-});
+// $('#addDancers').click(function(){
+// 	$('#addDancersModal').modal();
+// 	$('#spinner').spinner();
+// });
 
 
-$('#addProps').click(function(){
-
-	$('#choosePropModal').modal();
-})
+// $('#addProps').click(function(){
+// 	$('#choosePropModal').modal();
+// })
 
 //close stage modal dialog
 function closeStageDialog() {
@@ -116,8 +119,8 @@ function addDancerAt(posX,posY){
 	var dancerItem = $('<img src="img/ballet_dancer1.png" id="img-dancer"/>');
 	dancerItem.css("position","absolute");
 	dancerItem.css("z-index", 1);
-    //dancerItem.css("width", 40);
-    //dancerItem.css("height", 40);
+    dancerItem.css("width", 40);
+    dancerItem.css("height", 40);
     dancerItem.css("top", posY);
     dancerItem.css("left", posX);
 
