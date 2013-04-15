@@ -368,7 +368,7 @@ label#stageRightLabel{
 	text-align: center;
 }
 
-#delete-container {
+div#delete-container {
 	/*background-color: white;*/
     position:absolute;
     bottom:0px;
@@ -376,16 +376,16 @@ label#stageRightLabel{
     /*border: 1px solid #b7b9bd;*/
     border-bottom: none;
     border-right:none;
-    height:50px;
-    width:60px;
+    height:60px;
+    width:65px;
     /*line-height: 75px;*/
     text-align: center;
     font-size: 15px;
-    background:transparent url('../img/trash-close.png') center top no-repeat;
+    background:transparent url('../img/trash-close.png') center bottom no-repeat;
 }
 
-#delete-container:hover{
-	background:transparent url('../img/trash-open.png') center top no-repeat;
+div#delete-container.delete-hover{
+	background:transparent url('../img/trash-open.png') center bottom no-repeat;
 }
 
 /*#delete-container a{
@@ -460,6 +460,10 @@ img#preview-img{
 	width:80px;
 	height:80px;
 	border:1px solid gray;
+}
+
+#colors input{
+	margin: 0 10px 3px 0;
 }
 
 

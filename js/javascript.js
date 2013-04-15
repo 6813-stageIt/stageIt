@@ -9,11 +9,48 @@
 // $('#dancers li').click(function(){
 // 	$(this).addClass('dancer-selected').siblings().removeClass('dancer-selected');
 // });
+$("#delete-container").droppable({
+	accept:".added",
+	hoverClass: "delete-hover",
+	tolerance: "touch",
+	drop: function (event, ui){
+		$(ui.draggable).remove();
+	}
+});
+
 
 $('.option li').click(function(){
 	var option = $(this).parent().attr('data-option');
 	$(this).addClass(option+'-selected').siblings().removeClass(option+'-selected');
+});
+
+$('#addDancersModal .option img').click(function(){
+	var shape = $(this).parent().attr('id');
+	console.log(shape);
+	$('#preview-img').attr("src", "img/"+shape+'.png').css("border", "none");
 })
+
+$('#addDancersModal input[type="radio"]').click(function(){
+	console.log("radio clicked");
+	if($('#preview-img').attr('id').length > 0){
+		changeColorOfImage($(this).attr('value'));
+	}
+});
+
+function changeColorOfImage(color){
+	var curr = $('#preview-img').attr('src');
+	if (curr.search('square')!=-1){ //in src ->current image is square
+		$('#preview-img').attr('src', 'img/square-'+color+'.png');
+	}
+	else if (curr.search('circle')!=-1){
+		$('#preview-img').attr('src', 'img/circle-'+color+'.png');
+	}
+	else if (curr.search('triangle')!=-1){
+		$('#preview-img').attr('src', 'img/triangle-'+color+'.png');
+	}
+}
+
+
 
 // $('#editStage').click(function(){
 // 	$('#chooseStage').modal();
@@ -109,46 +146,46 @@ function addDancers(){
 	}
 	else{
 		var shape = $('.dancer-selected').attr('id');
-		var color 
-	}
-	
-	var numDancers = $("#spinner_numDancers").val();
-	closeAddDancersDialog();
+		var color = $('input[name=color]:radio:checked').attr('value');
+		console.log(color);
+		var numDancers = $("#spinner_numDancers").val();
+		closeAddDancersDialog();
+		// var img = $('<img>').attr('src', 'img/'+shape+'-'+color+'.png');		
+		var x = 30;
+		var y = 10;
+		for(var i=0; i < numDancers; i++){
+			var img = $('<img>').attr('src', 'img/'+shape+'-'+color+'.png');		
+			addDancerAt(img, x,y);
+			y+=60; //wont work for large amounts, add handling
+		}
 
-	var x = 30;
-	var y = 10;
-
-	for(var i=0; i < numDancers; i++){
-		x;
-		y=y+40;
-		//console.log('y='+y);
-		addDancerAt(x,y);
-	}
-	$('#addDancersModal').modal('hide'); 
+	}	 
 
 }
-function addDancerAt(posX,posY){
-	var draggableObject = $('<div id="draggable" class="ui-widget-content"></div>');
-	var dancerItem = $('<img src="img/ballet_dancer1.png" id="img-dancer"/>');
-	dancerItem.css("position","absolute");
-	dancerItem.css("z-index", 1);
-    dancerItem.css("width", 40);
-    dancerItem.css("height", 40);
-//    dancerItem.attr("id", "img-dancer");
-    dancerItem.css("top", posY);
-    dancerItem.css("left", posX);
 
-    //TODO:  
-    // - make dancers resizeable?
-    // - make dancers draggable
-    // - choose colors
-    // - choose shapes
-    
-    draggableObject.append(dancerItem);
-    
-    //dancer.element = dancerItem;
-    $("#canvasWrapper").append(draggableObject);
-    //console.log("dancer added at " + posX + ',' + posY + '?');
+function addDancerAt(imageDiv,posX,posY){
+	imageDiv.css({
+		'position': 'absolute',
+		'z-index':10,
+		'width':60,
+		'height':60,
+		'top':posY,
+		'left':posX,
+		'cursor':'move'
+	});
+	imageDiv.addClass("added");
+    imageDiv.draggable({
+            zIndex:100,
+            containment:'#canvasWrapper',
+        });
+    //imageDiv.resizable();
+    imageDiv.dblclick(function(){
+    	var newText = prompt("Enter text to display in element:");
+			if(newText != null){
+				$(this).text(newText);
+			}
+		});
+    $("#canvasWrapper").append(imageDiv);
 }
 function closeAddDancersDialog() {
 	$('#addDancersModal').modal('hide'); 

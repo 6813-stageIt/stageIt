@@ -5,10 +5,8 @@
 	<title>StageIt</title>
 	<link rel="stylesheet" href="css/bootstrap.min.css" />
 	<link rel="stylesheet" href="css/styles.css" />
-
-
 	  <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" /> 
-	  <script type="text/javascript" src="jquery/ui.spinner.js"></script>
+	  
 
 
 </head>
@@ -67,7 +65,7 @@
 						<canvas id="canvas-stage"><p>Your browser does not support HTML5 canvas</canvas>
 
 					</div>
-					<div id="delete-container" class="content"><a></a></div>
+					<div id="delete-container" class="content"></div>
 					<!-- <div id="preview"><label>Preview</label></div> -->
 				</div>
 			</div>
@@ -106,18 +104,21 @@
 			<ol>
 				<li><label for="dancers">Select dancer shape</label>
 				  <ul id="dancers" class="option" data-option="dancer">
-				    <li id="circle"><img alt="circle" class="img-dancer"/></li>
-					<li id="triangle"><img alt="triangle" class="img-dancer"/></li>
-				    <li id="square"><img alt="square" class="img-dancer"/></li>
+				    <li id="circle"><img src="img/circle.png" alt="circle" class="img-dancer"/></li>
+					<li id="triangle"><img src="img/triangle.png" alt="triangle" class="img-dancer"/></li>
+				    <li id="square"><img src="img/square.png" alt="square" class="img-dancer"/></li>
 
 				  </ul><div class="break"></div>
 				</li>
-				<li><label for="colors">Select dancer color</label>
-					<ul id="colors" class="option" data-option="color">
+				<li id="colors"><label for="colors">Select dancer color</label>
+					<!-- <ul id="colors" class="option" data-option="color">
 						<li id="red" class="color">Red</li>
 						<li id="blue" class="color">Blue</li>
 						<li id="green" class="color">Green</li>
-					</ul>
+					</ul> -->
+					<input type="radio" name="color" value="red">Red<br>
+					<input type="radio" name="color" value="blue">Blue<br>
+					<input type="radio" name="color" value="green">Green
 				</li>
 				  <li><label for="spinner">Number of Dancers to Add: </label><input id="spinner_numDancers" type="number" value="0" min="0"/></li>
 			</ol>
@@ -156,7 +157,9 @@
 
 	<script src="js/jquery-1.9.1.min.js"></script>
 	<script src="js/bootstrap.min.js"></script>
+	<script src="js/jquery-ui.js"></script>
 	<script src="js/javascript.js"></script>
+	
 	<script>
 	var debug = true;
 	var stageHasBeenPicked = false;
