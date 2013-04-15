@@ -1,13 +1,18 @@
-$('#stages li').click(function(){
-    $(this).addClass('stage-selected').siblings().removeClass('stage-selected');
-});
+// $('#stages li').click(function(){
+//     $(this).addClass('stage-selected').siblings().removeClass('stage-selected');
+// });
 
-$('#props li').click(function(){
-    $(this).addClass('prop-selected').siblings().removeClass('prop-selected');
-});
+// $('#props li').click(function(){
+//     $(this).addClass('prop-selected').siblings().removeClass('prop-selected');
+// });
 
-$('#dancers li').click(function(){
-	$(this).addClass('dancer-selected').siblings().removeClass('dancer-selected');
+// $('#dancers li').click(function(){
+// 	$(this).addClass('dancer-selected').siblings().removeClass('dancer-selected');
+// });
+
+$('.option li').click(function(){
+	var option = $(this).parent().attr('data-option');
+	$(this).addClass(option+'-selected').siblings().removeClass(option+'-selected');
 })
 
 // $('#editStage').click(function(){
@@ -99,7 +104,14 @@ function drawSemiCircleStage(){
 }
 
 function addDancers(){
-	$('#addDancersModal').modal('hide'); 
+	if(!$('.dancer-selected').length > 0){
+		$('#dancerHelper').css("display", "inline");
+	}
+	else{
+		var shape = $('.dancer-selected').attr('id');
+		var color 
+	}
+	
 	var numDancers = $("#spinner_numDancers").val();
 	closeAddDancersDialog();
 
@@ -112,6 +124,7 @@ function addDancers(){
 		//console.log('y='+y);
 		addDancerAt(x,y);
 	}
+	$('#addDancersModal').modal('hide'); 
 
 }
 function addDancerAt(posX,posY){
