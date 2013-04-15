@@ -26,6 +26,7 @@ $('#choosePropModal').on('hidden', function(){
 //shows the dancer modal
 $('#addDancers').click(function(){
 	$('#addDancersModal').modal();
+	$('#spinner').spinner();
 });
 
 
@@ -96,8 +97,11 @@ function drawSemiCircleStage(){
 
 function addDancers(){
 	console.log("add clicked");
+	var numDancers = $('#spinner').value;
 
-	var spinner = $( "#spinner" );
+
+
+	//var spinner = $( "#spinner" );
 	console.log(spinner);
 	//var numDancers = spinner.get(value)d;
 	//var numDancers = spinner.spinner("value");
@@ -118,7 +122,7 @@ function addDancers(){
 
 }
 function addDancerAt(posX,posY){
-	var draggableObject = $('<div id="draggable" class="ui-widget-content"><p>Drag me around</p></div>');
+	//var draggableObject = $('<div id="draggable" class="ui-widget-content"></div>');
 	var dancerItem = $('<img src="img/ballet_dancer1.png" id="img-dancer"/>');
 	dancerItem.css("position","absolute");
 	dancerItem.css("z-index", 1);
@@ -128,10 +132,10 @@ function addDancerAt(posX,posY){
     dancerItem.css("left", posX);
     console.log("dancer added?");
 
-    draggableObject.append(dancerItem);
+    //draggableObject.append(dancerItem);
     
     //dancer.element = dancerItem;
-    $("#canvasWrapper").append(draggableObject);
+    $("#canvasWrapper").append(dancerItem);
     console.log("dancer added at " + posX + ',' + posY + '?');
 }
 function closeAddDancersDialog() {
