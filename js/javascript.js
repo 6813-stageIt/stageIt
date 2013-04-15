@@ -96,47 +96,42 @@ function drawSemiCircleStage(){
 }
 
 function addDancers(){
-	console.log("add clicked");
-	var numDancers = $('#spinner').value;
-
-
-
-	//var spinner = $( "#spinner" );
-	console.log(spinner);
-	//var numDancers = spinner.get(value)d;
-	//var numDancers = spinner.spinner("value");
-	var numDancers = 10;
-	console.log("numDancers = "+numDancers);
-
+	$('#addDancersModal').modal('hide'); 
+	var numDancers = $("#spinner_numDancers").val();
 	closeAddDancersDialog();
+
 	var x = 30;
 	var y = 10;
 
 	for(var i=0; i < numDancers; i++){
 		x;
 		y=y+40;
-		console.log('y='+y);
-
+		//console.log('y='+y);
 		addDancerAt(x,y);
 	}
 
 }
 function addDancerAt(posX,posY){
-	//var draggableObject = $('<div id="draggable" class="ui-widget-content"></div>');
+	var draggableObject = $('<div id="draggable" class="ui-widget-content"></div>');
 	var dancerItem = $('<img src="img/ballet_dancer1.png" id="img-dancer"/>');
 	dancerItem.css("position","absolute");
 	dancerItem.css("z-index", 1);
-    dancerItem.css("width", 40);
-    dancerItem.css("height", 40);
+    //dancerItem.css("width", 40);
+    //dancerItem.css("height", 40);
     dancerItem.css("top", posY);
     dancerItem.css("left", posX);
-    console.log("dancer added?");
 
-    //draggableObject.append(dancerItem);
+    //TODO:  
+    // - make dancers resizeable?
+    // - make dancers draggable
+    // - choose colors
+    // - choose shapes
+    
+    draggableObject.append(dancerItem);
     
     //dancer.element = dancerItem;
-    $("#canvasWrapper").append(dancerItem);
-    console.log("dancer added at " + posX + ',' + posY + '?');
+    $("#canvasWrapper").append(draggableObject);
+    //console.log("dancer added at " + posX + ',' + posY + '?');
 }
 function closeAddDancersDialog() {
 	$('#addDancersModal').modal('hide'); 

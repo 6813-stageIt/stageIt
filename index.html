@@ -95,16 +95,19 @@
 	  </div>
 	</div>
 	<!-- AddDancers modal -->
-		<div id="addDancersModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="addDancersLabel" aria-hidden="false">
+	<div id="addDancersModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="addDancersLabel" aria-hidden="false">
 	  <div class="modal-header">
 	    <button type="button" class="close" data-dismiss="modal" aria-hidden="false"><i class="icon-remove"></i></button>
 	    <h4 id="addDancersLabel">Add Dancers</h4>
 	  </div>
 	  <div class="modal-body">
 		<p>
-		  <!-- <img src="img/ballet_dancer1.png" id="img-dancer"/> -->
-		  <label for="spinner">Number of Dancers to Add:</label>
-		  <input id="spinner" name="value"></input>
+		  <ul id="dancers">
+		    <li id="dancer1"><img src="img/ballet_dancer1.png" alt="dancer1" class="img-dancer"/></li>
+			<li id="dancer2"><img src="img/dancer2.jpg" alt="dancer2" class="img-dancer"/></li>
+		    <li id="dancer3"><img src="img/dancer3.jpg" alt="dancer3" class="img-dancer"/></li>
+		  </ul>
+		  <label for="spinner">Number of Dancers to Add: </label><input id="spinner_numDancers" type="number" value="0" min="0"/>
 		</p>
 
 	  </div>
@@ -114,7 +117,6 @@
 	    
 	  </div>
 	</div>
-
 	<!--- addProp modal -->	
 	<div id="choosePropModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="choosePropLabel" aria-hidden="false" data-backdrop="static">
 	  <div class="modal-header">
