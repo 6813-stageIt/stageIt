@@ -95,20 +95,22 @@
 	  </div>
 	</div>
 	<!-- AddDancers modal -->
-	<div id="addDancersModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="addDancersLabel" aria-hidden="false">
+	<div id="addDancersModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="addDancersLabel" aria-hidden="false" data-backdrop="static">
 	  <div class="modal-header">
 	    <button type="button" class="close" data-dismiss="modal" aria-hidden="false"><i class="icon-remove"></i></button>
 	    <h4 id="addDancersLabel">Add Dancers to the Stage</h4>
 	  </div>
 	  <div class="modal-body">
-		<p>
+	  	<table id="dancerModalWrapper">
+	  	<tr><td><div id="dancerOptions" class="cell">
 			<ol>
 				<li><label for="dancers">Select dancer shape</label>
 				  <ul id="dancers">
-				    <li id="dancer1"><img alt="circle" class="img-dancer"/></li>
-					<li id="dancer2"><img alt="triangle" class="img-dancer"/></li>
-				    <li id="dancer3"><img alt="square" class="img-dancer"/></li>
-				  </ul>
+				    <li id="circle"><img alt="circle" class="img-dancer"/></li>
+					<li id="triangle"><img alt="triangle" class="img-dancer"/></li>
+				    <li id="square"><img alt="square" class="img-dancer"/></li>
+
+				  </ul><div class="break"></div>
 				</li>
 				<li><label for="colors">Select dancer color</label>
 					<ul id="colors">
@@ -119,8 +121,12 @@
 				</li>
 				  <li><label for="spinner">Number of Dancers to Add: </label><input id="spinner_numDancers" type="number" value="0" min="0"/></li>
 			</ol>
-		</p>
-
+		</div></td>
+		<td id="previewcell"><div id="dancer-preview" class="cell"><label>Preview</label>
+			<img id="preview-img" alt="preview image">
+		</div></td>
+	</tr>
+	</table>
 	  </div>
 	  <div class="modal-footer">
 	  	<button class="btn btn-primary" onclick="addDancers()">Add</button>

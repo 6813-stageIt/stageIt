@@ -25,7 +25,7 @@ $('#chooseStage').on('hidden', function(){
 $('#choosePropModal').on('hidden', function(){
 	$('#props li').removeClass('prop-selected');
 	$('#propHelper').css("display", "none");
-})
+});
 
 //shows the dancer modal
 // $('#addDancers').click(function(){

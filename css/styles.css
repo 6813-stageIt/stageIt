@@ -410,9 +410,12 @@ li.stage-selected > img, li.prop-selected > img, li.dancer-selected > img {
     border:1px solid blue;
 }
 
-#stages li, #props li {
-    display: inline-block;
+#stages li, #props li, ul#dancers li {
+    /*display: inline-block;*/
+    float: left;
     cursor: pointer;
+    padding-left: 0px;
+    margin-left: 0px;
 }
 
 #stages img , #props img, #dancer img{
@@ -426,7 +429,30 @@ li.stage-selected > img, li.prop-selected > img, li.dancer-selected > img {
 ul#dancers, ul#colors{
 	list-style-type: none;
 }
-ul#dancers li{
-	display: inline-block;
-	padding-right: 15px;
+
+/*div#dancer-preview{
+	position: relative;
+	margin-top: 0px;
+	float: right;
+}*/
+table#dancerModalWrapper{
+	width: 100%;
 }
+
+table#dancerModalWrapper td{
+	width: 50%;
+}
+
+td#previewcell{
+	vertical-align: middle;
+	text-align: center;
+}
+
+img#preview-img{
+	width:80px;
+	height:80px;
+	border:1px solid gray;
+}
+
+
+
