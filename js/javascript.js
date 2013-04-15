@@ -134,6 +134,7 @@ function addDancerAt(posX,posY){
 	dancerItem.css("z-index", 1);
     dancerItem.css("width", 40);
     dancerItem.css("height", 40);
+//    dancerItem.attr("id", "img-dancer");
     dancerItem.css("top", posY);
     dancerItem.css("left", posX);
 
