@@ -152,4 +152,18 @@ function addDancerAt(posX,posY){
 }
 function closeAddDancersDialog() {
 	$('#addDancersModal').modal('hide'); 
+};
+
+//function called when ok button is clicked on props modal
+function addProp() {
+	//check if there is something selected
+	if(!$('.stage-selected').length > 0){
+		$('#stageHelper').css("display", "inline");
+	}
+	else{
+		var stage = $('.stage-selected').attr('id');
+		closeStageDialog();
+		drawStageShape(stage);
+	}
+	
 	};

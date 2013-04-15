@@ -141,14 +141,14 @@
 	    <h4 id="choosePropLabel">Select a prop</h4>
 	  </div>
 	  <div class="modal-body">
-	    <ul id="props" class="option" data-option="prop">
-		    <li id="prop1"><img  alt="prop1" /></li>
-		    <li id="prop2"><img  alt="prop2" /></li>
+	    <ul id="props">
+		    <li id="prop1"><img  alt="prop1" src="img/door.jpg" id="img-prop"/></li>
+		    <li id="prop2"><img  alt="prop2" src="img/table.jpg" id="img-prop"/></li>
 		</ul>
 	  </div>
 	   <div class="modal-footer">
 	   	<p id="propHelper" style="display:none;color:red" class="pull-left">Please select a prop.</p>
-	  	<button class="btn btn-primary" data-dismiss="modal">Ok</button>
+	  	<button class="btn btn-primary" data-dismiss="modal" onclick="addProp()">Ok</button>
 	    <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
 	    
 	  </div>
