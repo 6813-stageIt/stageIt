@@ -197,7 +197,8 @@ function addDancerAt(div,posX,posY){
 	div.addClass('animated bounceIn');
 	div.addClass('shape');
 	div.resizable({
-      aspectRatio: 1 / 1
+      aspectRatio: 1 / 1,
+      maxWidth: 150,
     });
     div.draggable({
             zIndex:100,
