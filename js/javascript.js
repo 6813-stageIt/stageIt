@@ -172,7 +172,7 @@ function addDancers(){
 			var id="dancer-"+dancerCounter;
 			dancerCounter++;
 			var wrap = $('<div></div>').attr('id', id);
-			var url = 'img/'+shape+'-'+color+'.png';
+			var url = 'img/fix/'+shape+'-'+color+'.jpg';
 			wrap.css('background','transparent url('+url+')');
 			if(y>440){
 				y=10;
@@ -261,7 +261,7 @@ function addProp() {
 	
 }
 
-function addPropAt(div, posX, posY){
+function addPropAt(div, posX, posY){ ///you could just use the addDancer function since its the same code..
 	// console.log(source);
 	// var propItem = $('<img  alt="prop2" src="'+source+'" id="img-prop" width="100" height="100"/>');
 	// console.log(propItem);
