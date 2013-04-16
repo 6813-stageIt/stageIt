@@ -3,14 +3,16 @@
 <head>
 	<meta charset="UTF-8"/>
 	<title>StageIt</title>
+	<link rel="stylesheet" href="css/jquery-ui.css" />
 	<link rel="stylesheet" href="css/bootstrap.min.css" />
 	<link rel="stylesheet" href="css/styles.css" />
+	<link rel="stylesheet" href="css/animate.min.css" />
 </head>
 <body>
-	<div id="outerWrapper">
+	<div id="outerWrapper" class="animated fadeIn">
 		<div id="topnavWrapper">
 			<div id="topnav">
-				<div id="stageItLogo"><h2>StageIt</h2></div>
+				<div id="stageItLogo" class="animated fadeIn"><h2>StageIt</h2></div>
 				<ul id="topNavAccount">
 					<li class="first"><a id="home" href="#" >Home</a></li>
 					<li><a id="account" href="#">Account</a></li>
@@ -19,7 +21,7 @@
 		</div>
 		<div id="wrapper">
 			<div id="subHeader">
-				<div id="pageTitle"><h1><a id="projectName" data-toggle="tooltip" title="Double click to change">Project Name</a></h1></div>
+				<div id="pageTitle"><h1><a id="projectName" class="tool" data-toggle="tooltip" title="Double click to change">Project Name</a></h1></div>
 				<ul id="pageActionsNav">
 					<li><a id="addFormation"><img src="img/plus_blue.png" class="img-nav"/> New</a></li>
 					<li><a id="undo"><img src="img/arrow_undo.png" class="img-nav"/> Undo</a></li>
@@ -34,9 +36,9 @@
 					<label><h5>Tasks</h5></label></div>
 					<div id="tasks-container">
 					<table id="tasks">
-					<tr><td><a id="editStage"><label>Edit Stage</label></a></td></tr>
-					<tr><td><a id="addDancers"><label>Add Dancers</label></a></td></tr>
-					<tr class="last"><td><a id="addProps"><label>Add Props</label></a></td></tr>
+					<tr><td><a id="editStage" href="#chooseStage" data-toggle="modal"><label>Edit Stage</label></a></td></tr>
+					<tr><td><a id="addDancers" href="#addDancersModal" data-toggle="modal"><label>Add Dancers</label></a></td></tr>
+					<tr class="last"><td><a id="addProps" href="#choosePropModal" data-toggle="modal"><label>Add Props</label></a></td></tr>
 					<tr><td><a id="arrangeDancers"><label>Arrange Dancers</label></a></td></tr>
 					<!-- <div id="comments"><label id="commentsLabel">Comments</label><textarea class="input-small"></textarea></div> -->
 					</table></div>
@@ -50,6 +52,10 @@
 					</div>
 					<div class="labelContainer">
 					<label><h5>Tools</h5></label>
+					<table id="toolsTable">
+						<tr><td><button id="straightPathTool" onclick="drawPathPrompt()">path</button></td>
+						</tr>
+					</table>
 					</div>
 				</div><!-- end of sidebar -->
 
@@ -58,15 +64,15 @@
 						<label id="audienceLabel">Audience</label>
 <!-- 						<label id="stageLeftLabel">Stage Left</label>
 						<label id="stageRightLabel">Stage Right</label> -->
-						<canvas id="canvas-stage"><p>Your browser does not support HTML5 canvas</canvas>
-
+						<canvas id="canvas-stage"><p>Your browser does not support HTML5 canvas</p></canvas>
+						
+						<canvas id="arrow-canvas"><p>Your browser does not support HTML5 canvas</p></canvas>
 					</div>
-					<div id="delete-container" class="content"><a></a></div>
+					<div id="delete-container" class="content tool" data-toggle="tooltip" title="Drag items on the stage here to delete"></div>
 					<!-- <div id="preview"><label>Preview</label></div> -->
 				
-					<div id="arrow-canvas-container">
-						<canvas id="arrow-canvas-stage"><p>Your browser does not support HTML5 canvas</canvas>
-					</div>
+						
+						
 				</div>
 			</div>
 		</div>
@@ -80,7 +86,7 @@
 	  </div>
 	  <div class="modal-body">
 	    <!-- <button id="stage1" class="btn">Stage 1</button> -->
-	    <ul id="stages">
+	    <ul id="stages" class="option" data-option="stage">
 		    <li id="rectangle"><img  alt="rectangle stage" /></li>
 		    <li id="semicircle"><img  alt="semicircle stage" /></li>
 		</ul>
@@ -93,21 +99,48 @@
 	  </div>
 	</div>
 	<!-- AddDancers modal -->
-	<div id="addDancersModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="addDancersLabel" aria-hidden="false">
+	<div id="addDancersModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="addDancersLabel" aria-hidden="false" data-backdrop="static">
 	  <div class="modal-header">
 	    <button type="button" class="close" data-dismiss="modal" aria-hidden="false"><i class="icon-remove"></i></button>
-	    <h4 id="addDancersLabel">Add Dancers</h4>
+	    <h4 id="addDancersLabel">Add Dancers to the Stage</h4>
 	  </div>
 	  <div class="modal-body">
-	    <p>Some stuff here</p>
+	  	<table id="dancerModalWrapper">
+	  	<tr><td><div id="dancerOptions" class="cell">
+			<ol>
+				<li><label for="dancers">Select dancer shape</label>
+				  <ul id="dancers" class="option" data-option="dancer">
+				    <li id="circle"><img src="img/circle.png" alt="circle" class="img-dancer"/></li>
+					<li id="triangle"><img src="img/triangle.png" alt="triangle" class="img-dancer"/></li>
+				    <li id="square"><img src="img/square.png" alt="square" class="img-dancer"/></li>
+
+				  </ul><div class="break"></div>
+				</li>
+				<li id="colors"><label for="colors">Select dancer color</label>
+					<!-- <ul id="colors" class="option" data-option="color">
+						<li id="red" class="color">Red</li>
+						<li id="blue" class="color">Blue</li>
+						<li id="green" class="color">Green</li>
+					</ul> -->
+					<input type="radio" name="color" value="red">Red<br>
+					<input type="radio" name="color" value="blue">Blue<br>
+					<input type="radio" name="color" value="green">Green
+				</li>
+				  <li><label for="spinner">Number of Dancers to Add: </label><input id="spinner_numDancers" type="number" value="0" min="0"/></li>
+			</ol>
+		</div></td>
+		<td id="previewcell"><div id="dancer-preview" class="cell"><label>Preview</label>
+			<img id="preview-img" class="tool" alt="preview image" data-toggle="tooltip" title="Double click a dancer on the stage to add text" data-placement="bottom">
+		</div></td>
+	</tr>
+	</table>
 	  </div>
-	   <div class="modal-footer">
-	  	<button class="btn btn-primary">Add</button>
+	  <div class="modal-footer">
+	  	<button class="btn btn-primary" onclick="addDancers()">Add</button>
 	    <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
 	    
 	  </div>
 	</div>
-
 	<!--- addProp modal -->	
 	<div id="choosePropModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="choosePropLabel" aria-hidden="false" data-backdrop="static">
 	  <div class="modal-header">
@@ -115,22 +148,27 @@
 	    <h4 id="choosePropLabel">Select a prop</h4>
 	  </div>
 	  <div class="modal-body">
-	    <ul id="props">
-		    <li id="prop1"><img  alt="prop1" /></li>
-		    <li id="prop2"><img  alt="prop2" /></li>
+	    <ul id="props" class="option" data-option="prop">
+		    <li id="prop1"><img  alt="prop1" src="img/door.jpg" id="img-prop" width="100" height="100"/></li>
+		    <li id="prop2"><img  alt="prop2" src="img/table.jpg" id="img-prop" width="100" height="100"/></li>
+		    <li id="prop3"><img  alt="prop3" src="img/chair.jpeg" id="img-prop" width="100" height="100"/></li>
+		    <li id="prop4"><img  alt="prop4" src="img/couch.jpeg" id="img-prop" width="100" height="100"/></li>
 		</ul>
 	  </div>
 	   <div class="modal-footer">
 	   	<p id="propHelper" style="display:none;color:red" class="pull-left">Please select a prop.</p>
-	  	<button class="btn btn-primary" data-dismiss="modal">Ok</button>
+	  	<button class="btn btn-primary" data-dismiss="modal" onclick="addProp()">Add</button>
 	    <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
 	    
 	  </div>
 	</div>
 
 	<script src="js/jquery-1.9.1.min.js"></script>
+	
+	<script src="js/jquery-ui.js"></script>
 	<script src="js/bootstrap.min.js"></script>
 	<script src="js/javascript.js"></script>
+	
 	<script>
 	var debug = true;
 	var stageHasBeenPicked = false;
@@ -138,9 +176,15 @@
 		if(!debug){
 		$('#chooseStage').modal();
 	}
-		$('#projectName').tooltip();
+		$('.tool').tooltip();
 	})();
-	
+	var canvas = document.getElementById('arrow-canvas');
+	  // Make it visually fill the positioned parent
+	  canvas.style.width ='100%';
+	  canvas.style.height='100%';
+	  // ...then set the internal size to match
+	  canvas.width  = canvas.offsetWidth;
+	  canvas.height = canvas.offsetHeight;
 	</script>
 </body>
 </html>

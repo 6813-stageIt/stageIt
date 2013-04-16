@@ -1,38 +1,191 @@
-$('#stages li').click(function(){
-    $(this).addClass('stage-selected').siblings().removeClass('stage-selected');
+// $('#stages li').click(function(){
+//     $(this).addClass('stage-selected').siblings().removeClass('stage-selected');
+// });
+
+// $('#props li').click(function(){
+//     $(this).addClass('prop-selected').siblings().removeClass('prop-selected');
+// });
+
+// $('#dancers li').click(function(){
+// 	$(this).addClass('dancer-selected').siblings().removeClass('dancer-selected');
+// });
+var dancerCounter=0; //used to add id to dancers
+var propCounter=0;
+var arrowstartX = 0;
+var arrowstartY=0;
+var arrowendX = 0;
+var arrowendY=0;
+var drawPath=false;
+var startDrawPath=false; 
+var lastCanvasState;
+var listOfPaths=[];
+
+$("#delete-container").droppable({
+	accept:".added",
+	hoverClass: "delete-hover",
+	tolerance: "touch",
+	drop: function (event, ui){
+		$(ui.draggable).remove();
+	}
 });
 
-$('#props li').click(function(){
-    $(this).addClass('prop-selected').siblings().removeClass('prop-selected');
+
+$('.option li').click(function(){
+	var option = $(this).parent().attr('data-option');
+	$(this).addClass(option+'-selected').siblings().removeClass(option+'-selected');
 });
 
-$('#editStage').click(function(){
-	$('#chooseStage').modal();
+$('#addDancersModal .option img').click(function(){
+	var shape = $(this).parent().attr('id');
+	$('#preview-img').attr("src", "img/"+shape+'.png').css("border", "none");
+})
 
+$('#addDancersModal input[type="radio"]').click(function(){
+	if($('#preview-img').attr('id').length > 0){
+		changeColorOfImage($(this).attr('value'));
+	}
 });
+
+
+$('#spinner_numDancers').keyup(function (e) {
+    	if (e.keyCode == 13 && $("#spinner_numDancers")){ //enter and spinner field in focus
+    		addDancers();
+    	}
+    });
+function drawPathPrompt(){
+	prompt = "<b id=\"pathNote\"> Draw your path by clicking and dragging the arrow <button id=\"cancelPath\" onclick=\"cancelPath()\"> Cancel</b>"
+	//$('#canvasWrapper').append(prmopt);
+	$(prompt).appendTo("#canvasWrapper");
+	console.log(prompt);
+	document.getElementById('straightPathTool').disabled=true;
+	drawPath=true;
+}
+function cancelPath(){
+	(elem=document.getElementById("pathNote")).parentNode.removeChild(elem);
+	(elem=document.getElementById("cancelPath")).parentNode.removeChild(elem);
+	document.getElementById('straightPathTool').disabled=false;
+	drawPath=false;
+	console.log("cancel path");
+}
+$('#arrow-canvas').mousedown(function(e){
+	console.log('mousedown');
+	if(drawPath){
+		var x;
+		var y;
+		if (e.pageX || e.pageY) { 
+		  x = e.pageX;
+		  y = e.pageY;
+		}
+		arrowstartX=x;
+		arrowstartY=y;
+		startDrawPath=true;
+		
+	}
+})
+$('#arrow-canvas').mousemove( function(e){
+	console.log('mousemove' + e.pageX+' ' +e.pageY);
+	if(startDrawPath&&drawPath){
+			redrawPaths();
+		move=new Object();
+		var x; var y;
+		if (e.pageX || e.pageY) { 
+		  x = e.pageX;
+		  y = e.pageY;
+		}
+		move.startx = arrowstartX;
+		move.starty = arrowstartY;
+		move.endx=x;
+		move.endy = y;
+		drawArrow(move);
+	}
+})
+function redrawPaths(){
+
+	var canvas = document.getElementById('arrow-canvas');
+		var context = canvas.getContext('2d');
+		context.clearRect(0, 0, canvas.width, canvas.height);
+		//canvas.drawColor(0, Mode.CLEAR);
+		for(var i=0; i<listOfPaths.length; i++){
+			drawArrow(listOfPaths[i]);
+		}
+		console.log(listOfPaths);
+}
+$('body').mouseup( function(e){
+	if(startDrawPath&&drawPath){
+			redrawPaths();
+		move=new Object();
+		var offset=$("#arrow-canvas").offset();
+		var x; var y;
+		if (e.pageX || e.pageY) { 
+		  x = e.pageX-offset.left;
+		  y = e.pageY-offset.top;
+		}
+		var canvas = document.getElementById('arrow-canvas');
+		console.log('cheight= '+canvas.height);
+		console.log('cwidth= '+canvas.width);
+		if(x>0&&y>0&&x<canvas.height&&y<canvas.width){
+			move.startx = arrowstartX;
+			move.starty = arrowstartY;
+			move.endx = e.pageX;
+			move.endy = e.pageY;
+			drawArrow(move);
+			listOfPaths.push(move);
+			console.log('path pushed');
+			cancelPath();
+		}
+		else{cancelPath()}
+		drawPath=false;
+		startDrawPath=false;
+	}
+})
+function changeColorOfImage(color){
+	var curr = $('#preview-img').attr('src');
+	if (curr.search('square')!=-1){ //in src ->current image is square
+		$('#preview-img').attr('src', 'img/square-'+color+'.png');
+	}
+	else if (curr.search('circle')!=-1){
+		$('#preview-img').attr('src', 'img/circle-'+color+'.png');
+	}
+	else if (curr.search('triangle')!=-1){
+		$('#preview-img').attr('src', 'img/triangle-'+color+'.png');
+	}
+}
+
+
+
+// $('#editStage').click(function(){
+// 	$('#chooseStage').modal();
+
+// });
 
 // things that need to be reset when stageModal is hidden
 $('#chooseStage').on('hidden', function(){
 	$('#stages li').removeClass('stage-selected');
 	$('#stageHelper').css("display", "none");
 	$('.hidden').css("display", "inline");
+	console.log("#chooseStage");
 });
 
 $('#choosePropModal').on('hidden', function(){
 	$('#props li').removeClass('prop-selected');
 	$('#propHelper').css("display", "none");
-})
-
-//shows the dancer modal
-$('#addDancers').click(function(){
-	$('#addDancersModal').modal();
+	console.log("#choosePropModal");
 });
 
+// $('#addDancersModal').on("shown", function(){
+// 	// $('#dancer-preview').tooltip("show");
+// })
 
-$('#addProps').click(function(){
+//shows the dancer modal
+// $('#addDancers').click(function(){
+// 	$('#addDancersModal').modal();
+// 	$('#spinner').spinner();
+// });
 
-	$('#choosePropModal').modal();
-})
+
+// $('#addProps').click(function(){
+// 	$('#choosePropModal').modal();
+// })
 
 //close stage modal dialog
 function closeStageDialog() {
@@ -51,7 +204,7 @@ function drawStage() {
 		drawStageShape(stage);
 	}
 	
-	};
+	}
 
 function drawStageShape(stage){
 	switch(stage){
@@ -75,12 +228,6 @@ function drawRectangleStage(){
 	ctxt.lineWidth = 1;
 	ctxt.strokeStyle = 'gray';
 	ctxt.stroke(); 
-	move=new Object();
-	move.startx = 0;
-	move.starty = 0;
-	move.endy=300;
-	move.endx = 210;
-	drawArrow(move);
 }
 function drawSemiCircleStage(){
 	var canvas = document.getElementById('canvas-stage');
@@ -103,11 +250,11 @@ function drawSemiCircleStage(){
 function drawArrow(arrow){
 		//stroke method of arrow
 		//arrow will have start and end coordinates
-		starty=arrow.starty;
-		startx=arrow.startx;
-		//x and y cordinates are flipped from row and column
-		endy=arrow.endy;
-		endx=arrow.endx;
+		var offset=$("#arrow-canvas").offset();
+		starty=arrow.starty-offset.top;
+		startx=arrow.startx-offset.left;
+		endy=arrow.endy-offset.top;
+		endx=arrow.endx-offset.left;
 		var dx = 0;
 		var dy = 0;
 		var dz = 0;
@@ -124,36 +271,128 @@ function drawArrow(arrow){
 		else if(starty==endy)
 			dz = -1;
 			
-	var canvas = document.getElementById('arrow-canvas-stage');
-			if (canvas.getContext){
-			console.log('awesomesauce');
-			console.log(startx+endy);
-				var context = canvas.getContext('2d');
-				context.clearRect(0, 0, canvas.width, canvas.height); //clears the canvas, old arrows erased
-				ratio=.8;
-				context.strokeStyle = '#FBEC5D'; //yellow corn arrow
-				context.lineWidth  = 3;
-				var tiplength = 10*ratio;   // length of head
+		var canvas = document.getElementById('arrow-canvas');
+				if (canvas.getContext){
+				console.log('awesomesauce');
+				console.log(startx+endy);
+					var context = canvas.getContext('2d');
+				//context.clearRect(0, 0, canvas.width, canvas.height); //clears the canvas, old arrows erased
+				ratio=10;
+				context.strokeStyle = '#000000'; //yellow corn arrow
+				context.lineWidth  = 1;
 				var angle = Math.atan2(endy-starty,endx-startx);
 				context.beginPath();
 				context.moveTo(startx, starty);
 				context.lineTo(endx, endy);
-				if(dz==0){
-					context.lineTo(endx-tiplength*dx,endy); //first tip of arrow
+					context.lineTo(endx-ratio*Math.cos(angle+Math.PI/4),endy-ratio*Math.sin(angle+Math.PI/4)); //first tip of arrow
 					context.moveTo(endx, endy);
-					context.lineTo(endx,endy-tiplength*dy); //second tip of arrow
-				}
-				else if(dz ==-1){//vertical
-					context.lineTo(endx-tiplength*dx,endy-tiplength*dx); //first tip of arrow
-					context.moveTo(endx, endy);
-					context.lineTo(endx-tiplength*dx,endy+tiplength*dx); //second tip of arrow
-				}	
-				else if(dz ==1){//horizontal
-					context.lineTo(endx-tiplength*dy,endy-tiplength*dy); //first tip of arrow
-					context.moveTo(endx, endy);
-					context.lineTo(endx+tiplength*dy,endy-tiplength*dy); //second tip of arrow
-				}
+					context.lineTo(endx-ratio*Math.cos(angle-Math.PI/4),endy-ratio*Math.sin(angle-Math.PI/4)); //second tip of arrow
+				
 				context.closePath();
 				context.stroke();
 			}	
 		}
+
+
+function addDancers(){
+	if(!$('.dancer-selected').length > 0){
+		$('#dancerHelper').css("display", "inline");
+	}
+	else{
+		var shape = $('.dancer-selected').attr('id');
+		var color = $('input[name=color]:radio:checked').attr('value');
+		console.log(color);
+		var numDancers = $("#spinner_numDancers").val();
+		closeAddDancersDialog();	
+		var x = 30;
+		var y = 10;
+		for(var i=0; i < numDancers; i++){
+			var id="dancer-"+dancerCounter;
+			dancerCounter++;
+			var wrap = $('<div></div>').attr('id', id);
+			var url = 'img/'+shape+'-'+color+'.png';
+			wrap.css('background','transparent url('+url+')');
+			if(y>440){
+				y=10;
+				x+=60;		
+			}
+			addDancerAt(wrap, x,y);
+			y+=60; //wont work for large amounts, add handling
+		}
+
+	}	 
+
+}
+
+function addDancerAt(div,posX,posY){
+	div.css({
+		'position':'absolute',
+		'top':posY,
+		'left':posX,
+	});
+	div.addClass("added");
+	div.addClass('animated bounceIn');
+	div.addClass('shape');
+	div.resizable({
+      aspectRatio: 1 / 1
+    });
+    div.draggable({
+            zIndex:100,
+            containment:'#canvasWrapper',
+            start: function(e, ui) {
+		        $(ui.helper).width($(ui.helper).width()+10);
+		        $(ui.helper).height($(ui.helper).height()+10);
+		    },
+		    stop: function(e, ui) {
+		        $(ui.helper).width($(ui.helper).width()-10);
+		        $(ui.helper).height($(ui.helper).height()-10);
+		    }
+        });
+    //div.resizable();
+    div.dblclick(function(){
+    	var newText = prompt("Enter text to display in element:");
+			if(newText != null){
+				$(this).text(newText);
+			}
+		});
+    $("#canvasWrapper").append(div);
+}
+function closeAddDancersDialog() {
+	$('#addDancersModal').modal('hide'); 
+};
+
+//function called when ok button is clicked on props modal
+function addProp() {
+	//check if there is something selected
+	if(!$('.prop-selected').length > 0){
+		$('#propHelper').css("display", "inline");
+	}
+	else{
+		var propSource = $('.prop-selected').attr('src');
+		console.log("html="+$('.prop-selected').html); //('src'));
+		console.log("innerHTML="+$('.prop-selected').innerHTML()); //('src'));
+		console.log($('.prop-selected').attr('id'));
+		console.log(getElementById(prop))
+		closePropDialog();
+		addPropAt(30,100,propSource);
+	}
+	
+}
+
+function addPropAt(posX, posY, source){
+	console.log(source);
+	var propItem = $('<img  alt="prop2" src="'+source+'" id="img-prop" width="100" height="100"/>');
+	console.log(propItem);
+	propItem.css("position","absolute");
+	propItem.css("z-index", 1);
+    propItem.css("width", 40);
+    propItem.css("height", 40);
+    propItem.css("top", posY);
+    propItem.css("left", posX);
+	$("#canvasWrapper").append(propItem);
+    
+}
+
+function closePropDialog() {
+	$('#choosePropModal').modal('hide'); 
+};

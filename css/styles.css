@@ -25,6 +25,21 @@ img.img-nav{
 	width:15px;
 }
 
+img.img-dancer{
+	padding: 5px;
+	width: 40px;
+	height: 40px;
+	resize:none;
+}
+
+img li .img-prop{
+	padding: 5px;
+	width: 80px;
+	height: 80px;
+	position: absolute;
+	max-height: 30px;
+}
+
 label{
 	pointer-events:none;
 	font-size: 13px;
@@ -294,22 +309,14 @@ label#commentsLabel{
 
 }
 /*************** arrow canvas wrapper ***************/
-#arrow-canvas-stage{
+#arrow-canvas{
 	margin-top: 0px;
 	top:0;
-
-}
-#arrow-canvas-wrapper {
-	float: left;
-	width: 820px;
-	height: 500px;
-	border:1px solid gray;
-	border-left: none;
-	box-sizing:border-box;
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
-	position: relative;
-	top:0;
+	left:0;
+	width:100%;
+	height:100%;
+	position:absolute;
+	outline-offset:0;
 }
 
 #arrow-canvas-container{
@@ -379,7 +386,7 @@ label#stageRightLabel{
 	text-align: center;
 }
 
-#delete-container {
+div#delete-container {
 	/*background-color: white;*/
     position:absolute;
     bottom:0px;
@@ -387,16 +394,16 @@ label#stageRightLabel{
     /*border: 1px solid #b7b9bd;*/
     border-bottom: none;
     border-right:none;
-    height:50px;
-    width:60px;
+    height:60px;
+    width:65px;
     /*line-height: 75px;*/
     text-align: center;
     font-size: 15px;
-    background:transparent url('../img/trash-close.png') center top no-repeat;
+    background:transparent url('../img/trash-close.png') center bottom no-repeat;
 }
 
-#delete-container:hover{
-	background:transparent url('../img/trash-open.png') center top no-repeat;
+div#delete-container.delete-hover{
+	background:transparent url('../img/trash-open.png') center bottom no-repeat;
 }
 
 /*#delete-container a{
@@ -422,18 +429,93 @@ ul#stages{
 ul#stages li, ul#props li{
 	border:none;
 }
-li.stage-selected > img, li.prop-selected > img {
-    border:1px solid blue;
+li.stage-selected > img, li.prop-selected > img, li.dancer-selected > img,
+li.color-selected > img {
+    border:1px solid gray;
 }
 
-#stages li, #props li {
-    display: inline-block;
+#stages li, #props li, ul#dancers li {
+    /*display: inline-block;*/
+    float: left;
     cursor: pointer;
+    padding-left: 0px;
+    margin-left: 0px;
 }
 
-#stages img , #props img{
-    padding: 3px;
+.option img{ 
+    padding: 5px;
     width:130px;
     height:130px;
     box-sizing:border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
 }
+
+.option img.img-dancer{
+	width:70px;
+    height:70px;
+}
+
+
+
+/****************** modal form for dancers ***********/
+ul#dancers, ul#colors, ul#props{
+	list-style-type: none;
+}
+
+/*div#dancer-preview{
+	position: relative;
+	margin-top: 0px;
+	float: right;
+}*/
+table#dancerModalWrapper{
+	width: 100%;
+}
+
+table#dancerModalWrapper td{
+	width: 50%;
+}
+
+td#previewcell{
+	vertical-align: middle;
+	text-align: center;
+}
+
+img#preview-img{
+	width:80px;
+	height:80px;
+	border:1px solid gray;
+}
+
+#colors input{
+	margin: 0 10px 3px 0;
+}
+
+
+/********************* dancer divs **********************/
+div#added{
+	text-align: center;
+}
+
+div.innerText{
+	position: absolute;
+	/*top:48%;*/
+	
+}
+
+div.shape{
+	display: inline-block;
+	position: absolute;
+	cursor: move;
+	width:60px;
+	height:60px;
+	line-height: 60px;
+	text-align: center;
+	background-size:100% 100%;
+	background-repeat:no-repeat;
+	z-index: 10;
+}
+
+
+
+
