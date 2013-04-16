@@ -3,7 +3,6 @@ body{
 	padding: 0px;
 	font-family: 'Lucida Grande', Verdana, Arial, sans-serif;
 	color:black;
-
 }
 
 /***** general tag formatting *****/
@@ -86,6 +85,8 @@ td, th{
 	float:left;
 	margin:0;
 	margin-top: -20px;
+	font-family: 'Raleway', sans-serif;
+
 }
 
 ul#topNavAccount {
@@ -511,11 +512,30 @@ div.shape{
 	height:60px;
 	line-height: 60px;
 	text-align: center;
-	background-size:100% 100%;
-	background-repeat:no-repeat;
 	z-index: 10;
 }
 
 
 
+/********************* prop divs **********************/
+div.propImage{
+	display: inline-block;
+	position: absolute;
+	cursor: move;
+	width:80px;
+	height:80px;
+	line-height: 60px;
+	text-align: center;
+	background-size:100% 100%;
+	background-repeat:no-repeat;
+	z-index: 10;
+}
 
+img.image-prop{
+	width: 80px;
+	height: 80px;
+}
+
+div.ui-resizable-handle.ui-resizable-se.ui-icon.ui-icon-gripsmall-diagonal-se{
+	background-image: none;
+}
