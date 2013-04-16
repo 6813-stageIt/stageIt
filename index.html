@@ -171,21 +171,22 @@
 	<script src="js/javascript.js"></script>
 	
 	<script>
-	var debug = true;
+	var debug = false;
 	var stageHasBeenPicked = false;
-	(function(){
-		if(!debug){
+	$(document).ready(function(){
+				if(!debug){
 		$('#chooseStage').modal();
-	}
+		}
 		$('.tool').tooltip();
-	})();
-	var canvas = document.getElementById('arrow-canvas');
-	  // Make it visually fill the positioned parent
-	  canvas.style.width ='100%';
-	  canvas.style.height='100%';
-	  // ...then set the internal size to match
-	  canvas.width  = canvas.offsetWidth;
-	  canvas.height = canvas.offsetHeight;
+		var canvas = document.getElementById('arrow-canvas');
+		// Make it visually fill the positioned parent
+		canvas.style.width ='100%';
+		canvas.style.height='100%';
+		// ...then set the internal size to match
+		canvas.width  = canvas.offsetWidth;
+		canvas.height = canvas.offsetHeight;
+	});
+
 	</script>
 </body>
 </html>
