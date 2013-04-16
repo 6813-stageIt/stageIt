@@ -199,6 +199,7 @@ function addDancerAt(div,posX,posY){
 	div.resizable({
       aspectRatio: 1 / 1,
       maxWidth: 150,
+      addClasses: false
     });
     div.draggable({
             zIndex:100,

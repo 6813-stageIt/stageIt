@@ -519,3 +519,7 @@ img.image-prop{
 	width: 80px;
 	height: 80px;
 }
+
+div.ui-resizable-handle.ui-resizable-se.ui-icon.ui-icon-gripsmall-diagonal-se{
+	background-image: none;
+}
