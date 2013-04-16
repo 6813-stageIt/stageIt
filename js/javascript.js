@@ -75,6 +75,12 @@ function drawRectangleStage(){
 	ctxt.lineWidth = 1;
 	ctxt.strokeStyle = 'gray';
 	ctxt.stroke(); 
+	move=new Object();
+	move.startx = 0;
+	move.starty = 0;
+	move.endy=300;
+	move.endx = 210;
+	drawArrow(move);
 }
 function drawSemiCircleStage(){
 	var canvas = document.getElementById('canvas-stage');
@@ -92,4 +98,62 @@ function drawSemiCircleStage(){
 	ctxt.fill();
 	ctxt.strokeStyle = 'gray';
 	ctxt.stroke();
+	
 }
+function drawArrow(arrow){
+		//stroke method of arrow
+		//arrow will have start and end coordinates
+		starty=arrow.starty;
+		startx=arrow.startx;
+		//x and y cordinates are flipped from row and column
+		endy=arrow.endy;
+		endx=arrow.endx;
+		var dx = 0;
+		var dy = 0;
+		var dz = 0;
+		if(startx-endx>0)
+			dx = -1;
+		else
+			dx= 1;
+		if(starty-endy>0)
+			dy = -1;
+		else
+			dy = 1;
+		if (startx==endx)
+			dz = 1;
+		else if(starty==endy)
+			dz = -1;
+			
+	var canvas = document.getElementById('arrow-canvas-stage');
+			if (canvas.getContext){
+			console.log('awesomesauce');
+			console.log(startx+endy);
+				var context = canvas.getContext('2d');
+				context.clearRect(0, 0, canvas.width, canvas.height); //clears the canvas, old arrows erased
+				ratio=.8;
+				context.strokeStyle = '#FBEC5D'; //yellow corn arrow
+				context.lineWidth  = 3;
+				var tiplength = 10*ratio;   // length of head
+				var angle = Math.atan2(endy-starty,endx-startx);
+				context.beginPath();
+				context.moveTo(startx, starty);
+				context.lineTo(endx, endy);
+				if(dz==0){
+					context.lineTo(endx-tiplength*dx,endy); //first tip of arrow
+					context.moveTo(endx, endy);
+					context.lineTo(endx,endy-tiplength*dy); //second tip of arrow
+				}
+				else if(dz ==-1){//vertical
+					context.lineTo(endx-tiplength*dx,endy-tiplength*dx); //first tip of arrow
+					context.moveTo(endx, endy);
+					context.lineTo(endx-tiplength*dx,endy+tiplength*dx); //second tip of arrow
+				}	
+				else if(dz ==1){//horizontal
+					context.lineTo(endx-tiplength*dy,endy-tiplength*dy); //first tip of arrow
+					context.moveTo(endx, endy);
+					context.lineTo(endx+tiplength*dy,endy-tiplength*dy); //second tip of arrow
+				}
+				context.closePath();
+				context.stroke();
+			}	
+		}
