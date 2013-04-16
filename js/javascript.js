@@ -248,33 +248,10 @@ function addProp() {
 		addPropAt(wrap, x,y);
 		console.log("prop has been added?")
 	}	 
-
-
-	// else{
-	// 	var propSource = $('.prop-selected').attr('src');
-	// 	console.log("html="+$('.prop-selected').html); //('src'));
-	// 	console.log("innerHTML="+$('.prop-selected').innerHTML()); //('src'));
-	// 	console.log($('.prop-selected').attr('id'));
-	// 	console.log(getElementById(prop))
-	// 	closePropDialog();
-	// 	addPropAt(30,100,propSource);
-	//}
 	
 }
 
 function addPropAt(div, posX, posY){ ///you could just use the addDancer function since its the same code..
-	// console.log(source);
-	// var propItem = $('<img  alt="prop2" src="'+source+'" id="img-prop" width="100" height="100"/>');
-	// console.log(propItem);
-	// propItem.css("position","absolute");
-	// propItem.css("z-index", 1);
- //    propItem.css("width", 40);
- //    propItem.css("height", 40);
- //    propItem.css("top", posY);
- //    propItem.css("left", posX);
-	// $("#canvasWrapper").append(propItem);
-
-
 	div.css({
 		'position':'absolute',
 		'top':posY,
