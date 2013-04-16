@@ -3,6 +3,7 @@
 <head>
 	<meta charset="UTF-8"/>
 	<title>StageIt</title>
+	<link rel="stylesheet" href="css/jquery-ui.css" />
 	<link rel="stylesheet" href="css/bootstrap.min.css" />
 	<link rel="stylesheet" href="css/styles.css" />
 	<link rel="stylesheet" href="css/animate.min.css" />
@@ -13,10 +14,10 @@
 
 </head>
 <body>
-	<div id="outerWrapper">
+	<div id="outerWrapper" class="animated fadeIn">
 		<div id="topnavWrapper">
 			<div id="topnav">
-				<div id="stageItLogo"><h2>StageIt</h2></div>
+				<div id="stageItLogo" class="animated fadeIn"><h2>StageIt</h2></div>
 				<ul id="topNavAccount">
 					<li class="first"><a id="home" href="#" >Home</a></li>
 					<li><a id="account" href="#">Account</a></li>
@@ -126,7 +127,7 @@
 			</ol>
 		</div></td>
 		<td id="previewcell"><div id="dancer-preview" class="cell"><label>Preview</label>
-			<img id="preview-img" alt="preview image">
+			<img id="preview-img" class="tool" alt="preview image" data-toggle="tooltip" title="Double click a dancer on the stage to add text" data-placement="bottom">
 		</div></td>
 	</tr>
 	</table>
@@ -144,7 +145,7 @@
 	    <h4 id="choosePropLabel">Select a prop</h4>
 	  </div>
 	  <div class="modal-body">
-	    <ul id="props">
+	    <ul id="props" class="option" data-option="prop">
 		    <li id="prop1"><img  alt="prop1" src="img/door.jpg" id="img-prop"/></li>
 		    <li id="prop2"><img  alt="prop2" src="img/table.jpg" id="img-prop"/></li>
 		</ul>
@@ -164,7 +165,7 @@
 	<script src="js/javascript.js"></script>
 	
 	<script>
-	var debug = true;
+	var debug = false;
 	var stageHasBeenPicked = false;
 	(function(){
 		if(!debug){

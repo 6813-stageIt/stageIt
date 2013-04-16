@@ -474,4 +474,30 @@ img#preview-img{
 }
 
 
+/********************* dancer divs **********************/
+div#added{
+	text-align: center;
+}
+
+div.innerText{
+	position: absolute;
+	/*top:48%;*/
+	
+}
+
+div.shape{
+	display: inline-block;
+	position: absolute;
+	cursor: move;
+	width:60px;
+	height:60px;
+	line-height: 60px;
+	text-align: center;
+	background-size:100% 100%;
+	background-repeat:no-repeat;
+	z-index: 10;
+}
+
+
+
 

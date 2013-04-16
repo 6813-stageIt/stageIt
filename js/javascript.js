@@ -9,6 +9,9 @@
 // $('#dancers li').click(function(){
 // 	$(this).addClass('dancer-selected').siblings().removeClass('dancer-selected');
 // });
+var dancerCounter=0; //used to add id to dancers
+var propCounter=0;
+
 $("#delete-container").droppable({
 	accept:".added",
 	hoverClass: "delete-hover",
@@ -26,12 +29,10 @@ $('.option li').click(function(){
 
 $('#addDancersModal .option img').click(function(){
 	var shape = $(this).parent().attr('id');
-	console.log(shape);
 	$('#preview-img').attr("src", "img/"+shape+'.png').css("border", "none");
 })
 
 $('#addDancersModal input[type="radio"]').click(function(){
-	console.log("radio clicked");
 	if($('#preview-img').attr('id').length > 0){
 		changeColorOfImage($(this).attr('value'));
 	}
@@ -75,6 +76,10 @@ $('#choosePropModal').on('hidden', function(){
 	$('#props li').removeClass('prop-selected');
 	$('#propHelper').css("display", "none");
 });
+
+// $('#addDancersModal').on("shown", function(){
+// 	// $('#dancer-preview').tooltip("show");
+// })
 
 //shows the dancer modal
 // $('#addDancers').click(function(){
@@ -156,13 +161,20 @@ function addDancers(){
 		var color = $('input[name=color]:radio:checked').attr('value');
 		console.log(color);
 		var numDancers = $("#spinner_numDancers").val();
-		closeAddDancersDialog();
-		// var img = $('<img>').attr('src', 'img/'+shape+'-'+color+'.png');		
+		closeAddDancersDialog();	
 		var x = 30;
 		var y = 10;
 		for(var i=0; i < numDancers; i++){
-			var img = $('<img>').attr('src', 'img/'+shape+'-'+color+'.png');		
-			addDancerAt(img, x,y);
+			var id="dancer-"+dancerCounter;
+			dancerCounter++;
+			var wrap = $('<div></div>').attr('id', id);
+			var url = 'img/'+shape+'-'+color+'.png';
+			wrap.css('background','transparent url('+url+')');
+			if(y>440){
+				y=10;
+				x+=60;		
+			}
+			addDancerAt(wrap, x,y);
 			y+=60; //wont work for large amounts, add handling
 		}
 
@@ -170,19 +182,19 @@ function addDancers(){
 
 }
 
-function addDancerAt(imageDiv,posX,posY){
-	imageDiv.css({
-		'position': 'absolute',
-		'z-index':10,
-		'width':60,
-		'height':60,
+function addDancerAt(div,posX,posY){
+	div.css({
+		'position':'absolute',
 		'top':posY,
 		'left':posX,
-		'cursor':'move'
 	});
-	imageDiv.addClass("added");
-	imageDiv.addClass('animated bounceIn');
-    imageDiv.draggable({
+	div.addClass("added");
+	div.addClass('animated bounceIn');
+	div.addClass('shape');
+	div.resizable({
+      aspectRatio: 1 / 1
+    });
+    div.draggable({
             zIndex:100,
             containment:'#canvasWrapper',
             start: function(e, ui) {
@@ -194,14 +206,14 @@ function addDancerAt(imageDiv,posX,posY){
 		        $(ui.helper).height($(ui.helper).height()-10);
 		    }
         });
-    //imageDiv.resizable();
-    imageDiv.dblclick(function(){
+    //div.resizable();
+    div.dblclick(function(){
     	var newText = prompt("Enter text to display in element:");
 			if(newText != null){
 				$(this).text(newText);
 			}
 		});
-    $("#canvasWrapper").append(imageDiv);
+    $("#canvasWrapper").append(div);
 }
 function closeAddDancersDialog() {
 	$('#addDancersModal').modal('hide'); 
@@ -210,13 +222,13 @@ function closeAddDancersDialog() {
 //function called when ok button is clicked on props modal
 function addProp() {
 	//check if there is something selected
-	if(!$('.stage-selected').length > 0){
-		$('#stageHelper').css("display", "inline");
+	if(!$('.prop-selected').length > 0){
+		$('#propHelper').css("display", "inline");
 	}
 	else{
-		var stage = $('.stage-selected').attr('id');
-		closeStageDialog();
-		drawStageShape(stage);
+		var prop = $('.prop-selected').attr('id');
+		// closeStageDialog();
+		// drawStageShape(stage);
 	}
 	
 	};
