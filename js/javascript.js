@@ -160,9 +160,11 @@ function addDancers(){
 	}
 	else{
 		var shape = $('.dancer-selected').attr('id');
+		console.log(shape);
 		var color = $('input[name=color]:radio:checked').attr('value');
 		console.log(color);
 		var numDancers = $("#spinner_numDancers").val();
+		console.log(numDancers);
 		closeAddDancersDialog();	
 		var x = 30;
 		var y = 10;
@@ -224,32 +226,86 @@ function closeAddDancersDialog() {
 //function called when ok button is clicked on props modal
 function addProp() {
 	//check if there is something selected
+	console.log(".prop-selected="+$('.prop-selected'));
 	if(!$('.prop-selected').length > 0){
 		$('#propHelper').css("display", "inline");
 	}
 	else{
-		var propSource = $('.prop-selected').attr('src');
-		console.log("html="+$('.prop-selected').html); //('src'));
-		console.log("innerHTML="+$('.prop-selected').innerHTML()); //('src'));
-		console.log($('.prop-selected').attr('id'));
-		console.log(getElementById(prop))
+		var item = $('.prop-selected').attr('id');
+		console.log(item);
+
 		closePropDialog();
-		addPropAt(30,100,propSource);
-	}
+		var x = 30;
+		var y = 10;
+
+		var id="prop-"+item;
+		console.log("id="+id);
+		var wrap = $('<div></div>').attr('id', item);
+		var url = 'img/'+item+'.png';
+		wrap.css('background','transparent url('+url+')');
+		console.log(wrap);
+		addPropAt(wrap, x,y);
+		console.log("prop has been added?")
+	}	 
+
+
+	// else{
+	// 	var propSource = $('.prop-selected').attr('src');
+	// 	console.log("html="+$('.prop-selected').html); //('src'));
+	// 	console.log("innerHTML="+$('.prop-selected').innerHTML()); //('src'));
+	// 	console.log($('.prop-selected').attr('id'));
+	// 	console.log(getElementById(prop))
+	// 	closePropDialog();
+	// 	addPropAt(30,100,propSource);
+	//}
 	
 }
 
-function addPropAt(posX, posY, source){
-	console.log(source);
-	var propItem = $('<img  alt="prop2" src="'+source+'" id="img-prop" width="100" height="100"/>');
-	console.log(propItem);
-	propItem.css("position","absolute");
-	propItem.css("z-index", 1);
-    propItem.css("width", 40);
-    propItem.css("height", 40);
-    propItem.css("top", posY);
-    propItem.css("left", posX);
-	$("#canvasWrapper").append(propItem);
+function addPropAt(div, posX, posY){
+	// console.log(source);
+	// var propItem = $('<img  alt="prop2" src="'+source+'" id="img-prop" width="100" height="100"/>');
+	// console.log(propItem);
+	// propItem.css("position","absolute");
+	// propItem.css("z-index", 1);
+ //    propItem.css("width", 40);
+ //    propItem.css("height", 40);
+ //    propItem.css("top", posY);
+ //    propItem.css("left", posX);
+	// $("#canvasWrapper").append(propItem);
+
+
+	div.css({
+		'position':'absolute',
+		'top':posY,
+		'left':posX,
+	});
+	div.addClass("added");
+	div.addClass('animated bounceIn');
+	div.addClass('propImage');
+	div.resizable({
+      aspectRatio: 1 / 1
+    });
+    div.draggable({
+            zIndex:100,
+            containment:'#canvasWrapper',
+            start: function(e, ui) {
+		        $(ui.helper).width($(ui.helper).width()+10);
+		        $(ui.helper).height($(ui.helper).height()+10);
+		    },
+		    stop: function(e, ui) {
+		        $(ui.helper).width($(ui.helper).width()-10);
+		        $(ui.helper).height($(ui.helper).height()-10);
+		    }
+        });
+    //div.resizable();
+    div.dblclick(function(){
+    	var newText = prompt("Enter text to display in element:");
+			if(newText != null){
+				$(this).text(newText);
+			}
+		});
+    $("#canvasWrapper").append(div);
+
     
 }
 
