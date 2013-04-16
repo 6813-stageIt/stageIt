@@ -3,7 +3,6 @@ body{
 	padding: 0px;
 	font-family: 'Lucida Grande', Verdana, Arial, sans-serif;
 	color:black;
-
 }
 
 /***** general tag formatting *****/
@@ -495,8 +494,6 @@ div.shape{
 	height:60px;
 	line-height: 60px;
 	text-align: center;
-	background-size:100% 100%;
-	background-repeat:no-repeat;
 	z-index: 10;
 }
 

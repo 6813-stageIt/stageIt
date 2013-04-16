@@ -172,8 +172,9 @@ function addDancers(){
 			var id="dancer-"+dancerCounter;
 			dancerCounter++;
 			var wrap = $('<div></div>').attr('id', id);
-			var url = 'img/fix/'+shape+'-'+color+'.jpg';
-			wrap.css('background','transparent url('+url+')');
+			var img = $('<img>').attr('src', 'img/'+shape+'-'+color+'.png');
+			wrap.append(img);
+			// wrap.css('background','transparent url('+url+')');
 			if(y>440){
 				y=10;
 				x+=60;		
