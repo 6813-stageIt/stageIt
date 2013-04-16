@@ -31,10 +31,12 @@ img.img-dancer{
 	height: 40px;
 }
 
-img.img-prop{
+img li .img-prop{
 	padding: 5px;
 	width: 80px;
 	height: 80px;
+	position: absolute;
+	max-height: 30px;
 }
 
 label{

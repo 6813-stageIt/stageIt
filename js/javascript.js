@@ -70,11 +70,13 @@ $('#chooseStage').on('hidden', function(){
 	$('#stages li').removeClass('stage-selected');
 	$('#stageHelper').css("display", "none");
 	$('.hidden').css("display", "inline");
+	console.log("#chooseStage");
 });
 
 $('#choosePropModal').on('hidden', function(){
 	$('#props li').removeClass('prop-selected');
 	$('#propHelper').css("display", "none");
+	console.log("#choosePropModal");
 });
 
 // $('#addDancersModal').on("shown", function(){
@@ -109,7 +111,7 @@ function drawStage() {
 		drawStageShape(stage);
 	}
 	
-	};
+	}
 
 function drawStageShape(stage){
 	switch(stage){
@@ -226,9 +228,31 @@ function addProp() {
 		$('#propHelper').css("display", "inline");
 	}
 	else{
-		var prop = $('.prop-selected').attr('id');
-		// closeStageDialog();
-		// drawStageShape(stage);
+		var propSource = $('.prop-selected').attr('src');
+		console.log("html="+$('.prop-selected').html); //('src'));
+		console.log("innerHTML="+$('.prop-selected').innerHTML()); //('src'));
+		console.log($('.prop-selected').attr('id'));
+		console.log(getElementById(prop))
+		closePropDialog();
+		addPropAt(30,100,propSource);
 	}
 	
-	};
+}
+
+function addPropAt(posX, posY, source){
+	console.log(source);
+	var propItem = $('<img  alt="prop2" src="'+source+'" id="img-prop" width="100" height="100"/>');
+	console.log(propItem);
+	propItem.css("position","absolute");
+	propItem.css("z-index", 1);
+    propItem.css("width", 40);
+    propItem.css("height", 40);
+    propItem.css("top", posY);
+    propItem.css("left", posX);
+	$("#canvasWrapper").append(propItem);
+    
+}
+
+function closePropDialog() {
+	$('#choosePropModal').modal('hide'); 
+};
