@@ -19,7 +19,8 @@ var drawPath=false;
 var startDrawPath=false; 
 var lastCanvasState;
 var listOfPaths=[];
-
+var undoStack=[];
+var redoStack=[];
 $("#delete-container").droppable({
 	accept:".added",
 	hoverClass: "delete-hover",
@@ -29,7 +30,15 @@ $("#delete-container").droppable({
 	}
 });
 
-
+$('#newFormation').click( function(){
+	var path_canvas = document.getElementById('arrow-canvas');
+	var path_context = path_canvas.getContext('2d');
+	path_context.clearRect(0, 0, path_canvas.width, path_canvas.height);
+	listOfPaths=[];
+	undoStack=[];
+	redoStack=[];
+	//TODO: insert save the previous formation here
+})
 $('.option li').click(function(){
 	var option = $(this).parent().attr('data-option');
 	$(this).addClass(option+'-selected').siblings().removeClass(option+'-selected');
@@ -53,19 +62,25 @@ $('#spinner_numDancers').keyup(function (e) {
     	}
     });
 function drawPathPrompt(){
-	prompt = "<b id=\"pathNote\"> Draw your path by clicking and dragging the arrow <button id=\"cancelPath\" onclick=\"cancelPath()\"> Cancel</b>"
-	//$('#canvasWrapper').append(prmopt);
-	$(prompt).appendTo("#canvasWrapper");
-	console.log(prompt);
-	document.getElementById('straightPathTool').disabled=true;
-	drawPath=true;
+	if(!drawPath){
+		prompt = "<div id=\"pathNotif\"> Draw your path by clicking and dragging the arrow <button id=\"endPath\" onclick=\"endPath()\"> Cancel</div>"
+		//$('#canvasWrapper').append(prmopt);
+		$(prompt).appendTo("#canvasWrapper");
+		console.log(prompt);
+		document.getElementById('straightPathTool').disabled=true;
+		drawPath=true;
+		$('.added').draggable('disable')
+		$('.added').resizable('disable')
+	}
 }
-function cancelPath(){
-	(elem=document.getElementById("pathNote")).parentNode.removeChild(elem);
-	(elem=document.getElementById("cancelPath")).parentNode.removeChild(elem);
+function endPath(){
+	(elem=document.getElementById("pathNotif")).parentNode.removeChild(elem);
+	//(elem=document.getElementById("cancelPath")).parentNode.removeChild(elem); removed whole div, not needed
 	document.getElementById('straightPathTool').disabled=false;
 	drawPath=false;
 	console.log("cancel path");
+	$('.added').draggable('enable')
+	$('.added').resizable('enable')
 }
 $('#arrow-canvas').mousedown(function(e){
 	console.log('mousedown');
@@ -83,10 +98,11 @@ $('#arrow-canvas').mousedown(function(e){
 	}
 })
 $('#arrow-canvas').mousemove( function(e){
-	console.log('mousemove' + e.pageX+' ' +e.pageY);
+	//console.log('mousemove' + e.pageX+' ' +e.pageY);
 	if(startDrawPath&&drawPath){
 			redrawPaths();
 		move=new Object();
+		move.type="straight";
 		var x; var y;
 		if (e.pageX || e.pageY) { 
 		  x = e.pageX;
@@ -123,17 +139,23 @@ $('body').mouseup( function(e){
 		var canvas = document.getElementById('arrow-canvas');
 		console.log('cheight= '+canvas.height);
 		console.log('cwidth= '+canvas.width);
-		if(x>0&&y>0&&x<canvas.height&&y<canvas.width){
+		if(x>0&&y>0&&x<canvas.width&&y<canvas.height){
 			move.startx = arrowstartX;
 			move.starty = arrowstartY;
 			move.endx = e.pageX;
 			move.endy = e.pageY;
+			move.type="straight";
 			drawArrow(move);
 			listOfPaths.push(move);
 			console.log('path pushed');
-			cancelPath();
+			endPath();
 		}
-		else{cancelPath()}
+		else{
+			endPath();
+			console.log("path canceled");	
+			console.log("e.pageX= "+e.pageX);
+			console.log("e.pageY= "+e.pageY);
+		}
 		drawPath=false;
 		startDrawPath=false;
 	}
@@ -250,48 +272,52 @@ function drawSemiCircleStage(){
 function drawArrow(arrow){
 		//stroke method of arrow
 		//arrow will have start and end coordinates
-		var offset=$("#arrow-canvas").offset();
-		starty=arrow.starty-offset.top;
-		startx=arrow.startx-offset.left;
-		endy=arrow.endy-offset.top;
-		endx=arrow.endx-offset.left;
-		var dx = 0;
-		var dy = 0;
-		var dz = 0;
-		if(startx-endx>0)
-			dx = -1;
-		else
-			dx= 1;
-		if(starty-endy>0)
-			dy = -1;
-		else
-			dy = 1;
-		if (startx==endx)
-			dz = 1;
-		else if(starty==endy)
-			dz = -1;
-			
-		var canvas = document.getElementById('arrow-canvas');
-				if (canvas.getContext){
-				console.log('awesomesauce');
-				console.log(startx+endy);
-					var context = canvas.getContext('2d');
-				//context.clearRect(0, 0, canvas.width, canvas.height); //clears the canvas, old arrows erased
-				ratio=10;
-				context.strokeStyle = '#000000'; //yellow corn arrow
-				context.lineWidth  = 1;
-				var angle = Math.atan2(endy-starty,endx-startx);
-				context.beginPath();
-				context.moveTo(startx, starty);
-				context.lineTo(endx, endy);
-					context.lineTo(endx-ratio*Math.cos(angle+Math.PI/4),endy-ratio*Math.sin(angle+Math.PI/4)); //first tip of arrow
-					context.moveTo(endx, endy);
-					context.lineTo(endx-ratio*Math.cos(angle-Math.PI/4),endy-ratio*Math.sin(angle-Math.PI/4)); //second tip of arrow
+		if(arrow.type=="straight"){
+			var offset=$("#arrow-canvas").offset();
+			starty=arrow.starty-offset.top;
+			startx=arrow.startx-offset.left;
+			endy=arrow.endy-offset.top;
+			endx=arrow.endx-offset.left;
+			var dx = 0;
+			var dy = 0;
+			var dz = 0;
+			if(startx-endx>0)
+				dx = -1;
+			else
+				dx= 1;
+			if(starty-endy>0)
+				dy = -1;
+			else
+				dy = 1;
+			if (startx==endx)
+				dz = 1;
+			else if(starty==endy)
+				dz = -1;
 				
-				context.closePath();
-				context.stroke();
-			}	
+			var canvas = document.getElementById('arrow-canvas');
+					console.log('awesomesauce');
+					console.log(startx+endy);
+						var context = canvas.getContext('2d');
+					//context.clearRect(0, 0, canvas.width, canvas.height); //clears the canvas, old arrows erased
+					ratio=10;
+					context.strokeStyle = '#000000'; //yellow corn arrow
+					context.lineWidth  = 1;
+					var angle = Math.atan2(endy-starty,endx-startx);
+					context.beginPath();
+					context.moveTo(startx, starty);
+					context.lineTo(endx, endy);
+						context.lineTo(endx-ratio*Math.cos(angle+Math.PI/4),endy-ratio*Math.sin(angle+Math.PI/4)); //first tip of arrow
+						context.moveTo(endx, endy);
+						context.lineTo(endx-ratio*Math.cos(angle-Math.PI/4),endy-ratio*Math.sin(angle-Math.PI/4)); //second tip of arrow
+					
+					context.closePath();
+					context.stroke();
+			}
+		else if (arrow.type="freeform"){
+			
 		}
+		
+}
 
 
 function addDancers(){

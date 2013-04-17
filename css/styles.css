@@ -23,7 +23,11 @@ img.img-nav{
 	padding-right: 5px;
 	width:15px;
 }
-
+img.img-tool{
+	margin-top: 0px;
+	padding-right: 5px;
+	width:15px;
+}
 img.img-dancer{
 	padding: 5px;
 	width: 40px;
@@ -51,7 +55,9 @@ table, tr, td, th{
 td, th{
 	vertical-align: middle;
 }
-
+.toolButton	{
+	height:10px;
+}
 .break{
 	clear:both;
 }
@@ -318,6 +324,7 @@ label#commentsLabel{
 	height:100%;
 	position:absolute;
 	outline-offset:0;
+	z-index: 10;
 }
 
 #arrow-canvas-container{
@@ -332,7 +339,11 @@ label#audienceLabel{
 	font-weight: bold;
 }
 
-
+#pathNotif{
+	left:50;
+	top:0;
+	position:absolute;
+}
 label#stageLeftLabel{
 	position: absolute;
 	margin: 0;

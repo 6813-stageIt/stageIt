@@ -24,7 +24,7 @@
 			<div id="subHeader">
 				<div id="pageTitle"><h1><a id="projectName" class="tool" data-toggle="tooltip" title="Double click to change">Project Name</a></h1></div>
 				<ul id="pageActionsNav">
-					<li><a id="addFormation"><img src="img/plus_blue.png" class="img-nav"/> New</a></li>
+					<li><a id="newFormation"><img src="img/plus_blue.png" class="img-nav"/> New</a></li>
 					<li><a id="undo"><img src="img/arrow_undo.png" class="img-nav"/> Undo</a></li>
 					<li><a id="redo"><img src="img/arrow_redo.png" class="img-nav" /> Redo</a></li>
 					<li><a id="save"><img src="img/save.png" class="img-nav"/> Save</a></li>
@@ -54,8 +54,9 @@
 					<div class="labelContainer">
 					<label><h5>Tools</h5></label>
 					<table id="toolsTable">
-						<tr><td><button id="straightPathTool" onclick="drawPathPrompt()">path</button></td>
-						</tr>
+						<!--<tr><td><button id="straightPathTool" onclick="drawPathPrompt()">straight arrow</button></td>
+						</tr>-->
+						<a id="straightPathTool" class="toolButton" onclick="drawPathPrompt()"><img src="img/straight_arrow.png" class="img-tool"/> Straight Arrow</a>
 					</table>
 					</div>
 				</div><!-- end of sidebar -->
