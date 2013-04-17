@@ -316,7 +316,7 @@ function addDancers(){
 				y=10;
 				x+=60;		
 			}
-			addDancerAt(wrap, x,y);
+			addObjectAt(wrap, x,y, 'shape');
 			y+=60; //wont work for large amounts, add handling
 		}
 
@@ -324,7 +324,7 @@ function addDancers(){
 
 }
 
-function addDancerAt(div,posX,posY){
+function addObjectAt(div,posX,posY,newClass){
 	div.css({
 		'position':'absolute',
 		'top':posY,
@@ -332,7 +332,7 @@ function addDancerAt(div,posX,posY){
 	});
 	div.addClass("added");
 	div.addClass('animated bounceIn');
-	div.addClass('shape');
+	div.addClass(newClass);
 	div.resizable({
       aspectRatio: 1 / 1,
       maxWidth: 140,
@@ -350,13 +350,14 @@ function addDancerAt(div,posX,posY){
 		        $(ui.helper).height($(ui.helper).height()-10);
 		    }
         });
-    //div.resizable();
-    div.dblclick(function(){
-    	var newText = prompt("Enter text to display in element:");
-			if(newText != null){
-				$(this).text(newText);
-			}
-		});
+    if(newClass=="shape"){
+	    div.dblclick(function(){
+	    	var newText = prompt("Enter text to display in element:");
+				if(newText != null){
+					$(this).text(newText);
+				}
+			});
+	}
     $("#canvasWrapper").append(div);
 }
 function closeAddDancersDialog() {
@@ -391,53 +392,19 @@ function addProp() {
 		var x = 30;
 		var y = 10;
 
-		var id="prop-"+item;
+		var id="prop-"+propCounter;
+		propCounter++;
 		//console.log("id="+id);
-		var wrap = $('<div></div>').attr('id', item);
-		var url = 'img/'+item+'.png';
-		wrap.css('background','transparent url('+url+')');
+		var wrap = $('<div></div>').attr('id', id); //id's need to be unique
+		var img = $('<img>').attr('src', 'img/'+item+'.png');
+		wrap.append(img);
 		//console.log(wrap);
-		addPropAt(wrap, x,y);
+		addObjectAt(wrap, x,y, 'propImage');
 		//console.log("prop has been added?")
 	}	 
 	
 }
 
-function addPropAt(div, posX, posY){ ///you could just use the addDancer function since its the same code..
-	div.css({
-		'position':'absolute',
-		'top':posY,
-		'left':posX,
-	});
-	div.addClass("added");
-	div.addClass('animated bounceIn');
-	div.addClass('propImage');
-	div.resizable({
-      aspectRatio: 1 / 1
-    });
-    div.draggable({
-            zIndex:100,
-            containment:'#canvasWrapper',
-            start: function(e, ui) {
-		        $(ui.helper).width($(ui.helper).width()+10);
-		        $(ui.helper).height($(ui.helper).height()+10);
-		    },
-		    stop: function(e, ui) {
-		        $(ui.helper).width($(ui.helper).width()-10);
-		        $(ui.helper).height($(ui.helper).height()-10);
-		    }
-        });
-    //div.resizable();
-    div.dblclick(function(){
-    	var newText = prompt("Enter text to display in element:");
-			if(newText != null){
-				$(this).text(newText);
-			}
-		});
-    $("#canvasWrapper").append(div);
-
-    
-}
 function closePropDialog() {
 	$('#choosePropModal').modal('hide'); 
 };
