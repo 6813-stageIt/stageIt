@@ -67,7 +67,7 @@ $('#spinner_numDancers').keyup(function (e) {
     });
 function drawPathPrompt(){
 	if(!drawPath){
-		var prompt = "<div id=\"pathNotif\"> Draw an arrow by clicking and dragging below<br> <button id=\"endPath\" onclick=\"endPath()\"> Cancel</div>"
+		var prompt = "<div id=\"pathNotif\"> Draw an arrow by clicking and dragging on the stage<br> <button id=\"endPath\" onclick=\"endPath()\"> Cancel</div>"
 		//$('#canvasWrapper').append(prmopt);
 		$(prompt).appendTo("#canvasWrapper").addClass('animated fadeIn');
 		console.log(prompt);

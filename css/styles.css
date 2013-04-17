@@ -1,8 +1,13 @@
+html{
+	overflow:auto; 
+}
+
 body{
 	margin: 0px;
 	padding: 0px;
 	font-family: 'Lucida Grande', Verdana, Arial, sans-serif;
 	color:black;
+	overflow:auto;
 }
 
 /***** general tag formatting *****/
@@ -84,7 +89,7 @@ td, th{
 
 #topnav a:hover { 
 	color: black;
-	text-decoration: none 
+	text-decoration: underline;
 }
 
 #stageItLogo{
@@ -121,7 +126,7 @@ ul#topNavAccount li.first {
 
 #wrapper {
 	width: 960px;
-	margin: 40px auto 0 auto;
+	margin: 35px auto 0 auto;
 }
 
 h1 a {
@@ -190,7 +195,7 @@ a#projectName:hover{
 	background: #fff;
 	width: 960px;
 	position: relative;
-	min-height: 400px;
+	height: 400px;
 	display: table-row;
 }
 
@@ -250,6 +255,10 @@ div#formations-container{
     -webkit-box-sizing: border-box;
 }
 
+#sidebarActions table tr.last, #sidebarActions table td.last{
+	border-bottom:none;
+}
+
 
 table#tasks tr, table#tasks td{
 	height: 40px;
@@ -290,6 +299,30 @@ label.inline{
 }
 label#commentsLabel{
 	line-height: 40px;
+}
+
+/*********** notes ******************/
+div#notes{
+	width: 100%;
+	/*height:20px;*/
+	border: 1px solid gray;
+	border-top: none;
+	box-sizing:border-box;
+	height:50px;
+	max-height: 50px;
+	/*height: auto;*/
+}
+
+div#notes textarea{
+	width: 100%;
+	height: 100%;
+	box-sizing:border-box;
+	border:none;
+	-webkit-border-radius: 0px;
+	-moz-border-radius: 0px;
+	border-radius: 0px;
+	resize:none;
+	max-height: 50px;
 }
 
 
@@ -353,12 +386,16 @@ label#audienceLabel{
 
 div#pathNotif{
 	left:250;
-	top:0;
+	bottom:0;
 	position:absolute;
 	z-index:20;
 	font-weight: normal;
 	text-align: center;
-	background-color: white;
+	background-color: black;
+	color:white;
+	/*width: 80px;*/
+	font-size: 12px;
+
 }
 label#stageLeftLabel{
 	position: absolute;
