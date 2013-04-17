@@ -69,8 +69,7 @@ function drawPathPrompt(){
 		console.log(prompt);
 		document.getElementById('straightPathTool').disabled=true;
 		drawPath=true;
-		$('.added').draggable('disable')
-		$('.added').resizable('disable')
+		disableDraggableObjects(true);
 	}
 }
 function endPath(){
@@ -79,8 +78,7 @@ function endPath(){
 	document.getElementById('straightPathTool').disabled=false;
 	drawPath=false;
 	console.log("cancel path");
-	$('.added').draggable('enable')
-	$('.added').resizable('enable')
+	disableDraggableObjects(false);
 }
 $('#arrow-canvas').mousedown(function(e){
 	console.log('mousedown');
@@ -393,13 +391,18 @@ function closeAddDancersDialog() {
 };
 
 function disableDraggableObjects(foo){
+	
 	if(foo){
+		$('#arrow-canvas').css({'z-index':15});
 		$('.added').draggable('disable').css('pointer-events', 'none');
 		$('.added').resizable('disable').css('pointer-events', 'none');
 	}
 	else{
+		$('#arrow-canvas').css({'z-index':9});
+		$('#arrow-canvas').blur();
 		$('.added').draggable('enable').css('pointer-events', 'auto');
-		$('.added').resizable('enable').css('pointer-events', 'none');
+		$('.added').resizable('enable').css('pointer-events', 'auto');
+		console.log('everything restored');
 	}
 }
 

@@ -340,9 +340,10 @@ label#audienceLabel{
 }
 
 #pathNotif{
-	left:50;
+	left:250;
 	top:0;
 	position:absolute;
+	z-index:20;
 }
 label#stageLeftLabel{
 	position: absolute;
