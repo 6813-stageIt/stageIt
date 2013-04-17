@@ -364,7 +364,7 @@ function addDancerAt(div,posX,posY){
 	div.addClass('shape');
 	div.resizable({
       aspectRatio: 1 / 1,
-      maxWidth: 150,
+      maxWidth: 140,
       addClasses: false
     });
     div.draggable({
@@ -391,6 +391,15 @@ function addDancerAt(div,posX,posY){
 function closeAddDancersDialog() {
 	$('#addDancersModal').modal('hide'); 
 };
+
+function disableDraggableObjects(foo){
+	if(foo){
+		$('.added').draggable('disable').css('pointer-events', 'none');
+	}
+	else{
+		$('.added').draggable('enable').css('pointer-events', 'auto');
+	}
+}
 
 //function called when ok button is clicked on props modal
 function addProp() {
