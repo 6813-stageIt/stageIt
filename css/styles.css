@@ -55,9 +55,7 @@ table, tr, td, th{
 td, th{
 	vertical-align: middle;
 }
-/*.toolButton	{
-	height:10px;
-}*/
+s
 .break{
 	clear:both;
 }
@@ -182,7 +180,12 @@ a#projectName:hover{
 #pageActionsNav li { 
 	float: left; 
 }
-
+.enabled-button{
+	color:black;
+}
+.disabled-button{
+	color:gray;
+}
 
 /********** content *************/
 

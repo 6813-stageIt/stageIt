@@ -27,6 +27,7 @@ $("#delete-container").droppable({
 	tolerance: "touch",
 	drop: function (event, ui){
 		$(ui.draggable).remove();
+		//console.log(ui);
 	}
 });
 
@@ -38,6 +39,52 @@ $('#newFormation').click( function(){
 	undoStack=[];
 	redoStack=[];
 	//TODO: insert save the previous formation here
+})
+$('#undo').click( function(){
+	console.log("undo");
+	
+	if(undoStack.length==0){
+		//disable undo stack
+	}
+	else{
+		var action = undoStack.pop();
+		console.log(action.undoType);
+		switch(action.undoType){
+			case "arrow": //means arrow
+				listOfPaths.pop();
+				redrawPaths();
+				break;
+			case "dancer":
+				action.dancer.remove();
+				break;
+			case "prop":
+				action.prop.remove();
+				break;
+			case "delete_dancer":
+				
+				break;
+			case "delete_arrow":
+				
+				break;
+			case "drag":
+			console.log("about to remove undo");
+				action.newDancer.helper.remove();
+				console.log("removed");
+				console.log(action.dancer);
+				console.log(action.newDancer.helper);
+				console.log(action.pos.left);
+				action.newDancer.helper.offsetTop=action.pos.top;
+				action.newDancer.helper.offsetLeft=action.pos.left;
+				
+				console.log(action.newDancer.helper.offsetLeft);
+				
+				$("#canvasWrapper").append(action.newDancer.helper);
+				console.log(action.newDancer);
+				break;
+		}
+	}
+	
+		
 })
 $('.option li').click(function(){
 	var option = $(this).parent().attr('data-option');
@@ -68,7 +115,7 @@ function drawPathPrompt(){
 		prompt = "<div id=\"pathNotif\"> Draw your path by clicking and dragging the arrow <button id=\"endPath\" onclick=\"endPath()\"> Cancel</div>"
 		//$('#canvasWrapper').append(prmopt);
 		$(prompt).appendTo("#canvasWrapper");
-		console.log(prompt);
+		//console.log(prompt);
 		document.getElementById('straightPathTool').disabled=true;
 		drawPath=true;
 		disableDraggableObjects(true);
@@ -79,7 +126,7 @@ function endPath(){
 	//(elem=document.getElementById("cancelPath")).parentNode.removeChild(elem); removed whole div, not needed
 	document.getElementById('straightPathTool').disabled=false;
 	drawPath=false;
-	console.log("cancel path");
+	//console.log("cancel path");
 	disableDraggableObjects(false);
 }
 function redrawPaths(){
@@ -149,6 +196,8 @@ $('body').mouseup( function(e){
 			drawArrow(move);
 			listOfPaths.push(move);
 			console.log('path pushed');
+			move.undoType="arrow";
+			undoStack.push(move);
 			endPath();
 		}
 		else{
@@ -375,10 +424,13 @@ function addDancerAt(div,posX,posY){
             start: function(e, ui) {
 		        $(ui.helper).width($(ui.helper).width()+10);
 		        $(ui.helper).height($(ui.helper).height()+10);
+				console.log(ui);
+				beginDrag(ui);
 		    },
 		    stop: function(e, ui) {
 		        $(ui.helper).width($(ui.helper).width()-10);
 		        $(ui.helper).height($(ui.helper).height()-10);
+				endDrag(ui);
 		    }
         });
     //div.resizable();
@@ -389,6 +441,11 @@ function addDancerAt(div,posX,posY){
 			}
 		});
     $("#canvasWrapper").append(div);
+	action = new Object();
+	action.undoType='dancer';
+	action.dancer=div;
+	undoStack.push(action);
+	console.log(action);
 }
 function closeAddDancersDialog() {
 	$('#addDancersModal').modal('hide'); 
@@ -431,7 +488,19 @@ function addProp() {
 	}	 
 	
 }
-
+var tempDrag=new Object();
+function beginDrag(ui){
+	tempDrag.undoType="drag";
+	tempDrag.dancer=ui.helper[0];
+	tempDrag.pos =ui.position;
+}
+function endDrag(ui){
+	tempDrag.newDancer=ui;
+	undoStack.push(tempDrag);
+	console.log(tempDrag);
+	tempDrag=new Object();
+	console.log(undoStack[undoStack.length-1]);
+}
 function addPropAt(div, posX, posY){ ///you could just use the addDancer function since its the same code..
 	div.css({
 		'position':'absolute',
@@ -450,10 +519,15 @@ function addPropAt(div, posX, posY){ ///you could just use the addDancer functio
             start: function(e, ui) {
 		        $(ui.helper).width($(ui.helper).width()+10);
 		        $(ui.helper).height($(ui.helper).height()+10);
+				//console.log(ui);
+				beginDrag(ui);
 		    },
 		    stop: function(e, ui) {
 		        $(ui.helper).width($(ui.helper).width()-10);
 		        $(ui.helper).height($(ui.helper).height()-10);
+				console.log(ui);
+				console.log('end-drag');
+				endDrag(ui);
 		    }
         });
     //div.resizable();
@@ -464,7 +538,11 @@ function addPropAt(div, posX, posY){ ///you could just use the addDancer functio
 			}
 		});
     $("#canvasWrapper").append(div);
-
+	action = new Object();
+	action.undoType='prop';
+	action.prop=div;
+	undoStack.push(action);
+	console.log(action);
     
 }
 
