@@ -41,12 +41,11 @@ img.img-dancer{
 	resize:none;
 }
 
-img li .img-prop{
+img.img-prop{
 	padding: 5px;
-	width: 80px;
-	height: 80px;
-	position: absolute;
-	max-height: 30px;
+	width: 100px;
+	height: 100px;
+	resize:none;
 }
 
 label{
@@ -624,3 +623,11 @@ img.image-prop{
 div.ui-resizable-handle.ui-resizable-se.ui-icon.ui-icon-gripsmall-diagonal-se{
 	background-image: none;
 }
+
+
+
+/********************* arrangement divs **********************/
+#arrangement input{
+	margin: 0 10px 3px 0;
+}
+

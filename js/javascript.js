@@ -165,7 +165,7 @@ $('body').mouseup( function(e){
 
 
 
-// things that need to be reset when stageModal is hidden
+// things that need to be reset when modals are hidden
 $('#chooseStage').on('hidden', function(){
 	$('#stages li').removeClass('stage-selected');
 	$('#stageHelper').css("display", "none");
@@ -179,11 +179,14 @@ $('#choosePropModal').on('hidden', function(){
 	//console.log("#choosePropModal");
 });
 
+$('#chooseArrangementModal').on('hidden', function(){
+	console.log("#chooseArrangmentModal closed");
+});
 
 //close stage modal dialog
 function closeStageDialog() {
 	$('#chooseStage').modal('hide'); 
-	};
+};
 
 //function called when ok button is clicked on stage modal
 function drawStage() {
@@ -197,7 +200,7 @@ function drawStage() {
 		drawStageShape(stage);
 	}
 	
-	}
+}
 
 function drawStageShape(stage){
 	switch(stage){
@@ -405,8 +408,53 @@ function addProp() {
 	
 }
 
+function addPropAt(div, posX, posY){ ///you could just use the addDancer function since its the same code..
+	div.css({
+		'position':'absolute',
+		'top':posY,
+		'left':posX,
+	});
+	div.addClass("added");
+	div.addClass('animated bounceIn');
+	div.addClass('propImage');
+	div.resizable({
+      aspectRatio: 1 / 1
+    });
+    div.draggable({
+            zIndex:100,
+            containment:'#canvasWrapper',
+            start: function(e, ui) {
+		        $(ui.helper).width($(ui.helper).width()+10);
+		        $(ui.helper).height($(ui.helper).height()+10);
+		    },
+		    stop: function(e, ui) {
+		        $(ui.helper).width($(ui.helper).width()-10);
+		        $(ui.helper).height($(ui.helper).height()-10);
+		    }
+        });
+    //div.resizable();
+    div.dblclick(function(){
+    	var newText = prompt("Enter text to display in element:");
+			if(newText != null){
+				$(this).text(newText);
+			}
+		});
+    $("#canvasWrapper").append(div);
+
+    
+}
+
 function closePropDialog() {
 	$('#choosePropModal').modal('hide'); 
 };
 
+function arrangeDancers(){
+	var arrangement = $('input[name=arrangement]:radio:checked').attr('value');
+	closeArrangeDialog();
+	alert("At this time, your dancers could not be automatically arranged in a '"+arrangement+"' format. We appologize for any inconvenience.", closeArrangeDialog());
+}	 
 
+
+function closeArrangeDialog() {
+	$('#chooseArrangementModal').modal('hide'); 
+};
