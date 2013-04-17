@@ -46,7 +46,8 @@ $('.option li').click(function(){
 
 $('#addDancersModal .option img').click(function(){
 	var shape = $(this).parent().attr('id');
-	$('#preview-img').attr("src", "img/"+shape+'.png').css("border", "none");
+	var color = $('input[name="color"]:radio:checked').attr('value');
+	$('#preview-img').attr("src", "img/"+shape+'-'+color+'.png').css("border", "none");
 })
 
 $('#addDancersModal input[type="radio"]').click(function(){
@@ -54,6 +55,19 @@ $('#addDancersModal input[type="radio"]').click(function(){
 		changeColorOfImage($(this).attr('value'));
 	}
 });
+
+function changeColorOfImage(color){
+	var curr = $('#preview-img').attr('src');
+	if (curr.search('square')!=-1){ //in src ->current image is square
+		$('#preview-img').attr('src', 'img/square-'+color+'.png');
+	}
+	else if (curr.search('circle')!=-1){
+		$('#preview-img').attr('src', 'img/circle-'+color+'.png');
+	}
+	else if (curr.search('triangle')!=-1){
+		$('#preview-img').attr('src', 'img/triangle-'+color+'.png');
+	}
+}
 
 
 $('#spinner_numDancers').keyup(function (e) {
@@ -158,18 +172,7 @@ $('body').mouseup( function(e){
 		startDrawPath=false;
 	}
 })
-function changeColorOfImage(color){
-	var curr = $('#preview-img').attr('src');
-	if (curr.search('square')!=-1){ //in src ->current image is square
-		$('#preview-img').attr('src', 'img/square-'+color+'.png');
-	}
-	else if (curr.search('circle')!=-1){
-		$('#preview-img').attr('src', 'img/circle-'+color+'.png');
-	}
-	else if (curr.search('triangle')!=-1){
-		$('#preview-img').attr('src', 'img/triangle-'+color+'.png');
-	}
-}
+
 
 
 
@@ -389,6 +392,8 @@ function addDancerAt(div,posX,posY){
 function closeAddDancersDialog() {
 	$('#addDancersModal').modal('hide'); 
 };
+
+
 
 function disableDraggableObjects(foo){
 	
