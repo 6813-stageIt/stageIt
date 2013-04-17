@@ -413,12 +413,16 @@ div#pathNotif{
 	z-index:20;
 	font-weight: normal;
 	text-align: center;
-	background-color: black;
+	background-color: #333333;
 	color:white;
 	/*width: 80px;*/
 	font-size: 12px;
-
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	padding: 5px;
 }
+
 label#stageLeftLabel{
 	position: absolute;
 	margin: 0;

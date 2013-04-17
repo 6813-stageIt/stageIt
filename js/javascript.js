@@ -25,11 +25,19 @@ $('#newFormation').click( function(){
 	var path_canvas = document.getElementById('arrow-canvas');
 	var path_context = path_canvas.getContext('2d');
 	path_context.clearRect(0, 0, path_canvas.width, path_canvas.height);
-	$('div.added').remove();
+	
 	listOfPaths=[];
 	undoStack=[];
 	redoStack=[];
 	//TODO: insert save the previous formation here
+	if($('div.added').length>0){
+		bootbox.confirm("Would you like to keep the dancers on the stage?", function(result){
+		if(!result){
+			$('div.added').remove();
+		}
+	});
+	}
+
 })
 $('#undo').click( function(){
 	console.log("undo");
@@ -414,6 +422,7 @@ function addObjectAt(div,posX,posY,newClass){
     div.draggable({
             zIndex:100,
             containment:'#canvasWrapper',
+            grid: [ 20,20 ],
             start: function(e, ui) {
 		        $(ui.helper).width($(ui.helper).width()+10);
 		        $(ui.helper).height($(ui.helper).height()+10);
