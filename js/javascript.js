@@ -61,6 +61,8 @@ $('#spinner_numDancers').keyup(function (e) {
     		addDancers();
     	}
     });
+	
+//path/arrow functions... we probably need to decide on a name, I used them interspersed...
 function drawPathPrompt(){
 	if(!drawPath){
 		prompt = "<div id=\"pathNotif\"> Draw your path by clicking and dragging the arrow <button id=\"endPath\" onclick=\"endPath()\"> Cancel</div>"
@@ -80,8 +82,19 @@ function endPath(){
 	console.log("cancel path");
 	disableDraggableObjects(false);
 }
+function redrawPaths(){
+
+	var canvas = document.getElementById('arrow-canvas');
+		var context = canvas.getContext('2d');
+		context.clearRect(0, 0, canvas.width, canvas.height);
+		//canvas.drawColor(0, Mode.CLEAR);
+		for(var i=0; i<listOfPaths.length; i++){
+			drawArrow(listOfPaths[i]);
+		}
+		//console.log(listOfPaths);
+}
 $('#arrow-canvas').mousedown(function(e){
-	console.log('mousedown');
+	//console.log('mousedown');
 	if(drawPath){
 		var x;
 		var y;
@@ -113,17 +126,7 @@ $('#arrow-canvas').mousemove( function(e){
 		drawArrow(move);
 	}
 })
-function redrawPaths(){
 
-	var canvas = document.getElementById('arrow-canvas');
-		var context = canvas.getContext('2d');
-		context.clearRect(0, 0, canvas.width, canvas.height);
-		//canvas.drawColor(0, Mode.CLEAR);
-		for(var i=0; i<listOfPaths.length; i++){
-			drawArrow(listOfPaths[i]);
-		}
-		console.log(listOfPaths);
-}
 $('body').mouseup( function(e){
 	if(startDrawPath&&drawPath){
 			redrawPaths();
@@ -158,6 +161,7 @@ $('body').mouseup( function(e){
 		startDrawPath=false;
 	}
 })
+
 function changeColorOfImage(color){
 	var curr = $('#preview-img').attr('src');
 	if (curr.search('square')!=-1){ //in src ->current image is square
@@ -242,7 +246,7 @@ function drawRectangleStage(){
 	var ctxt = canvas.getContext('2d');
 	ctxt.clearRect(0, 0, canvas.width, canvas.height);
 	ctxt.beginPath();
-	ctxt.rect(.5, .5, canvas.width-1, canvas.height-1);
+	ctxt.rect(50, 0, canvas.width-100, canvas.height-25);
 	ctxt.fillStyle = 'white';
 	ctxt.fill();
 	ctxt.lineWidth = 1;
@@ -254,9 +258,9 @@ function drawSemiCircleStage(){
 	var ctxt = canvas.getContext('2d');
 	ctxt.clearRect(0, 0, canvas.width, canvas.height);
 	ctxt.beginPath();
-	var x = canvas.width/2+.5;
-	var y = 1.5;
-	var radius = canvas.height-2.5;
+	var x = canvas.width-285;
+	var y = 0;
+	var radius = canvas.width/2-10;
 	var startAngle = 0; endAngle = Math.PI;
 	ctxt.arc(x,y,radius, startAngle,endAngle);
 	ctxt.closePath();
@@ -293,12 +297,12 @@ function drawArrow(arrow){
 				dz = -1;
 				
 			var canvas = document.getElementById('arrow-canvas');
-					console.log('awesomesauce');
-					console.log(startx+endy);
+					//console.log('awesomesauce');
+					//console.log(startx+endy);
 						var context = canvas.getContext('2d');
-					//context.clearRect(0, 0, canvas.width, canvas.height); //clears the canvas, old arrows erased
+					
 					ratio=10;
-					context.strokeStyle = '#000000'; //yellow corn arrow
+					context.strokeStyle = 'rgba(0, 0, 0, .5)'; //black arrow
 					context.lineWidth  = 1;
 					var angle = Math.atan2(endy-starty,endx-startx);
 					context.beginPath();
