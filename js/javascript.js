@@ -436,12 +436,15 @@ function addObjectAt(div,posX,posY,newClass){
 	}
     $("#canvasWrapper").append(div);
 	action = new Object();
-	if(newclass=="shape"){
-	action.undoType='dancer';}
+	if(newClass=="shape"){
+	action.undoType='dancer';
+	action.dancer=div;
+	}
 	else{
 		action.undoType='prop';
+		action.prop = div;
 	}
-	action.dancer=div;
+	
 	undoStack.push(action);
 	console.log(action);
 }
