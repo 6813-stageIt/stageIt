@@ -31,11 +31,27 @@ $('#newFormation').click( function(){
 	redoStack=[];
 	//TODO: insert save the previous formation here
 	if($('div.added').length>0){
-		bootbox.confirm("Would you like to keep the dancers on the stage?", function(result){
-		if(!result){
-			$('div.added').remove();
+		bootbox.dialog("Would you like to keep the dancers on the stage in the next formation?", [{
+		    "label" : "Yes",
+		    "class" : "btn-primary",
+		    "callback": function() {
+		        $('div.added').remove();
+		    }
+		}, {
+		    "label" : "No",
+		    "class": "btn",
+		    "callback": function() {
+		        // Example.show("uh oh, look out!");
+		    }
 		}
-	});
+		]);
+
+
+	// 	bootbox.prompt("Would you like to keep the dancers on the stage?", function(result){
+	// 	if(!result){
+	// 		$('div.added').remove();
+	// 	}
+	// });
 	}
 
 })
