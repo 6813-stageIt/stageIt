@@ -366,6 +366,15 @@ function closeAddDancersDialog() {
 	$('#addDancersModal').modal('hide'); 
 };
 
+function disableDraggableObjects(foo){
+	if(foo){
+		$('.added').draggable('disable').css('pointer-events', 'none');
+	}
+	else{
+		$('.added').draggable('enable').css('pointer-events', 'auto');
+	}
+}
+
 //function called when ok button is clicked on props modal
 function addProp() {
 	//check if there is something selected
