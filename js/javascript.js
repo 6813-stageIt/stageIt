@@ -70,7 +70,7 @@ function drawPathPrompt(){
 		var prompt = "<div id=\"pathNotif\"> Draw an arrow by clicking and dragging on the stage<br> <button id=\"endPath\" onclick=\"endPath()\"> Cancel</div>"
 		//$('#canvasWrapper').append(prmopt);
 		$(prompt).appendTo("#canvasWrapper").addClass('animated fadeIn');
-		console.log(prompt);
+		//console.log(prompt);
 		document.getElementById('straightPathTool').disabled=true;
 		drawPath=true;
 		disableDraggableObjects(true);
@@ -81,11 +81,11 @@ function endPath(){
 	//(elem=document.getElementById("cancelPath")).parentNode.removeChild(elem); removed whole div, not needed
 	document.getElementById('straightPathTool').disabled=false;
 	drawPath=false;
-	console.log("cancel path");
+	//console.log("cancel path");
 	disableDraggableObjects(false);
 }
 $('#arrow-canvas').mousedown(function(e){
-	console.log('mousedown');
+	//console.log('mousedown');
 	if(drawPath){
 		var x;
 		var y;
@@ -100,7 +100,7 @@ $('#arrow-canvas').mousedown(function(e){
 	}
 })
 $('#arrow-canvas').mousemove( function(e){
-	//console.log('mousemove' + e.pageX+' ' +e.pageY);
+	////console.log('mousemove' + e.pageX+' ' +e.pageY);
 	if(startDrawPath&&drawPath){
 			redrawPaths();
 		move=new Object();
@@ -126,7 +126,7 @@ function redrawPaths(){
 		for(var i=0; i<listOfPaths.length; i++){
 			drawArrow(listOfPaths[i]);
 		}
-		console.log(listOfPaths);
+		//console.log(listOfPaths);
 }
 $('body').mouseup( function(e){
 	if(startDrawPath&&drawPath){
@@ -139,8 +139,8 @@ $('body').mouseup( function(e){
 		  y = e.pageY-offset.top;
 		}
 		var canvas = document.getElementById('arrow-canvas');
-		console.log('cheight= '+canvas.height);
-		console.log('cwidth= '+canvas.width);
+		//console.log('cheight= '+canvas.height);
+		//console.log('cwidth= '+canvas.width);
 		if(x>0&&y>0&&x<canvas.width&&y<canvas.height){
 			move.startx = arrowstartX;
 			move.starty = arrowstartY;
@@ -149,14 +149,14 @@ $('body').mouseup( function(e){
 			move.type="straight";
 			drawArrow(move);
 			listOfPaths.push(move);
-			console.log('path pushed');
+			//console.log('path pushed');
 			endPath();
 		}
 		else{
 			endPath();
-			console.log("path canceled");	
-			console.log("e.pageX= "+e.pageX);
-			console.log("e.pageY= "+e.pageY);
+			//console.log("path canceled");	
+			//console.log("e.pageX= "+e.pageX);
+			//console.log("e.pageY= "+e.pageY);
 		}
 		drawPath=false;
 		startDrawPath=false;
@@ -170,13 +170,13 @@ $('#chooseStage').on('hidden', function(){
 	$('#stages li').removeClass('stage-selected');
 	$('#stageHelper').css("display", "none");
 	$('.hidden').css("display", "inline");
-	console.log("#chooseStage");
+	//console.log("#chooseStage");
 });
 
 $('#choosePropModal').on('hidden', function(){
 	$('#props li').removeClass('prop-selected');
 	$('#propHelper').css("display", "none");
-	console.log("#choosePropModal");
+	//console.log("#choosePropModal");
 });
 
 
@@ -266,8 +266,8 @@ function drawArrow(arrow){
 				dz = -1;
 				
 			var canvas = document.getElementById('arrow-canvas');
-					console.log('awesomesauce');
-					console.log(startx+endy);
+					//console.log('awesomesauce');
+					//console.log(startx+endy);
 						var context = canvas.getContext('2d');
 					//context.clearRect(0, 0, canvas.width, canvas.height); //clears the canvas, old arrows erased
 					ratio=10;
@@ -297,11 +297,11 @@ function addDancers(){
 	}
 	else{
 		var shape = $('.dancer-selected').attr('id');
-		console.log(shape);
+		//console.log(shape);
 		var color = $('input[name=color]:radio:checked').attr('value');
-		console.log(color);
+		//console.log(color);
 		var numDancers = $("#spinner_numDancers").val();
-		console.log(numDancers);
+		//console.log(numDancers);
 		closeAddDancersDialog();	
 		var x = 30;
 		var y = 10;
@@ -372,33 +372,33 @@ function disableDraggableObjects(foo){
 	}
 	else{
 		$('#arrow-canvas').css('pointer-events','none');
-		// console.log('everything restored');
+		// //console.log('everything restored');
 	}
 }
 
 //function called when ok button is clicked on props modal
 function addProp() {
 	//check if there is something selected
-	console.log(".prop-selected="+$('.prop-selected'));
+	//console.log(".prop-selected="+$('.prop-selected'));
 	if(!$('.prop-selected').length > 0){
 		$('#propHelper').css("display", "inline");
 	}
 	else{
 		var item = $('.prop-selected').attr('id');
-		console.log(item);
+		//console.log(item);
 
 		closePropDialog();
 		var x = 30;
 		var y = 10;
 
 		var id="prop-"+item;
-		console.log("id="+id);
+		//console.log("id="+id);
 		var wrap = $('<div></div>').attr('id', item);
 		var url = 'img/'+item+'.png';
 		wrap.css('background','transparent url('+url+')');
-		console.log(wrap);
+		//console.log(wrap);
 		addPropAt(wrap, x,y);
-		console.log("prop has been added?")
+		//console.log("prop has been added?")
 	}	 
 	
 }

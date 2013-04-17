@@ -1,5 +1,6 @@
 html{
-	overflow:auto; 
+	overflow:auto;
+	min-height: 110%; 
 }
 
 body{
