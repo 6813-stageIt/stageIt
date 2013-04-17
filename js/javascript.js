@@ -436,7 +436,11 @@ function addObjectAt(div,posX,posY,newClass){
 	}
     $("#canvasWrapper").append(div);
 	action = new Object();
-	action.undoType='dancer';
+	if(newclass=="shape"){
+	action.undoType='dancer';}
+	else{
+		action.undoType='prop';
+	}
 	action.dancer=div;
 	undoStack.push(action);
 	console.log(action);
@@ -498,50 +502,7 @@ function endDrag(ui){
 	tempDrag=new Object();
 	console.log(undoStack[undoStack.length-1]);
 }
-function addPropAt(div, posX, posY){ ///you could just use the addDancer function since its the same code..
-	div.css({
-		'position':'absolute',
-		'top':posY,
-		'left':posX,
-	});
-	div.addClass("added");
-	div.addClass('animated bounceIn');
-	div.addClass('propImage');
-	div.resizable({
-      aspectRatio: 1 / 1
-    });
-    div.draggable({
-            zIndex:100,
-            containment:'#canvasWrapper',
-            start: function(e, ui) {
-		        $(ui.helper).width($(ui.helper).width()+10);
-		        $(ui.helper).height($(ui.helper).height()+10);
-				//console.log(ui);
-				beginDrag(ui);
-		    },
-		    stop: function(e, ui) {
-		        $(ui.helper).width($(ui.helper).width()-10);
-		        $(ui.helper).height($(ui.helper).height()-10);
-				console.log(ui);
-				console.log('end-drag');
-				endDrag(ui);
-		    }
-        });
-    //div.resizable();
-    div.dblclick(function(){
-    	var newText = prompt("Enter text to display in element:");
-			if(newText != null){
-				$(this).text(newText);
-			}
-		});
-    $("#canvasWrapper").append(div);
-	action = new Object();
-	action.undoType='prop';
-	action.prop=div;
-	undoStack.push(action);
-	console.log(action);
-    
-}
+
 
 function closePropDialog() {
 	$('#choosePropModal').modal('hide'); 
