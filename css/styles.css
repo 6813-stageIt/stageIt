@@ -55,9 +55,9 @@ table, tr, td, th{
 td, th{
 	vertical-align: middle;
 }
-.toolButton	{
+/*.toolButton	{
 	height:10px;
-}
+}*/
 .break{
 	clear:both;
 }
@@ -240,13 +240,10 @@ div#formations-container{
 	/*border-top:1px solid black;*/
 }
 
-table#tasks, table#formations{
+#sidebarActions table{
 	width:100%;
 }
-
-
-table#tasks tr, table#tasks td{
-	height: 40px;
+#sidebarActions table tr, #sidebarActions table td{
 	border-bottom:1px solid #EAEAEA;
 	box-sizing: border-box;
     -moz-box-sizing: border-box;
@@ -254,7 +251,21 @@ table#tasks tr, table#tasks td{
 }
 
 
+table#tasks tr, table#tasks td{
+	height: 40px;
+	line-height: 40px;
+	
+}
 
+table#toolsTable tr, table#toolsTable td{
+	height:30px;
+	line-height: 30px;
+}
+
+
+label.inline{
+	display: inline-block;
+}
 
 #sidebarActions a {
 	display:block;
@@ -505,9 +516,10 @@ img#preview-img{
 
 
 /********************* dancer divs **********************/
-div#added{
+div.added{
 	text-align: center;
 }
+
 
 div.innerText{
 	position: absolute;
