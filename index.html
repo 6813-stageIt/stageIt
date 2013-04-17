@@ -37,10 +37,10 @@
 					<label><h5>Tasks</h5></label></div>
 					<div id="tasks-container">
 					<table id="tasks">
-					<tr><td><a id="editStage" href="#chooseStage" data-toggle="modal"><label>Edit Stage</label></a></td></tr>
-					<tr><td><a id="addDancers" href="#addDancersModal" data-toggle="modal"><label>Add Dancers</label></a></td></tr>
-					<tr class="last"><td><a id="addProps" href="#choosePropModal" data-toggle="modal"><label>Add Props</label></a></td></tr>
-					<tr><td><a id="arrangeDancers"><label>Arrange Dancers</label></a></td></tr>
+					<tr><td><a id="editStage" href="#chooseStage" data-toggle="modal" class="tool" data-toggle="tooltip" title="Change the stage" data-placement="right"><label>Edit Stage</label></a></td></tr>
+					<tr><td><a id="addDancers" href="#addDancersModal" data-toggle="modal" class="tool" data-toggle="tooltip" title="Add dancer objects to the stage" data-placement="right"><label>Add Dancers</label></a></td></tr>
+					<tr class="last"><td><a id="addProps" href="#choosePropModal" data-toggle="modal" class="tool" data-toggle="tooltip" title="Add prop objects to the stage" data-placement="right"><label>Add Props</label></a></td></tr>
+					<tr class="last"><td class="last"><a id="arrangeDancers" href="#arrangeDancersModal" data-toggle="modal" class="tool" data-toggle="tooltip" title="Arrange dancers on stages in template formations" data-placement="right"><label>Arrange Dancers</label></a></td></tr>
 					<!-- <div id="comments"><label id="commentsLabel">Comments</label><textarea class="input-small"></textarea></div> -->
 					</table></div>
 					<div class="labelContainer">
@@ -57,7 +57,7 @@
 					</div>
 					<table id="toolsTable">
 						<tr><td>
-						<a id="straightPathTool" class="toolButton" onclick="drawPathPrompt()"><img src="img/straight_arrow.png" class="img-tool"/><label class="inline"> Draw Arrow</label></a></td><tr>
+						<a id="straightPathTool" class="toolButton tool" onclick="drawPathPrompt()" data-toggle="tooltip" title="Draw arrows on the stage" data-placement="right"><img src="img/straight_arrow.png" class="img-tool"/><label class="inline"> Draw Arrow</label></a></td><tr>
 					</table>
 					
 				</div><!-- end of sidebar -->
@@ -72,12 +72,10 @@
 						<canvas id="arrow-canvas"><p>Your browser does not support HTML5 canvas</p></canvas>
 					</div>
 					<div id="delete-container" class="content tool" data-toggle="tooltip" title="Drag items on the stage here to delete"></div>
-					<!-- <div id="preview"><label>Preview</label></div> -->
-				
-						
-						
+					<!-- <div id="preview"><label>Preview</label></div> -->		
 				</div>
 			</div>
+			<div id="notes"><textarea placeholder="Tap to add notes"></textarea></div>
 		</div>
 	</div>
 
@@ -85,7 +83,7 @@
 	<div id="chooseStage" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="chooseStageLabel" aria-hidden="false" data-backdrop="static">
 	  <div class="modal-header">
 	    <button type="button" class="close hidden" data-dismiss="modal" aria-hidden="false" style="display:none"><i class="icon-remove"></i></button>
-	    <h4 id="chooseStageLabel">Select a stage</h4>
+	    <h4 id="chooseStageLabel">Select a stage to begin.</h4>
 	  </div>
 	  <div class="modal-body">
 	    <!-- <button id="stage1" class="btn">Stage 1</button> -->
@@ -113,21 +111,17 @@
 			<ol>
 				<li><label for="dancers">Select dancer shape</label>
 				  <ul id="dancers" class="option" data-option="dancer">
-				    <li id="circle"><img src="img/circle.png" alt="circle" class="img-dancer"/></li>
-					<li id="triangle"><img src="img/triangle.png" alt="triangle" class="img-dancer"/></li>
-				    <li id="square"><img src="img/square.png" alt="square" class="img-dancer"/></li>
+				    <li id="circle"><img src="img/circle-gray.png" alt="circle" class="img-dancer"/></li>
+					<li id="triangle"><img src="img/triangle-gray.png" alt="triangle" class="img-dancer"/></li>
+				    <li id="square"><img src="img/square-gray.png" alt="square" class="img-dancer"/></li>
 
 				  </ul><div class="break"></div>
 				</li>
 				<li id="colors"><label for="colors">Select dancer color</label>
-					<!-- <ul id="colors" class="option" data-option="color">
-						<li id="red" class="color">Red</li>
-						<li id="blue" class="color">Blue</li>
-						<li id="green" class="color">Green</li>
-					</ul> -->
+					<input type="radio" name="color" value="gray" checked>Gray<br>
 					<input type="radio" name="color" value="red">Red<br>
 					<input type="radio" name="color" value="blue">Blue<br>
-					<input type="radio" name="color" value="green">Green
+					<input type="radio" name="color" value="green">Green<br>
 				</li>
 				  <li><label for="spinner">Number of Dancers to Add: </label><input id="spinner_numDancers" type="number" value="0" min="0"/></li>
 			</ol>
@@ -152,10 +146,14 @@
 	  </div>
 	  <div class="modal-body">
 	    <ul id="props" class="option" data-option="prop">
-		    <li id="prop-door"><img  alt="prop1" src="img/prop-door.png" id="img-prop" width="100" height="100"/></li>
-		    <li id="prop-table"><img  alt="prop2" src="img/prop-table.png" id="img-prop" width="100" height="100"/></li>
-		    <li id="prop-chair"><img  alt="prop3" src="img/prop-chair.png" id="img-prop" width="100" height="100"/></li>
-		    <li id="prop-couch"><img  alt="prop4" src="img/prop-couch.png" id="img-prop" width="100" height="100"/></li>
+		    <li id="prop-door1" class="img-prop1"><img  alt="prop1" src="img/prop-door1.png" class="img-prop" width="200" height="100"/></li>
+		    <li id="prop-table1" class="img-prop1"><img  alt="prop2" src="img/prop-table1.png" class="img-prop" width="200" height="100"/></li>
+		    <li id="prop-table2" class="img-prop1"><img  alt="prop3" src="img/prop-table2.png" class="img-prop" width="200" height="100"/></li>
+		    <li id="prop-couch1" class="img-prop1"><img  alt="prop4" src="img/prop-couch1.png" class="img-prop" width="200" height="100"/></li>
+			<li id="prop-couch2" class="img-prop1"><img  alt="prop1" src="img/prop-couch2.png" class="img-prop" width="200" height="100"/></li>
+		    <li id="prop-chair1" class="img-prop1"><img  alt="prop2" src="img/prop-chair1.png" class="img-prop" width="200" height="100"/></li>
+		    <li id="prop-stool1" class="img-prop1"><img  alt="prop3" src="img/prop-stool1.png" class="img-prop" width="200" height="100"/></li>
+
 		</ul>
 	  </div>
 	   <div class="modal-footer">
@@ -163,6 +161,41 @@
 	  	<button class="btn btn-primary" data-dismiss="modal" onclick="addProp()">Add</button>
 	    <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
 	    
+	  </div>
+	</div>
+
+	<!-- ArrangeDancers modal -->
+	<div id="arrangeDancersModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="arrangeDancersLabel" aria-hidden="false" data-backdrop="static">
+	  <div class="modal-header">
+	    <button type="button" class="close" data-dismiss="modal" aria-hidden="false"><i class="icon-remove"></i></button>
+	    <h4 id="arrangeDancersLabel">Arrange Dancers on the Stage</h4>
+	  </div>
+	  <div class="modal-body">
+	  	<div id="arrangementOptions" class="cell">
+			<ol>
+<!-- 				<li><label for="dancers">Select dancer shape</label>
+				  <ul id="dancers" class="option" data-option="dancer">
+				    <li id="circle"><img src="img/circle-gray.png" alt="circle" class="img-dancer"/></li>
+					<li id="triangle"><img src="img/triangle-gray.png" alt="triangle" class="img-dancer"/></li>
+				    <li id="square"><img src="img/square-gray.png" alt="square" class="img-dancer"/></li>
+				  </ul><div class="break"></div>
+				</li> -->
+				<li id="arrangement"><label for="arrangement">Select dancer color</label>
+					<input type="radio" name="arrangement" value="oneHorizLine">One Horizontal Line<br>
+					<input type="radio" name="arrangement" value="twoHorizLines">Two Horizontal Lines<br>
+					<input type="radio" name="arrangement" value="oneVertLine">One Vertical Line<br>
+					<input type="radio" name="arrangement" value="twoVertLines">Two Vertical Lines<br>
+					<input type="radio" name="arrangement" value="dimond">Dimond<br>
+					<input type="radio" name="arrangement" value="circle">Circle<br>
+					<input type="radio" name="arrangement" value="V">V-shaped<br>
+					<input type="radio" name="arrangement" value="X">X-shaped<br>
+				</li>
+			</ol>
+		</div>
+	  </div>
+	  <div class="modal-footer">
+	  	<button class="btn btn-primary" onclick="arrangeDancers()">Arrange</button>
+	    <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
 	  </div>
 	</div>
 

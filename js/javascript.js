@@ -1,14 +1,3 @@
-// $('#stages li').click(function(){
-//     $(this).addClass('stage-selected').siblings().removeClass('stage-selected');
-// });
-
-// $('#props li').click(function(){
-//     $(this).addClass('prop-selected').siblings().removeClass('prop-selected');
-// });
-
-// $('#dancers li').click(function(){
-// 	$(this).addClass('dancer-selected').siblings().removeClass('dancer-selected');
-// });
 var dancerCounter=0; //used to add id to dancers
 var propCounter=0;
 var arrowstartX = 0;
@@ -21,6 +10,7 @@ var lastCanvasState;
 var listOfPaths=[];
 var undoStack=[];
 var redoStack=[];
+
 $("#delete-container").droppable({
 	accept:".added",
 	hoverClass: "delete-hover",
@@ -75,6 +65,8 @@ $('#undo').click( function(){
 				console.log(action.pos.left);
 				action.newDancer.helper.offsetTop=action.pos.top;
 				action.newDancer.helper.offsetLeft=action.pos.left;
+				div = action.newDancer.helper;
+				addObjectAt(div, action.pos.left, action.pos.top, 'shape');
 				
 				console.log(action.newDancer.helper.offsetLeft);
 				
@@ -93,7 +85,8 @@ $('.option li').click(function(){
 
 $('#addDancersModal .option img').click(function(){
 	var shape = $(this).parent().attr('id');
-	$('#preview-img').attr("src", "img/"+shape+'.png').css("border", "none");
+	var color = $('input[name="color"]:radio:checked').attr('value');
+	$('#preview-img').attr("src", "img/"+shape+'-'+color+'.png').css("border", "none");
 })
 
 $('#addDancersModal input[type="radio"]').click(function(){
@@ -101,6 +94,19 @@ $('#addDancersModal input[type="radio"]').click(function(){
 		changeColorOfImage($(this).attr('value'));
 	}
 });
+
+function changeColorOfImage(color){
+	var curr = $('#preview-img').attr('src');
+	if (curr.search('square')!=-1){ //in src ->current image is square
+		$('#preview-img').attr('src', 'img/square-'+color+'.png');
+	}
+	else if (curr.search('circle')!=-1){
+		$('#preview-img').attr('src', 'img/circle-'+color+'.png');
+	}
+	else if (curr.search('triangle')!=-1){
+		$('#preview-img').attr('src', 'img/triangle-'+color+'.png');
+	}
+}
 
 
 $('#spinner_numDancers').keyup(function (e) {
@@ -112,9 +118,9 @@ $('#spinner_numDancers').keyup(function (e) {
 //path/arrow functions... we probably need to decide on a name, I used them interspersed...
 function drawPathPrompt(){
 	if(!drawPath){
-		prompt = "<div id=\"pathNotif\"> Draw your path by clicking and dragging the arrow <button id=\"endPath\" onclick=\"endPath()\"> Cancel</div>"
+		var prompt = "<div id=\"pathNotif\"> Draw an arrow by clicking and dragging on the stage<br> <button id=\"endPath\" onclick=\"endPath()\"> Cancel</div>"
 		//$('#canvasWrapper').append(prmopt);
-		$(prompt).appendTo("#canvasWrapper");
+		$(prompt).appendTo("#canvasWrapper").addClass('animated fadeIn');
 		//console.log(prompt);
 		document.getElementById('straightPathTool').disabled=true;
 		drawPath=true;
@@ -156,7 +162,7 @@ $('#arrow-canvas').mousedown(function(e){
 	}
 })
 $('#arrow-canvas').mousemove( function(e){
-	//console.log('mousemove' + e.pageX+' ' +e.pageY);
+	////console.log('mousemove' + e.pageX+' ' +e.pageY);
 	if(startDrawPath&&drawPath){
 			redrawPaths();
 		move=new Object();
@@ -185,8 +191,8 @@ $('body').mouseup( function(e){
 		  y = e.pageY-offset.top;
 		}
 		var canvas = document.getElementById('arrow-canvas');
-		console.log('cheight= '+canvas.height);
-		console.log('cwidth= '+canvas.width);
+		//console.log('cheight= '+canvas.height);
+		//console.log('cwidth= '+canvas.width);
 		if(x>0&&y>0&&x<canvas.width&&y<canvas.height){
 			move.startx = arrowstartX;
 			move.starty = arrowstartY;
@@ -202,9 +208,9 @@ $('body').mouseup( function(e){
 		}
 		else{
 			endPath();
-			console.log("path canceled");	
-			console.log("e.pageX= "+e.pageX);
-			console.log("e.pageY= "+e.pageY);
+			//console.log("path canceled");	
+			//console.log("e.pageX= "+e.pageX);
+			//console.log("e.pageY= "+e.pageY);
 		}
 		drawPath=false;
 		startDrawPath=false;
@@ -226,44 +232,30 @@ function changeColorOfImage(color){
 
 
 
-// $('#editStage').click(function(){
-// 	$('#chooseStage').modal();
 
-// });
 
-// things that need to be reset when stageModal is hidden
+// things that need to be reset when modals are hidden
 $('#chooseStage').on('hidden', function(){
 	$('#stages li').removeClass('stage-selected');
 	$('#stageHelper').css("display", "none");
 	$('.hidden').css("display", "inline");
-	console.log("#chooseStage");
+	//console.log("#chooseStage");
 });
 
 $('#choosePropModal').on('hidden', function(){
 	$('#props li').removeClass('prop-selected');
 	$('#propHelper').css("display", "none");
-	console.log("#choosePropModal");
+	//console.log("#choosePropModal");
 });
 
-// $('#addDancersModal').on("shown", function(){
-// 	// $('#dancer-preview').tooltip("show");
-// })
-
-//shows the dancer modal
-// $('#addDancers').click(function(){
-// 	$('#addDancersModal').modal();
-// 	$('#spinner').spinner();
-// });
-
-
-// $('#addProps').click(function(){
-// 	$('#choosePropModal').modal();
-// })
+$('#chooseArrangementModal').on('hidden', function(){
+	console.log("#chooseArrangmentModal closed");
+});
 
 //close stage modal dialog
 function closeStageDialog() {
 	$('#chooseStage').modal('hide'); 
-	};
+};
 
 //function called when ok button is clicked on stage modal
 function drawStage() {
@@ -277,7 +269,7 @@ function drawStage() {
 		drawStageShape(stage);
 	}
 	
-	}
+}
 
 function drawStageShape(stage){
 	switch(stage){
@@ -377,11 +369,11 @@ function addDancers(){
 	}
 	else{
 		var shape = $('.dancer-selected').attr('id');
-		console.log(shape);
+		//console.log(shape);
 		var color = $('input[name=color]:radio:checked').attr('value');
-		console.log(color);
+		//console.log(color);
 		var numDancers = $("#spinner_numDancers").val();
-		console.log(numDancers);
+		//console.log(numDancers);
 		closeAddDancersDialog();	
 		var x = 30;
 		var y = 10;
@@ -396,7 +388,7 @@ function addDancers(){
 				y=10;
 				x+=60;		
 			}
-			addDancerAt(wrap, x,y);
+			addObjectAt(wrap, x,y, 'shape');
 			y+=60; //wont work for large amounts, add handling
 		}
 
@@ -404,7 +396,7 @@ function addDancers(){
 
 }
 
-function addDancerAt(div,posX,posY){
+function addObjectAt(div,posX,posY,newClass){
 	div.css({
 		'position':'absolute',
 		'top':posY,
@@ -412,7 +404,7 @@ function addDancerAt(div,posX,posY){
 	});
 	div.addClass("added");
 	div.addClass('animated bounceIn');
-	div.addClass('shape');
+	div.addClass(newClass);
 	div.resizable({
       aspectRatio: 1 / 1,
       maxWidth: 140,
@@ -433,13 +425,14 @@ function addDancerAt(div,posX,posY){
 				endDrag(ui);
 		    }
         });
-    //div.resizable();
-    div.dblclick(function(){
-    	var newText = prompt("Enter text to display in element:");
-			if(newText != null){
-				$(this).text(newText);
-			}
-		});
+    if(newClass=="shape"){
+	    div.dblclick(function(){
+	    	var newText = prompt("Enter text to display in element:");
+				if(newText != null){
+					$(this).text(newText);
+				}
+			});
+	}
     $("#canvasWrapper").append(div);
 	action = new Object();
 	action.undoType='dancer';
@@ -451,6 +444,8 @@ function closeAddDancersDialog() {
 	$('#addDancersModal').modal('hide'); 
 };
 
+
+
 function disableDraggableObjects(foo){
 	
 	if(foo){
@@ -458,33 +453,34 @@ function disableDraggableObjects(foo){
 	}
 	else{
 		$('#arrow-canvas').css('pointer-events','none');
-		console.log('everything restored');
+		// //console.log('everything restored');
 	}
 }
 
 //function called when ok button is clicked on props modal
 function addProp() {
 	//check if there is something selected
-	console.log(".prop-selected="+$('.prop-selected'));
+	//console.log(".prop-selected="+$('.prop-selected'));
 	if(!$('.prop-selected').length > 0){
 		$('#propHelper').css("display", "inline");
 	}
 	else{
 		var item = $('.prop-selected').attr('id');
-		console.log(item);
+		//console.log(item);
 
 		closePropDialog();
 		var x = 30;
 		var y = 10;
 
-		var id="prop-"+item;
-		console.log("id="+id);
-		var wrap = $('<div></div>').attr('id', item);
-		var url = 'img/'+item+'.png';
-		wrap.css('background','transparent url('+url+')');
-		console.log(wrap);
-		addPropAt(wrap, x,y);
-		console.log("prop has been added?")
+		var id="prop-"+propCounter;
+		propCounter++;
+		//console.log("id="+id);
+		var wrap = $('<div></div>').attr('id', id); //id's need to be unique
+		var img = $('<img>').attr('src', 'img/'+item+'.png');
+		wrap.append(img);
+		//console.log(wrap);
+		addObjectAt(wrap, x,y, 'propImage');
+		//console.log("prop has been added?")
 	}	 
 	
 }
@@ -548,4 +544,15 @@ function addPropAt(div, posX, posY){ ///you could just use the addDancer functio
 
 function closePropDialog() {
 	$('#choosePropModal').modal('hide'); 
+};
+
+function arrangeDancers(){
+	var arrangement = $('input[name=arrangement]:radio:checked').attr('value');
+	closeArrangeDialog();
+	alert("At this time, your dancers could not be automatically arranged in a '"+arrangement+"' format. We appologize for any inconvenience.", closeArrangeDialog());
+}	 
+
+
+function closeArrangeDialog() {
+	$('#chooseArrangementModal').modal('hide'); 
 };
