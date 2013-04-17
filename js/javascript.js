@@ -393,15 +393,10 @@ function closeAddDancersDialog() {
 function disableDraggableObjects(foo){
 	
 	if(foo){
-		$('#arrow-canvas').css({'z-index':15});
-		$('.added').draggable('disable').css('pointer-events', 'none');
-		$('.added').resizable('disable').css('pointer-events', 'none');
+		$('#arrow-canvas').css({'pointer-events':'auto', 'cursor':'crosshair'});
 	}
 	else{
-		$('#arrow-canvas').css({'z-index':9});
-		$('#arrow-canvas').blur();
-		$('.added').draggable('enable').css('pointer-events', 'auto');
-		$('.added').resizable('enable').css('pointer-events', 'auto');
+		$('#arrow-canvas').css('pointer-events','none');
 		console.log('everything restored');
 	}
 }
