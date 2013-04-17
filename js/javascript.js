@@ -1,14 +1,3 @@
-// $('#stages li').click(function(){
-//     $(this).addClass('stage-selected').siblings().removeClass('stage-selected');
-// });
-
-// $('#props li').click(function(){
-//     $(this).addClass('prop-selected').siblings().removeClass('prop-selected');
-// });
-
-// $('#dancers li').click(function(){
-// 	$(this).addClass('dancer-selected').siblings().removeClass('dancer-selected');
-// });
 var dancerCounter=0; //used to add id to dancers
 var propCounter=0;
 var arrowstartX = 0;
@@ -21,6 +10,7 @@ var lastCanvasState;
 var listOfPaths=[];
 var undoStack=[];
 var redoStack=[];
+
 $("#delete-container").droppable({
 	accept:".added",
 	hoverClass: "delete-hover",
@@ -77,9 +67,9 @@ $('#spinner_numDancers').keyup(function (e) {
     });
 function drawPathPrompt(){
 	if(!drawPath){
-		prompt = "<div id=\"pathNotif\"> Draw your path by clicking and dragging the arrow <button id=\"endPath\" onclick=\"endPath()\"> Cancel</div>"
+		var prompt = "<div id=\"pathNotif\"> Draw an arrow by clicking and dragging below<br> <button id=\"endPath\" onclick=\"endPath()\"> Cancel</div>"
 		//$('#canvasWrapper').append(prmopt);
-		$(prompt).appendTo("#canvasWrapper");
+		$(prompt).appendTo("#canvasWrapper").addClass('animated fadeIn');
 		console.log(prompt);
 		document.getElementById('straightPathTool').disabled=true;
 		drawPath=true;
@@ -175,12 +165,6 @@ $('body').mouseup( function(e){
 
 
 
-
-// $('#editStage').click(function(){
-// 	$('#chooseStage').modal();
-
-// });
-
 // things that need to be reset when stageModal is hidden
 $('#chooseStage').on('hidden', function(){
 	$('#stages li').removeClass('stage-selected');
@@ -195,20 +179,6 @@ $('#choosePropModal').on('hidden', function(){
 	console.log("#choosePropModal");
 });
 
-// $('#addDancersModal').on("shown", function(){
-// 	// $('#dancer-preview').tooltip("show");
-// })
-
-//shows the dancer modal
-// $('#addDancers').click(function(){
-// 	$('#addDancersModal').modal();
-// 	$('#spinner').spinner();
-// });
-
-
-// $('#addProps').click(function(){
-// 	$('#choosePropModal').modal();
-// })
 
 //close stage modal dialog
 function closeStageDialog() {
@@ -402,7 +372,7 @@ function disableDraggableObjects(foo){
 	}
 	else{
 		$('#arrow-canvas').css('pointer-events','none');
-		console.log('everything restored');
+		// console.log('everything restored');
 	}
 }
 
@@ -468,7 +438,8 @@ function addPropAt(div, posX, posY){ ///you could just use the addDancer functio
 
     
 }
-
 function closePropDialog() {
 	$('#choosePropModal').modal('hide'); 
 };
+
+

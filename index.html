@@ -37,10 +37,10 @@
 					<label><h5>Tasks</h5></label></div>
 					<div id="tasks-container">
 					<table id="tasks">
-					<tr><td><a id="editStage" href="#chooseStage" data-toggle="modal"><label>Edit Stage</label></a></td></tr>
-					<tr><td><a id="addDancers" href="#addDancersModal" data-toggle="modal"><label>Add Dancers</label></a></td></tr>
-					<tr class="last"><td><a id="addProps" href="#choosePropModal" data-toggle="modal"><label>Add Props</label></a></td></tr>
-					<tr><td><a id="arrangeDancers"><label>Arrange Dancers</label></a></td></tr>
+					<tr><td><a id="editStage" href="#chooseStage" data-toggle="modal" class="tool" data-toggle="tooltip" title="Change the stage" data-placement="right"><label>Edit Stage</label></a></td></tr>
+					<tr><td><a id="addDancers" href="#addDancersModal" data-toggle="modal" class="tool" data-toggle="tooltip" title="Add dancer objects to the stage" data-placement="right"><label>Add Dancers</label></a></td></tr>
+					<tr class="last"><td><a id="addProps" href="#choosePropModal" data-toggle="modal" class="tool" data-toggle="tooltip" title="Add prop objects to the stage" data-placement="right"><label>Add Props</label></a></td></tr>
+					<tr><td><a id="arrangeDancers" class="tool" data-toggle="tooltip" title="Arrange dancers on stages in template formations" data-placement="right"><label>Arrange Dancers</label></a></td></tr>
 					<!-- <div id="comments"><label id="commentsLabel">Comments</label><textarea class="input-small"></textarea></div> -->
 					</table></div>
 					<div class="labelContainer">
@@ -57,7 +57,7 @@
 					</div>
 					<table id="toolsTable">
 						<tr><td>
-						<a id="straightPathTool" class="toolButton" onclick="drawPathPrompt()"><img src="img/straight_arrow.png" class="img-tool"/><label class="inline"> Draw Arrow</label></a></td><tr>
+						<a id="straightPathTool" class="toolButton tool" onclick="drawPathPrompt()" data-toggle="tooltip" title="Draw arrows on the stage" data-placement="right"><img src="img/straight_arrow.png" class="img-tool"/><label class="inline"> Draw Arrow</label></a></td><tr>
 					</table>
 					
 				</div><!-- end of sidebar -->
@@ -85,7 +85,7 @@
 	<div id="chooseStage" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="chooseStageLabel" aria-hidden="false" data-backdrop="static">
 	  <div class="modal-header">
 	    <button type="button" class="close hidden" data-dismiss="modal" aria-hidden="false" style="display:none"><i class="icon-remove"></i></button>
-	    <h4 id="chooseStageLabel">Select a stage</h4>
+	    <h4 id="chooseStageLabel">Select a stage to begin.</h4>
 	  </div>
 	  <div class="modal-body">
 	    <!-- <button id="stage1" class="btn">Stage 1</button> -->
