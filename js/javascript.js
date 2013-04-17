@@ -395,9 +395,11 @@ function closeAddDancersDialog() {
 function disableDraggableObjects(foo){
 	if(foo){
 		$('.added').draggable('disable').css('pointer-events', 'none');
+		$('.added').resizable('disable').css('pointer-events', 'none');
 	}
 	else{
 		$('.added').draggable('enable').css('pointer-events', 'auto');
+		$('.added').resizable('enable').css('pointer-events', 'none');
 	}
 }
 
