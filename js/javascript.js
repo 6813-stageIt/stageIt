@@ -1,5 +1,6 @@
 var dancerCounter=0; //used to add id to dancers
 var propCounter=0;
+var formationCounter=1;
 var arrowstartX = 0;
 var arrowstartY=0;
 var arrowendX = 0;
@@ -21,7 +22,19 @@ $("#delete-container").droppable({
 	}
 });
 
-$('#newFormation').click( function(){
+$('#projectName').click(function(){
+	bootbox.prompt("Enter a name for the formation", function(result){
+		if(result!=null){
+			$('#projectName').text(result);
+			$('#formation'+formationCounter).find('label').text(result);
+		}
+	});
+});
+
+function clearCanvas(clearDancers){
+	if(clearDancers){
+		$('div.added').remove();
+	}
 	var path_canvas = document.getElementById('arrow-canvas');
 	var path_context = path_canvas.getContext('2d');
 	path_context.clearRect(0, 0, path_canvas.width, path_canvas.height);
@@ -29,32 +42,51 @@ $('#newFormation').click( function(){
 	listOfPaths=[];
 	undoStack=[];
 	redoStack=[];
-	//TODO: insert save the previous formation here
+	createNewFormation();
+}
+
+function createNewFormation(){
+	formationCounter++;
+	var newRow = $('<tr><td class="current" id="formation'+formationCounter+'"><a><label>Untitled Formation '+formationCounter
+	+'</label></a></td></tr>');
+	$('table#formations').find('*').removeClass("current");
+	newRow.appendTo($('#formations tbody'));
+	$('#projectName').text("Untitled Formation "+formationCounter);
+}
+
+$('#newFormation').click( function(){
 	if($('div.added').length>0){
-		bootbox.dialog("Would you like to keep the dancers on the stage in the next formation?", [{
+		bootbox.dialog("Would you like to keep the dancers on the stage in the next formation?", 
+			[
+			{
 		    "label" : "Yes",
 		    "class" : "btn-primary",
 		    "callback": function() {
-		        $('div.added').remove();
+		        clearCanvas(true);
 		    }
 		}, {
 		    "label" : "No",
 		    "class": "btn",
 		    "callback": function() {
-		        // Example.show("uh oh, look out!");
+		        clearCanvas(false);
 		    }
-		}
-		]);
-
-
-	// 	bootbox.prompt("Would you like to keep the dancers on the stage?", function(result){
-	// 	if(!result){
-	// 		$('div.added').remove();
-	// 	}
-	// });
+		},{
+			"label":"Cancel",
+			"class":"btn"
+		}]);
+	// var formationNum = $('#formations').length+1;
+	// $('<tr><td class="current" id="formation'formationNum+'"><a><label>Untitled Formation '+formationNum
+	// 	+'</label></a></td></tr>');
+	}
+	else{
+		bootbox.confirm("Create a new formation?", function(result){
+			if(result){
+				clearCanvas(true);
+			}
+		})
 	}
 
-})
+});
 $('#undo').click( function(){
 	console.log("undo");
 	
