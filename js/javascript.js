@@ -43,6 +43,7 @@ function clearCanvas(clearDancers){
 	var path_canvas = document.getElementById('arrow-canvas');
 	var path_context = path_canvas.getContext('2d');
 	path_context.clearRect(0, 0, path_canvas.width, path_canvas.height);
+	$('#notes > textarea').val("");
 	
 	listOfPaths=[];
 	undoStack=[];
