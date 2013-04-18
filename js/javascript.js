@@ -23,7 +23,7 @@ $("#delete-container").droppable({
 		undoStack.push(tempDrag);
 		redoStack=[];
 		tempDrag=new Object();
-		console.log(ui);
+		//console.log(ui);
 	}
 });
 
@@ -93,26 +93,26 @@ $('#newFormation').click( function(){
 
 });
 $('#undo').click( function(){
-	console.log("undo");
+	//console.log("undo");
 	
 	if(undoStack.length==0){
 		//disable undo stack
 	}
 	else{
 		var action = undoStack.pop();
-		console.log(action.undoType);
+		//console.log(action.undoType);
 		switch(action.undoType){
 			case "arrow": //means arrow
 				action.object=listOfPaths.pop();
 				redrawPaths();
 				break;
 			case "add":
-				console.log(action.object);
+				//console.log(action.object);
 				action.object.remove();
 				
 				break;
 			case "delete_object":
-				console.log(action);
+				//console.log(action);
 				div = action.object.helper;
 				div.css({
 					'position':'absolute',
@@ -139,7 +139,7 @@ $('#undo').click( function(){
 								start: function(e, ui) {
 									$(ui.helper).width($(ui.helper).width()+10);
 									$(ui.helper).height($(ui.helper).height()+10);
-									console.log(ui);
+									//console.log(ui);
 									beginDrag(ui);
 								},
 								stop: function(e, ui) {
@@ -150,13 +150,13 @@ $('#undo').click( function(){
 							});
 					//end quickfix
 				$("#canvasWrapper").append(div);
-				console.log("delete has been undone");
+				//console.log("delete has been undone");
 				break;
 			case "delete_arrow":
 				alert("this action has not be implemented, sorry");
 				break;
 			case "drag":
-				console.log("about to undo drag");
+				//console.log("about to undo drag");
 				//action.object.helper.offsetTop=action.oldPos.top;
 				//action.object.helper.offsetLeft=action.oldPos.left;
 				div = action.object.helper;
@@ -167,10 +167,10 @@ $('#undo').click( function(){
 				});
 				
 				//$("#canvasWrapper").append(action.object.helper);
-				console.log(action.object);
+				//console.log(action.object);
 				break;
 			case "resize":
-				console.log("about to undo resize");
+				//console.log("about to undo resize");
 				div = action.object.helper;
 				div.css({
 					'position':'absolute',
@@ -183,14 +183,14 @@ $('#undo').click( function(){
 	}	
 })
 $('#redo').click( function(){
-	console.log("redo");
+	//console.log("redo");
 	
 	if(redoStack.length==0){
 		//disable redoButton
 	}
 	else{
 		var action = redoStack.pop();
-		console.log(action.undoType);
+		//console.log(action.undoType);
 		switch(action.undoType){
 			case "arrow": //means arrow
 				listOfPaths.push(action.object);
@@ -199,7 +199,7 @@ $('#redo').click( function(){
 			case "add":
 				//action.object.remove();
 				div = action.object;
-				console.log(action);
+				//console.log(action);
 				//this is QUICKFIX, TODO:fix this image
 						div.css({
 							'width':action.size.width,
@@ -223,7 +223,7 @@ $('#redo').click( function(){
 								start: function(e, ui) {
 									$(ui.helper).width($(ui.helper).width()+10);
 									$(ui.helper).height($(ui.helper).height()+10);
-									console.log(ui);
+									//console.log(ui);
 									beginDrag(ui);
 								},
 								stop: function(e, ui) {
@@ -234,18 +234,18 @@ $('#redo').click( function(){
 							});
 					//end quickfix
 				$("#canvasWrapper").append(div);
-				console.log(action);
-				console.log("add has been redone");
+				//console.log(action);
+				//console.log("add has been redone");
 				break;
 			case "delete_object":
-				console.log(action.object);
+				//console.log(action.object);
 				action.object.helper.remove();
 				break;
 			case "delete_arrow":
 				alert("this action has not be implemented, sorry");
 				break;
 			case "drag":
-				console.log("about to undo drag");
+				//console.log("about to undo drag");
 				//action.object.helper.offsetTop=action.oldPos.top;
 				//action.object.helper.offsetLeft=action.oldPos.left;
 				div = action.object.helper;
@@ -256,10 +256,10 @@ $('#redo').click( function(){
 				});
 				
 				//$("#canvasWrapper").append(action.object.helper);
-				console.log(action.object);
+				//console.log(action.object);
 				break;
 			case "resize":
-				console.log("about to undo resize");
+				//console.log("about to undo resize");
 				div = action.object.helper;
 				div.css({
 					'position':'absolute',
@@ -314,7 +314,7 @@ function drawPathPrompt(){
 		var prompt = "<div id=\"pathNotif\"> Draw an arrow by clicking and dragging on the stage<br> <button id=\"endPath\" onclick=\"endPath()\"> Cancel</div>"
 		//$('#canvasWrapper').append(prmopt);
 		$(prompt).appendTo("#canvasWrapper").addClass('animated fadeIn');
-		//console.log(prompt);
+		////console.log(prompt);
 		document.getElementById('straightPathTool').disabled=true;
 		drawPath=true;
 		disableDraggableObjects(true);
@@ -325,7 +325,7 @@ function endPath(){
 	//(elem=document.getElementById("cancelPath")).parentNode.removeChild(elem); removed whole div, not needed
 	document.getElementById('straightPathTool').disabled=false;
 	drawPath=false;
-	//console.log("cancel path");
+	////console.log("cancel path");
 	disableDraggableObjects(false);
 }
 function redrawPaths(){
@@ -337,10 +337,10 @@ function redrawPaths(){
 		for(var i=0; i<listOfPaths.length; i++){
 			drawArrow(listOfPaths[i]);
 		}
-		//console.log(listOfPaths);
+		////console.log(listOfPaths);
 }
 $('#arrow-canvas').mousedown(function(e){
-	//console.log('mousedown');
+	////console.log('mousedown');
 	if(drawPath){
 		var x;
 		var y;
@@ -355,7 +355,7 @@ $('#arrow-canvas').mousedown(function(e){
 	}
 })
 $('#arrow-canvas').mousemove( function(e){
-	////console.log('mousemove' + e.pageX+' ' +e.pageY);
+	//////console.log('mousemove' + e.pageX+' ' +e.pageY);
 	if(startDrawPath&&drawPath){
 			redrawPaths();
 		move=new Object();
@@ -384,8 +384,8 @@ $('body').mouseup( function(e){
 		  y = e.pageY-offset.top;
 		}
 		var canvas = document.getElementById('arrow-canvas');
-		//console.log('cheight= '+canvas.height);
-		//console.log('cwidth= '+canvas.width);
+		////console.log('cheight= '+canvas.height);
+		////console.log('cwidth= '+canvas.width);
 		if(x>0&&y>0&&x<canvas.width&&y<canvas.height){
 			move.startx = arrowstartX;
 			move.starty = arrowstartY;
@@ -394,7 +394,7 @@ $('body').mouseup( function(e){
 			move.type="straight";
 			drawArrow(move);
 			listOfPaths.push(move);
-			console.log('path pushed');
+			//console.log('path pushed');
 			move.undoType="arrow";
 			undoStack.push(move);
 			redoStack=[];
@@ -402,9 +402,9 @@ $('body').mouseup( function(e){
 		}
 		else{
 			endPath();
-			//console.log("path canceled");	
-			//console.log("e.pageX= "+e.pageX);
-			//console.log("e.pageY= "+e.pageY);
+			////console.log("path canceled");	
+			////console.log("e.pageX= "+e.pageX);
+			////console.log("e.pageY= "+e.pageY);
 		}
 		drawPath=false;
 		startDrawPath=false;
@@ -433,17 +433,17 @@ $('#chooseStage').on('hidden', function(){
 	$('#stages li').removeClass('stage-selected');
 	$('#stageHelper').css("display", "none");
 	$('.hidden').css("display", "inline");
-	//console.log("#chooseStage");
+	////console.log("#chooseStage");
 });
 
 $('#choosePropModal').on('hidden', function(){
 	$('#props li').removeClass('prop-selected');
 	$('#propHelper').css("display", "none");
-	//console.log("#choosePropModal");
+	////console.log("#choosePropModal");
 });
 
 $('#chooseArrangementModal').on('hidden', function(){
-	console.log("#chooseArrangmentModal closed");
+	//console.log("#chooseArrangmentModal closed");
 });
 
 //close stage modal dialog
@@ -517,8 +517,8 @@ function drawArrow(arrow){
 			endx=arrow.endx-offset.left;
 							
 			var canvas = document.getElementById('arrow-canvas');
-					//console.log('awesomesauce');
-					//console.log(startx+endy);
+					////console.log('awesomesauce');
+					////console.log(startx+endy);
 						var context = canvas.getContext('2d');
 					
 					ratio=10;
@@ -548,11 +548,11 @@ function addDancers(){
 	}
 	else{
 		var shape = $('.dancer-selected').attr('id');
-		//console.log(shape);
+		////console.log(shape);
 		var color = $('input[name=color]:radio:checked').attr('value');
-		//console.log(color);
+		////console.log(color);
 		var numDancers = $("#spinner_numDancers").val();
-		//console.log(numDancers);
+		////console.log(numDancers);
 		closeAddDancersDialog();	
 		var x = 30;
 		var y = 10;
@@ -602,7 +602,7 @@ function addObjectAt(div,posX,posY,newClass){
             start: function(e, ui) {
 		        $(ui.helper).width($(ui.helper).width()+10);
 		        $(ui.helper).height($(ui.helper).height()+10);
-				console.log(ui);
+				//console.log(ui);
 				beginDrag(ui);
 		    },
 		    stop: function(e, ui) {
@@ -634,7 +634,7 @@ function addObjectAt(div,posX,posY,newClass){
 	action.size=size;
 	undoStack.push(action);
 	redoStack=[];
-	console.log(action);
+	//console.log(action);
 }
 function closeAddDancersDialog() {
 	$('#addDancersModal').modal('hide'); 
@@ -649,20 +649,20 @@ function disableDraggableObjects(foo){
 	}
 	else{
 		$('#arrow-canvas').css('pointer-events','none');
-		// //console.log('everything restored');
+		// ////console.log('everything restored');
 	}
 }
 
 //function called when ok button is clicked on props modal
 function addProp() {
 	//check if there is something selected
-	//console.log(".prop-selected="+$('.prop-selected'));
+	////console.log(".prop-selected="+$('.prop-selected'));
 	if(!$('.prop-selected').length > 0){
 		$('#propHelper').css("display", "inline");
 	}
 	else{
 		var item = $('.prop-selected').attr('id');
-		//console.log(item);
+		////console.log(item);
 
 		closePropDialog();
 		var x = 30;
@@ -670,13 +670,13 @@ function addProp() {
 
 		var id="prop-"+propCounter;
 		propCounter++;
-		//console.log("id="+id);
+		////console.log("id="+id);
 		var wrap = $('<div></div>').attr('id', id); //id's need to be unique
 		var img = $('<img>').attr('src', 'img/'+item+'.png');
 		wrap.append(img);
-		//console.log(wrap);
+		////console.log(wrap);
 		addObjectAt(wrap, x,y, 'propImage');
-		//console.log("prop has been added?")
+		////console.log("prop has been added?")
 	}	 
 	
 }
@@ -685,8 +685,8 @@ function beginDrag(ui){
 	//also the beginning of the delete undo path
 	tempDrag.undoType="drag";
 	tempDrag.oldPos =ui.position;
-	console.log(ui);
-	console.log("beginDrag");
+	//console.log(ui);
+	//console.log("beginDrag");
 	tempDrag.object=ui;
 }
 function endDrag(ui){
@@ -695,13 +695,13 @@ function endDrag(ui){
 	undoStack.push(tempDrag);
 	redoStack=[];
 	tempDrag=new Object();
-	console.log("endDrag");
-	//console.log(undoStack[undoStack.length-1]);
+	//console.log("endDrag");
+	////console.log(undoStack[undoStack.length-1]);
 }
 var tempResize=new Object();
 function beginResize(ui){
 	tempResize.undoType="resize";
-	console.log(ui);	
+	//console.log(ui);	
 	tempResize.oldSize =ui.originalSize;
 }
 function endResize(ui){
@@ -710,7 +710,7 @@ function endResize(ui){
 	undoStack.push(tempResize);
 	redoStack=[];
 	tempResize=new Object();
-	//console.log(undoStack[undoStack.length-1]);
+	////console.log(undoStack[undoStack.length-1]);
 }
 
 function closePropDialog() {
