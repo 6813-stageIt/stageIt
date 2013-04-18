@@ -43,6 +43,7 @@ function clearCanvas(clearDancers){
 	var path_canvas = document.getElementById('arrow-canvas');
 	var path_context = path_canvas.getContext('2d');
 	path_context.clearRect(0, 0, path_canvas.width, path_canvas.height);
+	$('#notes > textarea').val("");
 	
 	listOfPaths=[];
 	undoStack=[];
@@ -559,7 +560,7 @@ function addDancers(){
 		for(var i=0; i < numDancers; i++){
 			var id="dancer-"+dancerCounter;
 			dancerCounter++;
-			var wrap = $('<div></div>').attr('id', id);
+			var wrap = $('<div><div class="text"></div></div>').attr('id', id);
 			var img = $('<img>').attr('src', 'img/'+shape+'-'+color+'.png');
 			wrap.append(img);
 			// wrap.css('background','transparent url('+url+')');
@@ -615,7 +616,7 @@ function addObjectAt(div,posX,posY,newClass){
 	    div.dblclick(function(){
 	    	var newText = prompt("Enter text to display in element:");
 				if(newText != null){
-					$(this).text(newText);
+					$(this).find('.text').text(newText);
 				}
 			});
 	}
@@ -725,5 +726,5 @@ function arrangeDancers(){
 
 
 function closeArrangeDialog() {
-	$('#chooseArrangementModal').modal('hide'); 
+	$('#arrangeDancersModal').modal('hide'); 
 };
