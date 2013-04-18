@@ -23,9 +23,10 @@
 		</div>
 		<div id="wrapper">
 			<div id="subHeader">
-				<div id="pageTitle"><h1><a id="projectName" class="tool" data-toggle="tooltip" title="Double click to change">Untitled Formation</a></h1></div>
+				<div id="pageTitle"><h1><a id="projectName" class="tool" data-toggle="tooltip" title="Double click to change">Untitled Formation 1</a></h1></div>
 				<ul id="pageActionsNav">
-					<li><a id="newFormation" class="enabled-button"><img src="img/plus_blue.png" class="img-nav"/> New</a></li>
+					<li><a id="newFormation" class="enabled-button tool" data-toggle="tooltip" title="Create a new formation"><img src="img/plus_blue.png" class="img-nav"/> New</a></li>
+
 					<li><a id="undo" class="enabled-button"><img src="img/arrow_undo.png" class="img-nav"/> Undo</a></li>
 					<li><a id="redo" class="enabled-button"><img src="img/arrow_redo.png" class="img-nav" /> Redo</a></li>
 					<li><a id="save" class="enabled-button"><img src="img/save.png" class="img-nav"/> Save</a></li>
@@ -49,7 +50,7 @@
 					</div>
 					<div id="formations-container">
 					<table id="formations">
-						<tr><td><a>Formation 1</a></td></tr>
+						<tr><td class="current" id="formation1"><a><label>Untitled Formation 1</label></a></td></tr>
 
 					</table>
 					</div>
@@ -148,14 +149,11 @@
 	  </div>
 	  <div class="modal-body">
 	    <ul id="props" class="option" data-option="prop">
-		    <li id="prop-door1" class="img-prop1"><img  alt="prop1" src="img/prop-door1.png" class="img-prop" width="200" height="100"/></li>
-		    <li id="prop-table1" class="img-prop1"><img  alt="prop2" src="img/prop-table1.png" class="img-prop" width="200" height="100"/></li>
-		    <li id="prop-table2" class="img-prop1"><img  alt="prop3" src="img/prop-table2.png" class="img-prop" width="200" height="100"/></li>
-		    <li id="prop-couch1" class="img-prop1"><img  alt="prop4" src="img/prop-couch1.png" class="img-prop" width="200" height="100"/></li>
-			<li id="prop-couch2" class="img-prop1"><img  alt="prop1" src="img/prop-couch2.png" class="img-prop" width="200" height="100"/></li>
-		    <li id="prop-chair1" class="img-prop1"><img  alt="prop2" src="img/prop-chair1.png" class="img-prop" width="200" height="100"/></li>
-		    <li id="prop-stool1" class="img-prop1"><img  alt="prop3" src="img/prop-stool1.png" class="img-prop" width="200" height="100"/></li>
-
+		    <li id="prop-castChair" class="prop"><img  alt="prop4" src="img/prop-castChair.png" class="img-prop"/></li>
+			<li id="prop-ball" class="prop"><img  alt="prop1" src="img/prop-ball.png" class="img-prop"/></li>
+		    <li id="prop-flag" class="prop"><img  alt="prop2" src="img/prop-flag.png" class="img-prop"/></li>
+		    <li id="prop-boombox" class="prop"><img  alt="prop3" src="img/prop-boombox.png" class="img-prop"/></li>
+		    <li id="prop-box" class="prop"><img  alt="prop3" src="img/prop-box.png" class="img-prop"/></li>
 		</ul>
 	  </div>
 	   <div class="modal-footer">
@@ -187,7 +185,7 @@
 					<input type="radio" name="arrangement" value="twoHorizLines">Two Horizontal Lines<br>
 					<input type="radio" name="arrangement" value="oneVertLine">One Vertical Line<br>
 					<input type="radio" name="arrangement" value="twoVertLines">Two Vertical Lines<br>
-					<input type="radio" name="arrangement" value="dimond">Dimond<br>
+					<input type="radio" name="arrangement" value="diamond">Diamond<br>
 					<input type="radio" name="arrangement" value="circle">Circle<br>
 					<input type="radio" name="arrangement" value="V">V-shaped<br>
 					<input type="radio" name="arrangement" value="X">X-shaped<br>

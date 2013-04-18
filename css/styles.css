@@ -17,10 +17,11 @@ a, a:visited{
 	text-decoration: none; 
 	outline: none;
 	color:black;
-	cursor:point;
+	cursor:pointer;
 }
 a:hover, a:visited{
 	text-decoration: none;
+	cursor: pointer;
 }
 
 
@@ -287,6 +288,10 @@ table#tasks tr, table#tasks td{
 table#toolsTable tr, table#toolsTable td{
 	height:30px;
 	line-height: 30px;
+}
+
+td.current{
+	background-color: #e5e2e2;
 }
 
 
