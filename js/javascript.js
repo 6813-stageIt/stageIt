@@ -515,22 +515,7 @@ function drawArrow(arrow){
 			startx=arrow.startx-offset.left;
 			endy=arrow.endy-offset.top;
 			endx=arrow.endx-offset.left;
-			var dx = 0;
-			var dy = 0;
-			var dz = 0;
-			if(startx-endx>0)
-				dx = -1;
-			else
-				dx= 1;
-			if(starty-endy>0)
-				dy = -1;
-			else
-				dy = 1;
-			if (startx==endx)
-				dz = 1;
-			else if(starty==endy)
-				dz = -1;
-				
+							
 			var canvas = document.getElementById('arrow-canvas');
 					//console.log('awesomesauce');
 					//console.log(startx+endy);
