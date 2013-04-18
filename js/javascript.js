@@ -62,13 +62,13 @@ $('#newFormation').click( function(){
 		    "label" : "Yes",
 		    "class" : "btn-primary",
 		    "callback": function() {
-		        clearCanvas(true);
+		        clearCanvas(false);
 		    }
 		}, {
 		    "label" : "No",
 		    "class": "btn",
 		    "callback": function() {
-		        clearCanvas(false);
+		        clearCanvas(true);
 		    }
 		},{
 			"label":"Cancel",
