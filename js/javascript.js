@@ -725,5 +725,5 @@ function arrangeDancers(){
 
 
 function closeArrangeDialog() {
-	$('#chooseArrangementModal').modal('hide'); 
+	$('#arrangeDancersModal').modal('hide'); 
 };
