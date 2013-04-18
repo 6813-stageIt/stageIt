@@ -213,8 +213,8 @@
 	var stageHasBeenPicked = false;
 	$(document).ready(function(){
 				if(!debug){
-		$('#chooseStage').modal();
-		}
+					$('#chooseStage').modal();
+				}	
 		$('.tool').tooltip();
 		var canvas = document.getElementById('arrow-canvas');
 		// Make it visually fill the positioned parent
@@ -223,9 +223,8 @@
 		// ...then set the internal size to match
 		canvas.width  = canvas.offsetWidth;
 		canvas.height = canvas.offsetHeight;
-		var canvas = document.getElementById('canvas-stage');
 		
-		// ...then set the internal size to match
+		var canvas = document.getElementById('canvas-stage');
 		canvas.width  = canvas.offsetWidth-100;
 		canvas.height = canvas.offsetHeight-100;
 	});

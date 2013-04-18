@@ -16,8 +16,13 @@ $("#delete-container").droppable({
 	hoverClass: "delete-hover",
 	tolerance: "touch",
 	drop: function (event, ui){
+		
 		$(ui.draggable).remove();
-		//console.log(ui);
+		tempDrag.undoType="delete_object";
+		undoStack.push(tempDrag);
+		redoStack=[];
+		tempDrag=new Object();
+		console.log(ui);
 	}
 });
 
@@ -66,42 +71,173 @@ $('#undo').click( function(){
 		console.log(action.undoType);
 		switch(action.undoType){
 			case "arrow": //means arrow
-				listOfPaths.pop();
+				action.object=listOfPaths.pop();
 				redrawPaths();
 				break;
-			case "dancer":
-				action.dancer.remove();
-				break;
-			case "prop":
-				action.prop.remove();
-				break;
-			case "delete_dancer":
+			case "add":
+				console.log(action.object);
+				action.object.remove();
 				
+				break;
+			case "delete_object":
+				console.log(action);
+				div = action.object.helper;
+				div.css({
+					'position':'absolute',
+					'top':action.oldPos.top,
+					'left':action.oldPos.left,
+					
+				});
+				//this is QUICKFIX, TODO:fix this image
+						div.resizable({
+						  aspectRatio: 1 / 1,
+						  maxWidth: 140,
+						  addClasses: false,
+						  start:function(e,ui){ 
+							beginResize(ui);
+						  },
+						  stop:function(e,ui){
+							endResize(ui);
+						  },
+						});
+						div.draggable({
+								zIndex:100,
+								containment:'#canvasWrapper',
+								grid: [ 20,20 ],
+								start: function(e, ui) {
+									$(ui.helper).width($(ui.helper).width()+10);
+									$(ui.helper).height($(ui.helper).height()+10);
+									console.log(ui);
+									beginDrag(ui);
+								},
+								stop: function(e, ui) {
+									$(ui.helper).width($(ui.helper).width()-10);
+									$(ui.helper).height($(ui.helper).height()-10);
+									endDrag(ui);
+								}
+							});
+					//end quickfix
+				$("#canvasWrapper").append(div);
+				console.log("delete has been undone");
 				break;
 			case "delete_arrow":
-				
+				alert("this action has not be implemented, sorry");
 				break;
 			case "drag":
-			console.log("about to remove undo");
-				action.newDancer.helper.remove();
-				console.log("removed");
-				console.log(action.dancer);
-				console.log(action.newDancer.helper);
-				console.log(action.pos.left);
-				action.newDancer.helper.offsetTop=action.pos.top;
-				action.newDancer.helper.offsetLeft=action.pos.left;
-				div = action.newDancer.helper;
-				addObjectAt(div, action.pos.left, action.pos.top, 'shape');
+				console.log("about to undo drag");
+				//action.object.helper.offsetTop=action.oldPos.top;
+				//action.object.helper.offsetLeft=action.oldPos.left;
+				div = action.object.helper;
+				div.css({
+					'position':'absolute',
+					'top':action.oldPos.top,
+					'left':action.oldPos.left,
+				});
 				
-				console.log(action.newDancer.helper.offsetLeft);
-				
-				$("#canvasWrapper").append(action.newDancer.helper);
-				console.log(action.newDancer);
+				//$("#canvasWrapper").append(action.object.helper);
+				console.log(action.object);
+				break;
+			case "resize":
+				console.log("about to undo resize");
+				div = action.object.helper;
+				div.css({
+					'position':'absolute',
+					'width':action.oldSize.width,
+					'height':action.oldSize.height,
+				});
 				break;
 		}
-	}
+		redoStack.push(action);
+	}	
+})
+$('#redo').click( function(){
+	console.log("redo");
 	
-		
+	if(redoStack.length==0){
+		//disable redoButton
+	}
+	else{
+		var action = redoStack.pop();
+		console.log(action.undoType);
+		switch(action.undoType){
+			case "arrow": //means arrow
+				listOfPaths.push(action.object);
+				redrawPaths();
+				break;
+			case "add":
+				//action.object.remove();
+				div = action.object;
+				console.log(action);
+				//this is QUICKFIX, TODO:fix this image
+						div.css({
+							'width':action.size.width,
+							'height':action.size.height,
+						});
+						div.resizable({
+						  aspectRatio: 1 / 1,
+						  maxWidth: 140,
+						  addClasses: false,
+						  start:function(e,ui){ 
+							beginResize(ui);
+						  },
+						  stop:function(e,ui){
+							endResize(ui);
+						  },
+						});
+						div.draggable({
+								zIndex:100,
+								containment:'#canvasWrapper',
+								grid: [ 20,20 ],
+								start: function(e, ui) {
+									$(ui.helper).width($(ui.helper).width()+10);
+									$(ui.helper).height($(ui.helper).height()+10);
+									console.log(ui);
+									beginDrag(ui);
+								},
+								stop: function(e, ui) {
+									$(ui.helper).width($(ui.helper).width()-10);
+									$(ui.helper).height($(ui.helper).height()-10);
+									endDrag(ui);
+								}
+							});
+					//end quickfix
+				$("#canvasWrapper").append(div);
+				console.log(action);
+				console.log("add has been redone");
+				break;
+			case "delete_object":
+				console.log(action.object);
+				action.object.helper.remove();
+				break;
+			case "delete_arrow":
+				alert("this action has not be implemented, sorry");
+				break;
+			case "drag":
+				console.log("about to undo drag");
+				//action.object.helper.offsetTop=action.oldPos.top;
+				//action.object.helper.offsetLeft=action.oldPos.left;
+				div = action.object.helper;
+				div.css({
+					'position':'absolute',
+					'top':action.newPos.top,
+					'left':action.newPos.left,
+				});
+				
+				//$("#canvasWrapper").append(action.object.helper);
+				console.log(action.object);
+				break;
+			case "resize":
+				console.log("about to undo resize");
+				div = action.object.helper;
+				div.css({
+					'position':'absolute',
+					'width':action.newSize.width,
+					'height':action.newSize.height,
+				});
+				break;
+		}
+		undoStack.push(action);
+	}	
 })
 $('.option li').click(function(){
 	var option = $(this).parent().attr('data-option');
@@ -229,6 +365,7 @@ $('body').mouseup( function(e){
 			console.log('path pushed');
 			move.undoType="arrow";
 			undoStack.push(move);
+			redoStack=[];
 			endPath();
 		}
 		else{
@@ -433,7 +570,13 @@ function addObjectAt(div,posX,posY,newClass){
 	div.resizable({
       aspectRatio: 1 / 1,
       maxWidth: 140,
-      addClasses: false
+      addClasses: false,
+	  start:function(e,ui){ 
+		beginResize(ui);
+	  },
+	  stop:function(e,ui){
+		endResize(ui);
+	  },
     });
     div.draggable({
             zIndex:100,
@@ -461,16 +604,19 @@ function addObjectAt(div,posX,posY,newClass){
 	}
     $("#canvasWrapper").append(div);
 	action = new Object();
-	if(newClass=="shape"){
-	action.undoType='dancer';
-	action.dancer=div;
-	}
-	else{
-		action.undoType='prop';
-		action.prop = div;
-	}
 	
+	action.object=div;
+	action.undoType="add";
+	position=new Object();
+	position.top=posY;
+	position.left=posX;
+	undoStack.oldPos=position;
+	size=new Object;
+	size.width = div.css('width');
+	size.height = div.css('height');
+	action.size=size;
 	undoStack.push(action);
+	redoStack=[];
 	console.log(action);
 }
 function closeAddDancersDialog() {
@@ -519,18 +665,36 @@ function addProp() {
 }
 var tempDrag=new Object();
 function beginDrag(ui){
+	//also the beginning of the delete undo path
 	tempDrag.undoType="drag";
-	tempDrag.dancer=ui.helper[0];
-	tempDrag.pos =ui.position;
+	tempDrag.oldPos =ui.position;
+	console.log(ui);
+	console.log("beginDrag");
+	tempDrag.object=ui;
 }
 function endDrag(ui){
-	tempDrag.newDancer=ui;
+	tempDrag.object=ui;
+	tempDrag.newPos=ui.position;
 	undoStack.push(tempDrag);
-	console.log(tempDrag);
+	redoStack=[];
 	tempDrag=new Object();
-	console.log(undoStack[undoStack.length-1]);
+	console.log("endDrag");
+	//console.log(undoStack[undoStack.length-1]);
 }
-
+var tempResize=new Object();
+function beginResize(ui){
+	tempResize.undoType="resize";
+	console.log(ui);	
+	tempResize.oldSize =ui.originalSize;
+}
+function endResize(ui){
+	tempResize.object=ui;
+	tempResize.newSize=ui.size;
+	undoStack.push(tempResize);
+	redoStack=[];
+	tempResize=new Object();
+	//console.log(undoStack[undoStack.length-1]);
+}
 
 function closePropDialog() {
 	$('#choosePropModal').modal('hide'); 
