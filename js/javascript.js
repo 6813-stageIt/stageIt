@@ -474,6 +474,18 @@ function drawStageShape(stage){
 		case 'semicircle':
 			drawSemiCircleStage();
 			break;
+		case 'circle':
+			drawCircleStage();
+			break;
+		case 'oval':
+			drawOvalStage();
+			break;
+		case 'trapezoidSmallFront':
+			drawTrapezoidSmallFrontStage();
+			break;
+		case 'trapezoidBigFront':
+			drawTrapezoidBigFrontStage();
+			break;
 	}
 }
 
@@ -504,8 +516,90 @@ function drawSemiCircleStage(){
 	ctxt.fillStyle = 'white';
 	ctxt.fill();
 	ctxt.strokeStyle = 'gray';
-	ctxt.stroke();
-	
+	ctxt.stroke();	
+}
+function drawCircleStage(){
+	var canvas = document.getElementById('canvas-stage');
+	var ctxt = canvas.getContext('2d');
+	ctxt.clearRect(0, 0, canvas.width, canvas.height);
+	ctxt.beginPath();
+	var x = canvas.width/2;
+	var y = canvas.height/2;
+	var radius = canvas.width/4;
+	var startAngle = 0; endAngle = Math.PI*2;
+	ctxt.arc(x,y,radius, startAngle,endAngle);
+	ctxt.closePath();
+	ctxt.lineWidth = 1;
+	ctxt.fillStyle = 'white';
+	ctxt.fill();
+	ctxt.strokeStyle = 'gray';
+	ctxt.stroke();	
+	//TODO: why is it an oval..?
+}
+function drawOvalStage(){
+	var canvas = document.getElementById('canvas-stage');
+	var ctxt = canvas.getContext('2d');
+	ctxt.clearRect(0, 0, canvas.width, canvas.height);
+	ctxt.beginPath();
+	var centerX = canvas.width/4;
+	var centerY = canvas.height/2;
+	var radius = canvas.width/4;
+	ctxt.scale(2,1);
+	var startAngle = 0; endAngle = Math.PI*2;
+	ctxt.arc(centerX, centerY, radius, startAngle, endAngle, false);
+	ctxt.lineWidth = 1;
+	ctxt.fillStyle = 'white';
+	ctxt.fill();
+	ctxt.strokeStyle = 'gray';
+	ctxt.stroke();	
+}
+function drawTrapezoidSmallFrontStage(){
+	var canvas = document.getElementById('canvas-stage');
+	var ctxt = canvas.getContext('2d');
+	ctxt.clearRect(0, 0, canvas.width, canvas.height);
+	ctxt.beginPath();
+
+	var base0 = canvas.width;
+	var base1 = 0;
+	var top0 = canvas.width-100;
+	var top1 = 100;
+	var height = canvas.height-25;
+
+  	ctxt.moveTo(top0,height);
+  	ctxt.lineTo(top1,height);
+  	ctxt.lineTo(base1,0);
+  	ctxt.lineTo(base0,0);
+  	ctxt.closePath();
+
+	ctxt.lineWidth = 1;
+	ctxt.fillStyle = 'white';
+	ctxt.fill();
+	ctxt.strokeStyle = 'gray';
+	ctxt.stroke(); 
+}
+function drawTrapezoidBigFrontStage(){
+	var canvas = document.getElementById('canvas-stage');
+	var ctxt = canvas.getContext('2d');
+	ctxt.clearRect(0, 0, canvas.width, canvas.height);
+	ctxt.beginPath();
+
+	var base0 = canvas.width;
+	var base1 = 0;
+	var top0 = canvas.width-100;
+	var top1 = 100;
+	var height = canvas.height-25;
+
+  	ctxt.moveTo(base0,height);
+  	ctxt.lineTo(base1,height);
+  	ctxt.lineTo(top1,0);
+  	ctxt.lineTo(top0,0);
+  	ctxt.closePath();
+
+	ctxt.lineWidth = 1;
+	ctxt.fillStyle = 'white';
+	ctxt.fill();
+	ctxt.strokeStyle = 'gray';
+	ctxt.stroke(); 
 }
 function drawArrow(arrow){
 		//stroke method of arrow
