@@ -527,7 +527,7 @@ function drawCircleStage(){
 	var y = canvas.height/2;
 	var radius = canvas.width/4;
 	var startAngle = 0; endAngle = Math.PI*2;
-	ctxt.arc(x,y,radius, startAngle,endAngle);
+	ctxt.arc(x,y,radius, startAngle,endAngle, false);
 	ctxt.closePath();
 	ctxt.lineWidth = 1;
 	ctxt.fillStyle = 'white';
@@ -540,6 +540,7 @@ function drawOvalStage(){
 	var canvas = document.getElementById('canvas-stage');
 	var ctxt = canvas.getContext('2d');
 	ctxt.clearRect(0, 0, canvas.width, canvas.height);
+	ctxt.save();
 	ctxt.beginPath();
 	var centerX = canvas.width/4;
 	var centerY = canvas.height/2;
@@ -552,6 +553,7 @@ function drawOvalStage(){
 	ctxt.fill();
 	ctxt.strokeStyle = 'gray';
 	ctxt.stroke();	
+	ctxt.restore();
 }
 function drawTrapezoidSmallFrontStage(){
 	var canvas = document.getElementById('canvas-stage');
@@ -822,3 +824,4 @@ function arrangeDancers(){
 function closeArrangeDialog() {
 	$('#arrangeDancersModal').modal('hide'); 
 };
+
