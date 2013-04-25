@@ -1,25 +1,30 @@
 var dancerCounter=0; //used to add id to dancers
 var propCounter=0;
 var formationCounter=1;
-var arrowstartX = 0;
+var arrowstartX = 0; //used to keep track of an arrow object beginning and end
 var arrowstartY=0;
 var arrowendX = 0;
 var arrowendY=0;
-var drawPath=false;
+var drawPath=false;	//flag for whenever draw arrow button is pressed
 var startDrawPath=false; 
 var lastCanvasState;
-var listOfPaths=[];
-var undoStack=[];
-var redoStack=[];
+var listOfPaths=[];	//list of current paths on canvas
+var undoStack=[];	//stack of all actions to undo
+var redoStack=[];	//stack of all actions to redo
 
 $("#delete-container").droppable({
 	accept:".added",
 	hoverClass: "delete-hover",
 	tolerance: "touch",
 	drop: function (event, ui){
+		//console.log(ui.helper.css("height"));
 		
-		$(ui.draggable).remove();
+		var size = new Object();
+		size.height =$(ui.helper).height();
+		size.width = $(ui.helper).width();
+		tempDrag.size = size;
 		tempDrag.undoType="delete_object";
+		$(ui.draggable).remove();
 		undoStack.push(tempDrag);
 		redoStack=[];
 		tempDrag=new Object();
@@ -105,7 +110,7 @@ $('#undo').click( function(){
 		switch(action.undoType){
 			case "arrow": //means arrow
 				action.object=listOfPaths.pop();
-				redrawPaths();
+				redrawPaths();$(ui.draggable).remove();
 				break;
 			case "add":
 				//console.log(action.object);
@@ -115,41 +120,15 @@ $('#undo').click( function(){
 			case "delete_object":
 				//console.log(action);
 				div = action.object.helper;
+				div = reAddObject(div, action);
 				div.css({
 					'position':'absolute',
 					'top':action.oldPos.top,
 					'left':action.oldPos.left,
-					
+					'width':action.size.width-10,
+					'height':action.size.height-10,
 				});
-				//this is QUICKFIX, TODO:fix this image
-						div.resizable({
-						  aspectRatio: 1 / 1,
-						  maxWidth: 140,
-						  addClasses: false,
-						  start:function(e,ui){ 
-							beginResize(ui);
-						  },
-						  stop:function(e,ui){
-							endResize(ui);
-						  },
-						});
-						div.draggable({
-								zIndex:100,
-								containment:'#canvasWrapper',
-								grid: [ 20,20 ],
-								start: function(e, ui) {
-									$(ui.helper).width($(ui.helper).width()+10);
-									$(ui.helper).height($(ui.helper).height()+10);
-									//console.log(ui);
-									beginDrag(ui);
-								},
-								stop: function(e, ui) {
-									$(ui.helper).width($(ui.helper).width()-10);
-									$(ui.helper).height($(ui.helper).height()-10);
-									endDrag(ui);
-								}
-							});
-					//end quickfix
+				console.log(action.size.width-10);
 				$("#canvasWrapper").append(div);
 				//console.log("delete has been undone");
 				break;
@@ -158,8 +137,6 @@ $('#undo').click( function(){
 				break;
 			case "drag":
 				//console.log("about to undo drag");
-				//action.object.helper.offsetTop=action.oldPos.top;
-				//action.object.helper.offsetLeft=action.oldPos.left;
 				div = action.object.helper;
 				div.css({
 					'position':'absolute',
@@ -178,6 +155,10 @@ $('#undo').click( function(){
 					'width':action.oldSize.width,
 					'height':action.oldSize.height,
 				});
+			case "rename":
+				console.log(action.object);
+				action.object.find('.text').text(action.oldName);
+				//action.object[0].innerHTML(action.oldName);
 				break;
 		}
 		redoStack.push(action);
@@ -201,39 +182,13 @@ $('#redo').click( function(){
 				//action.object.remove();
 				div = action.object;
 				//console.log(action);
+				div = reAddObject(div, action);
 				//this is QUICKFIX, TODO:fix this image
 						div.css({
 							'width':action.size.width,
 							'height':action.size.height,
 						});
-						div.resizable({
-						  aspectRatio: 1 / 1,
-						  maxWidth: 140,
-						  addClasses: false,
-						  start:function(e,ui){ 
-							beginResize(ui);
-						  },
-						  stop:function(e,ui){
-							endResize(ui);
-						  },
-						});
-						div.draggable({
-								zIndex:100,
-								containment:'#canvasWrapper',
-								grid: [ 20,20 ],
-								start: function(e, ui) {
-									$(ui.helper).width($(ui.helper).width()+10);
-									$(ui.helper).height($(ui.helper).height()+10);
-									//console.log(ui);
-									beginDrag(ui);
-								},
-								stop: function(e, ui) {
-									$(ui.helper).width($(ui.helper).width()-10);
-									$(ui.helper).height($(ui.helper).height()-10);
-									endDrag(ui);
-								}
-							});
-					//end quickfix
+				//end quickfix
 				$("#canvasWrapper").append(div);
 				//console.log(action);
 				//console.log("add has been redone");
@@ -267,6 +222,9 @@ $('#redo').click( function(){
 					'width':action.newSize.width,
 					'height':action.newSize.height,
 				});
+			case "rename":
+				console.log(action.object);
+				action.object.find('.text').text(action.newName);
 				break;
 		}
 		undoStack.push(action);
@@ -334,7 +292,6 @@ function redrawPaths(){
 	var canvas = document.getElementById('arrow-canvas');
 		var context = canvas.getContext('2d');
 		context.clearRect(0, 0, canvas.width, canvas.height);
-		//canvas.drawColor(0, Mode.CLEAR);
 		for(var i=0; i<listOfPaths.length; i++){
 			drawArrow(listOfPaths[i]);
 		}
@@ -392,13 +349,16 @@ $('body').mouseup( function(e){
 			move.starty = arrowstartY;
 			move.endx = e.pageX;
 			move.endy = e.pageY;
-			move.type="straight";
-			drawArrow(move);
-			listOfPaths.push(move);
-			//console.log('path pushed');
-			move.undoType="arrow";
-			undoStack.push(move);
-			redoStack=[];
+			if(Math.abs(move.startx-move.endx)>5&&Math.abs(move.starty-move.endy)>5){
+				move.type="straight";
+				drawArrow(move);
+				listOfPaths.push(move);
+				//console.log('path pushed');
+				move.undoType="arrow";
+				undoStack.push(move);
+				redoStack=[];
+			}else{console.log('not moved');}
+			
 			endPath();
 		}
 		else{
@@ -670,6 +630,55 @@ function addDancers(){
 
 }
 
+function reAddObject(div, action){
+	div.resizable({
+		  aspectRatio: 1 / 1,
+		  maxWidth: 140,
+		  addClasses: false,
+		  start:function(e,ui){ 
+			beginResize(ui);
+		  },
+		  stop:function(e,ui){
+			endResize(ui);
+		  },
+		});
+	div.draggable({
+			zIndex:100,
+			containment:'#canvasWrapper',
+			grid: [ 20,20 ],
+			start: function(e, ui) {
+				$(ui.helper).width($(ui.helper).width()+10);
+				$(ui.helper).height($(ui.helper).height()+10);
+				//console.log(ui);
+				beginDrag(ui);
+			},
+			stop: function(e, ui) {
+				$(ui.helper).width($(ui.helper).width()-10);
+				$(ui.helper).height($(ui.helper).height()-10);
+				endDrag(ui);
+			}
+		});
+	console.log(div);
+	if(div.hasClass("shape")){
+		console.log('newShape');
+		
+	    div.dblclick(function(){
+	    	action = new Object();
+			action.object = $(this);
+			action.oldName = $(this)[0].innerText;
+			console.log("rename");
+	    	var newText = prompt("Enter text to display in element:");
+				if(newText != null){
+					$(this).find('.text').text(newText);
+				}
+			action.newName = newText;
+			action.undoType = "rename";
+			undoStack.push(action);
+			redoStack=[];
+		})
+	}
+	return div;
+}
 function addObjectAt(div,posX,posY,newClass){
 	div.css({
 		'position':'absolute',
@@ -708,11 +717,19 @@ function addObjectAt(div,posX,posY,newClass){
         });
     if(newClass=="shape"){
 	    div.dblclick(function(){
+	    	action = new Object();
+			action.object = $(this);
+			action.oldName = $(this)[0].innerText;
+			console.log("rename");
 	    	var newText = prompt("Enter text to display in element:");
 				if(newText != null){
 					$(this).find('.text').text(newText);
 				}
-			});
+			action.newName = newText;
+			action.undoType = "rename";
+			undoStack.push(action);
+			redoStack=[];
+		})
 	}
     $("#canvasWrapper").append(div);
 	action = new Object();
@@ -726,7 +743,8 @@ function addObjectAt(div,posX,posY,newClass){
 	size=new Object;
 	size.width = div.css('width');
 	size.height = div.css('height');
-	action.size=size;
+	action.originSize=size;
+	action.size = size;
 	undoStack.push(action);
 	redoStack=[];
 	//console.log(action);
@@ -780,6 +798,7 @@ function beginDrag(ui){
 	//also the beginning of the delete undo path
 	tempDrag.undoType="drag";
 	tempDrag.oldPos =ui.position;
+	
 	//console.log(ui);
 	//console.log("beginDrag");
 	tempDrag.object=ui;
@@ -801,6 +820,7 @@ function beginResize(ui){
 }
 function endResize(ui){
 	tempResize.object=ui;
+	tempResize.size=ui.size;
 	tempResize.newSize=ui.size;
 	undoStack.push(tempResize);
 	redoStack=[];
