@@ -5,7 +5,7 @@ var arrowstartX = 0; //used to keep track of an arrow object beginning and end
 var arrowstartY=0;
 var arrowendX = 0;
 var arrowendY=0;
-var drawPath=false;	//flag for whenever draw arrow button is pressed
+var drawPath='none';	//flag for whenever draw arrow button is pressed
 var startDrawPath=false; 
 var lastCanvasState;
 var listOfPaths=[];	//list of current paths on canvas
@@ -18,7 +18,7 @@ $("#delete-container").droppable({
 	tolerance: "touch",
 	drop: function (event, ui){
 		//console.log(ui.helper.css("height"));
-		
+			
 		var size = new Object();
 		size.height =$(ui.helper).height();
 		size.width = $(ui.helper).width();
@@ -110,7 +110,7 @@ $('#undo').click( function(){
 		switch(action.undoType){
 			case "arrow": //means arrow
 				action.object=listOfPaths.pop();
-				redrawPaths();$(ui.draggable).remove();
+				redrawPaths();
 				break;
 			case "add":
 				//console.log(action.object);
@@ -269,13 +269,24 @@ $('#spinner_numDancers').keyup(function (e) {
 	
 //path/arrow functions... we probably need to decide on a name, I used them interspersed...
 function drawPathPrompt(){
-	if(!drawPath){
+	if(!(drawPath=='straight')){
 		var prompt = "<div id=\"pathNotif\"> Draw an arrow by clicking and dragging on the stage<br> <button id=\"endPath\" onclick=\"endPath()\"> Cancel</div>"
-		//$('#canvasWrapper').append(prmopt);
+		
 		$(prompt).appendTo("#canvasWrapper").addClass('animated fadeIn');
 		////console.log(prompt);
 		document.getElementById('straightPathTool').disabled=true;
-		drawPath=true;
+		drawPath='straight';
+		disableDraggableObjects(true);
+	}
+}
+function drawCurvePathPrompt(){
+	if(drawPath=='none'){
+		var prompt = "<div id=\"pathNotif\"> Draw an arrow by clicking and dragging on the stage<br> <button id=\"endPath\" onclick=\"endPath()\"> Cancel</div>"
+		
+		$(prompt).appendTo("#canvasWrapper").addClass('animated fadeIn');
+		////console.log(prompt);
+		document.getElementById('straightPathTool').disabled=true;
+		drawPath='curve';
 		disableDraggableObjects(true);
 	}
 }
@@ -283,7 +294,7 @@ function endPath(){
 	(elem=document.getElementById("pathNotif")).parentNode.removeChild(elem);
 	//(elem=document.getElementById("cancelPath")).parentNode.removeChild(elem); removed whole div, not needed
 	document.getElementById('straightPathTool').disabled=false;
-	drawPath=false;
+	drawPath='none';
 	////console.log("cancel path");
 	disableDraggableObjects(false);
 }
@@ -299,7 +310,7 @@ function redrawPaths(){
 }
 $('#arrow-canvas').mousedown(function(e){
 	////console.log('mousedown');
-	if(drawPath){
+	if(!(drawPath=='none')){
 		var x;
 		var y;
 		if (e.pageX || e.pageY) { 
@@ -312,27 +323,34 @@ $('#arrow-canvas').mousedown(function(e){
 		
 	}
 })
+var arrowPath=[];
 $('#arrow-canvas').mousemove( function(e){
 	//////console.log('mousemove' + e.pageX+' ' +e.pageY);
-	if(startDrawPath&&drawPath){
+	if(startDrawPath&&!(drawPath=='none')){
 			redrawPaths();
 		move=new Object();
-		move.type="straight";
-		var x; var y;
+		move.type=drawPath;
+		var pos = new Object();
 		if (e.pageX || e.pageY) { 
-		  x = e.pageX;
-		  y = e.pageY;
+		  pos.x = e.pageX;
+		  pos.y = e.pageY;
 		}
 		move.startx = arrowstartX;
 		move.starty = arrowstartY;
-		move.endx=x;
-		move.endy = y;
+		
+		if(move.type=='curve'){
+			arrowPath.push(pos)
+			move.path=arrowPath;
+			//console.log(arrowPath);
+		}
+		move.endx=pos.x;
+		move.endy = pos.y;
 		drawArrow(move);
 	}
 })
 
 $('body').mouseup( function(e){
-	if(startDrawPath&&drawPath){
+	if(startDrawPath&&!(drawPath=='none')){
 			redrawPaths();
 		move=new Object();
 		var offset=$("#arrow-canvas").offset();
@@ -350,7 +368,11 @@ $('body').mouseup( function(e){
 			move.endx = e.pageX;
 			move.endy = e.pageY;
 			if(Math.abs(move.startx-move.endx)>5&&Math.abs(move.starty-move.endy)>5){
-				move.type="straight";
+				move.type=drawPath;
+				if(move.type=='curve'){
+					move.path=arrowPath
+					arrowPath=[]
+				}
 				drawArrow(move);
 				listOfPaths.push(move);
 				//console.log('path pushed');
@@ -367,7 +389,7 @@ $('body').mouseup( function(e){
 			////console.log("e.pageX= "+e.pageX);
 			////console.log("e.pageY= "+e.pageY);
 		}
-		drawPath=false;
+		drawPath='none';
 		startDrawPath=false;
 	}
 })
@@ -566,8 +588,9 @@ function drawTrapezoidBigFrontStage(){
 function drawArrow(arrow){
 		//stroke method of arrow
 		//arrow will have start and end coordinates
-		if(arrow.type=="straight"){
-			var offset=$("#arrow-canvas").offset();
+		var offset=$("#arrow-canvas").offset();
+			
+			
 			starty=arrow.starty-offset.top;
 			startx=arrow.startx-offset.left;
 			endy=arrow.endy-offset.top;
@@ -577,24 +600,34 @@ function drawArrow(arrow){
 					////console.log('awesomesauce');
 					////console.log(startx+endy);
 						var context = canvas.getContext('2d');
-					
+					context.lineCap='round';
 					ratio=10;
 					context.strokeStyle = 'rgba(0, 0, 0, .5)'; //black arrow
-					context.lineWidth  = 1;
+					context.lineWidth  =5;
 					var angle = Math.atan2(endy-starty,endx-startx);
 					context.beginPath();
 					context.moveTo(startx, starty);
-					context.lineTo(endx, endy);
+					if(arrow.type=='curve'){
+						var anglesum=0;
+						var anglesumcount=0;
+						for (var i=0;i<arrow.path.length; i++){
+							context.lineTo(arrow.path[i].x-offset.left,arrow.path[i].y-offset.top);
+							if (arrow.path.length-i<10){
+								anglesumcount++;
+								anglesum+=Math.atan2(endy-arrow.path[i].y+offset.top,endx-arrow.path[i].x+offset.left);
+							}
+						}
+						angle=anglesum/anglesumcount;
+					}
+					context.lineTo(endx+1, endy+1);
+					context.moveTo(endx, endy);
 						context.lineTo(endx-ratio*Math.cos(angle+Math.PI/4),endy-ratio*Math.sin(angle+Math.PI/4)); //first tip of arrow
 						context.moveTo(endx, endy);
 						context.lineTo(endx-ratio*Math.cos(angle-Math.PI/4),endy-ratio*Math.sin(angle-Math.PI/4)); //second tip of arrow
-					
-					context.closePath();
+						context.moveTo(endx, endy);	
+					//context.closePath();
 					context.stroke();
-			}
-		else if (arrow.type="freeform"){
 			
-		}
 		
 }
 
