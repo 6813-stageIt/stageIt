@@ -4,12 +4,10 @@
 	<meta charset="UTF-8"/>
 	<title>StageIt</title>
 	<link rel="stylesheet" href="css/jquery-ui-1.10.2.custom.min.css" />
-	
 	<link rel="stylesheet" href="css/bootstrap.min.css" />
 	<link rel="stylesheet" href="css/styles.css" />
 	<link rel="stylesheet" href="css/animate.min.css" />
 	<link href='http://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
-	<script src="http://code.createjs.com/easeljs-0.6.0.min.js"></script>
 </head>
 <body>
 	<div id="outerWrapper" class="animated fadeIn">
@@ -62,9 +60,23 @@
 					</div>
 					<table id="toolsTable">
 						<tr><td>
-						<a id="straightPathTool" class="toolButton tool" onclick="drawPathPrompt()" data-toggle="tooltip" title="Draw arrows on the stage" data-placement="right"><img src="img/straight_arrow.png" class="img-tool"/><label class="inline"> Straight Arrow</label></a></td>
+						<a id="straightPathTool" class="toolButton tool" onclick="drawPathPrompt()" 
+							data-toggle="tooltip" title="Draw arrows on the stage" data-placement="right">
+								<img src="img/straight_arrow.png" class="img-tool"/>
+									<label class="inline">Straight</label></a>
+						</td>
 						<td>
-						<a id="curvePathTool" class="toolButton tool" onclick="drawCurvePathPrompt()" data-toggle="tooltip" title="Draw arrows on the stage" data-placement="right"><img src="img/straight_arrow.png" class="img-tool"/><label class="inline"> Curved arrow</label></a></td><tr>
+						<a id="curvePathTool" class="toolButton tool" onclick="drawCurvePathPrompt()" 
+							data-toggle="tooltip" title="Draw arrows on the stage" data-placement="right">
+								<img src="img/freeform_arrow.png" class="img-tool"/>
+									<label class="inline">Freeform</label></a>
+						</td></tr>
+						<!---<tr><td>
+						<a id="curvePathTool" class="toolButton tool" onclick="drawCurvePathPrompt()" 
+							data-toggle="tooltip" title="Draw arrows on the stage" data-placement="right">
+								<img src="img/freeform_arrow.png" class="img-tool"/>
+									<label class="inline">Arrow</label></a>
+						</td></tr>-->
 					</table>
 					
 				</div><!-- end of sidebar -->
@@ -209,7 +221,7 @@
 	</div>
 
 	<script src="js/jquery-1.9.1.min.js"></script>
-	
+	<script src="http://code.createjs.com/easeljs-0.6.0.min.js"></script>
 	<script src="js/jquery-ui-1.10.2.custom.min.js"></script>
 	<script src="js/bootstrap.min.js"></script>
 	<script src="js/bootbox.min.js"></script>

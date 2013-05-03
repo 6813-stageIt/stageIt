@@ -4,6 +4,7 @@ var formationCounter=1;
 var arrowstartX = 0; //used to keep track of an arrow object beginning and end
 var arrowstartY=0;
 var arrowendX = 0;
+
 var arrowendY=0;
 var drawPath='none';	//flag for whenever draw arrow button is pressed
 var startDrawPath=false; 
@@ -11,6 +12,17 @@ var lastCanvasState;
 var listOfPaths=[];	//list of current paths on canvas
 var undoStack=[];	//stack of all actions to undo
 var redoStack=[];	//stack of all actions to redo
+console.log("gethere");
+$.getScript('http://code.createjs.com/easeljs-0.6.0.min.js', function()
+{
+    // script is now loaded and executed.
+    // put your dependent JS here.
+		console.log("createjs?");
+		console.log(createjs);
+	arrowStage= new createjs.Stage(document.getElementById("arrow-canvas"));
+	arrowStage.enableMouseOver();
+	arrowUpdate=false;
+});
 
 $("#delete-container").droppable({
 	accept:".added",
@@ -303,6 +315,9 @@ function redrawPaths(){
 	var canvas = document.getElementById('arrow-canvas');
 		var context = canvas.getContext('2d');
 		context.clearRect(0, 0, canvas.width, canvas.height);
+		arrowStage.clear();
+		arrowStage.canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
+		arrowStage.removeAllChildren();
 		for(var i=0; i<listOfPaths.length; i++){
 			drawArrow(listOfPaths[i]);
 		}
@@ -588,6 +603,7 @@ function drawTrapezoidBigFrontStage(){
 function drawArrow(arrow){
 		//stroke method of arrow
 		//arrow will have start and end coordinates
+		ratio=10;
 		var offset=$("#arrow-canvas").offset();
 			
 			
@@ -595,16 +611,57 @@ function drawArrow(arrow){
 			startx=arrow.startx-offset.left;
 			endy=arrow.endy-offset.top;
 			endx=arrow.endx-offset.left;
-							
+			var angle = Math.atan2(endy-starty,endx-startx);
+			shapeArrow=new createjs.Shape();
+			shapeArrow.graphics.setStrokeStyle(6,1);
+			shapeArrow.graphics.beginStroke(createjs.Graphics.getRGB(0,0,0,.5));
+			shapeArrow.graphics.moveTo(startx, starty);
+			var minLeft=endx;var minTop=endy;
+			if(arrow.type=='curve'){
+					var anglesum=0;
+					var anglesumcount=0;
+					for (var i=0;i<arrow.path.length; i++){
+						shapeArrow.graphics.lineTo(arrow.path[i].x-offset.left,arrow.path[i].y-offset.top);
+						if (arrow.path.length-i<10){
+							anglesumcount++;
+							anglesum+=Math.atan2(endy-arrow.path[i].y+offset.top,endx-arrow.path[i].x+offset.left);
+						}
+						if (arrow.path[i].x<minLeft){
+							minLeft=arrow.path[i].x-offset.left;
+						}
+						if (arrow.path[i].y<minTop){
+							minTop=arrow.path[i].y-offset.top;
+						}
+					}
+					angle=anglesum/anglesumcount;
+				}
+			shapeArrow.graphics.lineTo(endx, endy);
+			shapeArrow.graphics.lineTo(endx+1, endy+1);
+					shapeArrow.graphics.moveTo(endx, endy);
+						shapeArrow.graphics.lineTo(endx-ratio*Math.cos(angle+Math.PI/4),endy-ratio*Math.sin(angle+Math.PI/4)); //first tip of arrow
+						shapeArrow.graphics.moveTo(endx, endy);
+						shapeArrow.graphics.lineTo(endx-ratio*Math.cos(angle-Math.PI/4),endy-ratio*Math.sin(angle-Math.PI/4)); //second tip of arrow
+						shapeArrow.graphics.moveTo(endx, endy);	
+			shapeArrow.graphics.endStroke();
+			var min=new Object();
+			min.top=minTop;
+			min.left=minLeft;
+			console.log(min);
+			shapeArrow.min=min;
+			shapeArrow.onPress = arrowPressHandler;
+			arrowStage.addChild(shapeArrow);
+			arrowStage.update();
+			createjs.Ticker.addListener(window);
 			var canvas = document.getElementById('arrow-canvas');
+			
 					////console.log('awesomesauce');
 					////console.log(startx+endy);
-						var context = canvas.getContext('2d');
+					/*var context = canvas.getContext('2d');
 					context.lineCap='round';
-					ratio=10;
+					
 					context.strokeStyle = 'rgba(0, 0, 0, .5)'; //black arrow
 					context.lineWidth  =5;
-					var angle = Math.atan2(endy-starty,endx-startx);
+					
 					context.beginPath();
 					context.moveTo(startx, starty);
 					if(arrow.type=='curve'){
@@ -626,12 +683,38 @@ function drawArrow(arrow){
 						context.lineTo(endx-ratio*Math.cos(angle-Math.PI/4),endy-ratio*Math.sin(angle-Math.PI/4)); //second tip of arrow
 						context.moveTo(endx, endy);	
 					//context.closePath();
-					context.stroke();
+					context.stroke();*/
+					
+		
 			
 		
 }
-
-
+function arrowPressHandler(e){
+	 e.onMouseMove = function(ev){	
+		 	  e.target.x = ev.stageX-e.target.min.left;
+			  e.target.y = ev.stageY-e.target.min.top;
+			  console.log("x:"+ev.stageX)
+			  console.log("startx:"+e.target.min.left);
+			  /*if(Math.abs(e.target.min.left-e.target.x)<50){
+			  e.target.min.left = e.target.x;
+			  }
+			  if(Math.abs(e.target.min.top-e.target.y)<50){
+			  e.target.min.top = e.target.y;
+			  }*/
+	  
+		  
+		//console.log(e.target);
+	  
+		arrowUpdate = true;
+	 }
+ 
+}
+function tick(){ 
+ if(arrowUpdate){
+  arrowUpdate = false;
+  arrowStage.update(); 
+ }
+}
 function addDancers(){
 	if(!$('.dancer-selected').length > 0){
 		$('#dancerHelper').css("display", "inline");
