@@ -24,6 +24,19 @@ $.getScript('http://code.createjs.com/easeljs-0.6.0.min.js', function()
 	arrowUpdate=false;
 });
 
+$('#save').click(function(){
+	var divContents = $('#canvas-container');
+	var formationName = $('#projectName');
+	$.ajax({  
+    type: 'GET',
+    url: 'saver.php', 
+    data: { contents: divContents, filename :formationName },
+    success: function(data, textStatis, jqXHR) {
+        console.log(data);
+    }
+});
+});
+
 $("#delete-container").droppable({
 	accept:".added",
 	hoverClass: "delete-hover",
