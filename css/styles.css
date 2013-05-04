@@ -13,9 +13,11 @@ body{
 
 div.navbar a.brand{
 	font-family: 'Raleway', sans-serif;
-	font-size: 2.5em;
+	font-size: 2em;
 	font-weight: normal;
 }
+
+
 
 
 /***** general tag formatting *****/
