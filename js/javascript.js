@@ -47,7 +47,7 @@ $("#delete-container").droppable({
 $('#projectName').click(function(){
 	bootbox.prompt("Enter a name for the formation", function(result){
 		if(result!=null){
-			$('#projectName').text(result);
+			$('#projectName').text(result).removeClass("default");
 			$('#formation'+formationCounter).find('label').text(result);
 		}
 	});
@@ -74,7 +74,7 @@ function createNewFormation(){
 	+'</label></a></td></tr>');
 	$('table#formations').find('*').removeClass("current");
 	newRow.appendTo($('#formations tbody'));
-	$('#projectName').text("Untitled Formation "+formationCounter);
+	$('#projectName').text("Untitled Formation "+formationCounter).addClass("default");
 }
 
 $('#newFormation').click( function(){

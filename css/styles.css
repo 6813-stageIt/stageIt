@@ -192,10 +192,14 @@ ul#topNavAccount li.first {
 div#pageTitle h1 {
 	/*color: #fff;*/
 	/*font-size: 2em;*/
-	font-style: italic;
+	/*font-style: italic;*/
 	margin: 0;
 	line-height: 20px;
 	font-weight: normal;
+}
+
+div#pageTitle h1 a.default{
+	font-style: italic;
 }
 a#projectName{
 	font-size:20px;
