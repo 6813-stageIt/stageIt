@@ -12,7 +12,6 @@ var lastCanvasState;
 var listOfPaths=[];	//list of current paths on canvas
 var undoStack=[];	//stack of all actions to undo
 var redoStack=[];	//stack of all actions to redo
-console.log("gethere");
 $.getScript('http://code.createjs.com/easeljs-0.6.0.min.js', function()
 {
     // script is now loaded and executed.
@@ -69,7 +68,7 @@ $("#delete-container").droppable({
 $('#projectName').click(function(){
 	bootbox.prompt("Enter a name for the formation", function(result){
 		if(result!=null){
-			$('#projectName').text(result);
+			$('#projectName').text(result).removeClass("default");
 			$('#formation'+formationCounter).find('label').text(result);
 		}
 	});
@@ -97,7 +96,7 @@ function createNewFormation(){
 	+'</label></a></td></tr>');
 	$('table#formations').find('*').removeClass("current");
 	newRow.appendTo($('#formations tbody'));
-	$('#projectName').text("Untitled Formation "+formationCounter);
+	$('#projectName').text("Untitled Formation "+formationCounter).addClass("default");
 }
 
 $('#newFormation').click( function(){
@@ -788,14 +787,14 @@ function reAddObject(div, action){
 			containment:'#canvasWrapper',
 			grid: [ 20,20 ],
 			start: function(e, ui) {
-				$(ui.helper).width($(ui.helper).width()+10);
-				$(ui.helper).height($(ui.helper).height()+10);
+				// $(ui.helper).width($(ui.helper).width()+10);
+				// $(ui.helper).height($(ui.helper).height()+10);
 				//console.log(ui);
 				beginDrag(ui);
 			},
 			stop: function(e, ui) {
-				$(ui.helper).width($(ui.helper).width()-10);
-				$(ui.helper).height($(ui.helper).height()-10);
+				// $(ui.helper).width($(ui.helper).width()-10);
+				// $(ui.helper).height($(ui.helper).height()-10);
 				endDrag(ui);
 			}
 		});
@@ -845,14 +844,16 @@ function addObjectAt(div,posX,posY,newClass){
             containment:'#canvasWrapper',
             grid: [ 20,20 ],
             start: function(e, ui) {
-		        $(ui.helper).width($(ui.helper).width()+10);
-		        $(ui.helper).height($(ui.helper).height()+10);
+            	$(ui.helper).css("border", "1px solid red");
+		        // $(ui.helper).width($(ui.helper).width()+10);
+		        // $(ui.helper).height($(ui.helper).height()+10);
 				//console.log(ui);
 				beginDrag(ui);
 		    },
 		    stop: function(e, ui) {
-		        $(ui.helper).width($(ui.helper).width()-10);
-		        $(ui.helper).height($(ui.helper).height()-10);
+		    	$(ui.helper).css("border", "none");
+		        // $(ui.helper).width($(ui.helper).width()-10);
+		        // $(ui.helper).height($(ui.helper).height()-10);
 				endDrag(ui);
 		    }
         });

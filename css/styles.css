@@ -168,7 +168,7 @@ ul#topNavAccount li.first {
 }
 
 #wrapper h1 a {
-	font-size: 14px;
+	/*font-size: 14px;*/
 /*	font-weight: bold;*/
 	margin: 0px;
 	padding: 0px;
@@ -192,13 +192,23 @@ ul#topNavAccount li.first {
 	position: absolute;
 	bottom: 5px;
 }
-#pageTitle h1 {
+div#pageTitle h1 {
 	/*color: #fff;*/
-	font-size: 14px;
+	/*font-size: 2em;*/
+	/*font-style: italic;*/
 	margin: 0;
 	line-height: 20px;
 	font-weight: normal;
 }
+
+div#pageTitle h1 a.default{
+	font-style: italic;
+}
+a#projectName{
+	font-size:20px;
+	color: gray;
+}
+
 
 a#projectName:hover{
 	background-color: #E6E6E6;
@@ -650,7 +660,11 @@ div.shape{
 	line-height: 60px;
 	text-align: center;
 	z-index: 10;
+
 }
+/*div.shape:hover{
+	outline: 1px solid red;
+}*/
 
 
 
