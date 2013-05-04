@@ -21,9 +21,9 @@
           </button>
           <a class="brand" href="#">StageIt</a>
           <div class="nav-collapse collapse">
-             <form class="navbar-form pull-right">
-              <input class="span2" type="text" placeholder="Email">
-              <input class="span2" type="password" placeholder="Password">
+             <form action="login.php" class="navbar-form pull-right" method="post">
+              <input class="span2" type="text" placeholder="Email" name="email">
+              <input class="span2" type="password" placeholder="Password" name="password">
               <button type="submit" class="btn">Log In</button>
             </form>
           </div><!--/.nav-collapse -->
@@ -41,34 +41,34 @@
 </div>
 <div class="span4">
     <div class="signup_container">
-      <form class="form-signin">
+      <form class="form-signin" action="signup.php" method="post">
         <h2 class="form-signin-heading">Sign Up</h2>
-        <!-- <div class="row"> -->
-        <input type="text" class="input-block-level" placeholder="First Name">
-          <input type="text" class="input-block-level" placeholder="Last Name">
-        <!-- </div> -->
-        <input type="text" class="input-block-level" placeholder="Email address">
-        <input type="password" class="input-block-level" placeholder="Password">
-        <input type="password" class="input-block-level" placeholder="Confirm Password">
-        <label class="checkbox">
-          <input type="checkbox" value="remember-me"> Remember me
-        </label>
+        
+        <input type="text" class="input-block-level" placeholder="Pick a user name" name="username">
+        <input type="text" class="input-block-level" placeholder="Your email address" name="email">
+        <input id="pass" type="password" class="input-block-level" placeholder="Create a password" name="password">
+        <input id="confirmpass" type="password" class="input-block-level" placeholder="Confirm password" name="confirmpassword">
+        
+        
         <button class="btn btn-large btn-success" type="submit">Sign up</button>
       </form>
     </div> <!-- /container -->
 </div>
 </div>
 	<script src="js/jquery-1.9.1.min.js"></script>
-	
 	<script src="js/jquery-ui-1.10.2.custom.min.js"></script>
-	<script src="js/bootstrap.min.js"></script>
-	<script src="js/bootbox.min.js"></script>
-	<script src="js/javascript.js"></script>
-	<script src="http://d3lp1msu2r81bx.cloudfront.net/kjs/js/lib/kinetic-v4.4.3.min.js"></script>
-    
-	
+	<script src="js/bootstrap.min.js"></script> 
 	<script>
+//   function checkPasswordMatch() {
+//     var password = $("#pass").val();
+//     var confirmPassword = $("#confirmpass").val();
+//     if (password != confirmPassword)
+//         $("#checkpassmatch").html("Passwords do not match!");
+//     else
+//         $("#checkpassmatch").html("Passwords match.");
+// }
 	$(document).ready(function(){
+
 	});
 	</script>
 </body>

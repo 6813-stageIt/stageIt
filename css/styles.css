@@ -162,6 +162,7 @@ ul#topNavAccount li.first {
 #wrapper {
 	width: 960px;
 	margin: 35px auto 0 auto;
+	font-family: 'Lucida Grande', Verdana, Arial, sans-serif;
 }
 
 #wrapper h1 a {
