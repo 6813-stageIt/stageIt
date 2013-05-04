@@ -24,14 +24,23 @@ $.getScript('http://code.createjs.com/easeljs-0.6.0.min.js', function()
 	arrowUpdate=false;
 });
 
+$('.formation-name').click(function(){
+	$.ajax({
+		url: 'tester.html',
+		success: function(data){
+			console.log(data);
+		}
+	});
+});
+
 $('#save').click(function(){
-	var divContents = $('#canvas-container');
-	var formationName = $('#projectName');
+	var divContents = $('#canvasWrapper').html();
+	// var formationName = $('#projectName');
 	$.ajax({  
     type: 'GET',
     url: 'saver.php', 
-    data: { contents: divContents, filename :formationName },
-    success: function(data, textStatis, jqXHR) {
+    data: { contents: divContents },
+    success: function(data, textStatus, jqXHR) {
         console.log(data);
     }
 });
@@ -81,9 +90,10 @@ function clearCanvas(clearDancers){
 	createNewFormation();
 }
 
+
 function createNewFormation(){
 	formationCounter++;
-	var newRow = $('<tr><td class="current" id="formation'+formationCounter+'"><a><label>Untitled Formation '+formationCounter
+	var newRow = $('<tr><td class="current formation-name" id="formation'+formationCounter+'"><a><label>Untitled Formation '+formationCounter
 	+'</label></a></td></tr>');
 	$('table#formations').find('*').removeClass("current");
 	newRow.appendTo($('#formations tbody'));

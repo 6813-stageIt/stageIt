@@ -1,7 +1,7 @@
 <?php
 
 $data = $_GET['contents'];
-// $name = $_GET['filename'];
+$name = $_GET['filename'];
 $handle = fopen("tester.html", 'w+');
 if($handle)
 {
