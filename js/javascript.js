@@ -12,7 +12,6 @@ var lastCanvasState;
 var listOfPaths=[];	//list of current paths on canvas
 var undoStack=[];	//stack of all actions to undo
 var redoStack=[];	//stack of all actions to redo
-console.log("gethere");
 $.getScript('http://code.createjs.com/easeljs-0.6.0.min.js', function()
 {
     // script is now loaded and executed.
