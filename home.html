@@ -12,10 +12,16 @@
   <script type="text/javascript" src="http://www.parsecdn.com/js/parse-1.2.7.min.js"></script>
   <script src="js/jquery-ui-1.10.2.custom.min.js"></script>
   <script src="js/bootstrap.min.js"></script> 
-  <script>
-    
-  </script>
   <script src="signup.js"></script>
+  <script>
+  $(function(){
+      Parse.initialize("61JEjzEt8GyaXUNUmt80f9BKJWRQD8TZXb6FZcqt", "tkGBjxWtIgmIIcQk5X4h1vxYQj9E8Fbfrnqgi2kG");
+  var currentUser = Parse.User.current();
+  if(currentUser){
+    window.location = "dashboard.html";
+  }
+});
+  </script>
 </head>
 <body>
   <div id="app">
@@ -30,9 +36,9 @@
           </button>
           <a class="brand" href="#">StageIt</a>
           <div class="nav-collapse collapse">
-             <form action="login.php" class="navbar-form pull-right" method="post">
-              <input class="span2" type="text" placeholder="Email" name="email">
-              <input class="span2" type="password" placeholder="Password" name="password">
+             <form class="navbar-form pull-right" id="login">
+              <input class="span2" type="text" placeholder="User name" name="username" id="username">
+              <input class="span2" type="password" placeholder="Password" name="password" id="password">
               <button type="submit" class="btn">Log In</button>
             </form>
           </div><!--/.nav-collapse -->
@@ -68,6 +74,12 @@ $("#signup").on("submit", function(e) {
   console.log("submit");
   e.preventDefault();
   checkForm();
+
+  });
+$("#login").on("submit", function(e) {
+  console.log("login");
+  e.preventDefault();
+  login();
 
   });
 </script>
