@@ -18,15 +18,7 @@ function checkForm(){
 	Parse.User.signUp(username, password, { ACL: new Parse.ACL(), "email": email }, {
         success: function(user) {
          console.log("this shit finally worked");
-          $.ajax({  
-			    type: 'POST',
-			    url: 'home.php', 
-			    data: { username: username },
-			    success: function(data, textStatus, jqXHR) {
-			        // console.log(data);
-			        window.location = "home.php";
-			    }
-			});
+         window.location = "dashboard.html";
         },
 
         error: function(user, error) {
@@ -47,15 +39,6 @@ function login(){
 		success: function(user) {
 		// Do stuff after successful login.
 		window.location = "dashboard.html";
-		// 	$.ajax({  
-		// 		type: 'POST',
-		// 		url: 'home.php', 
-		// 		data: { username: username },
-		// 		success: function(data, textStatus, jqXHR) {
-		// 		console.log(data);
-		// 		window.location = "home.php";
-		// 	}
-		// });
 		},
 		error: function(user, error) {
 		// The login failed. Check error to see why.

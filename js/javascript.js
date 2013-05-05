@@ -34,15 +34,15 @@ $('.formation-name').click(function(){
 
 $('#save').click(function(){
 	var divContents = $('#canvasWrapper').html();
-	// var formationName = $('#projectName');
-	$.ajax({  
-    type: 'GET',
-    url: 'saver.php', 
-    data: { contents: divContents },
-    success: function(data, textStatus, jqXHR) {
-        console.log(data);
-    }
-});
+	var formationName = $('#projectName');
+	
+	// $.ajax({  
+ //    type: 'GET',
+ //    url: 'saver.php', 
+ //    data: { contents: divContents },
+ //    success: function(data, textStatus, jqXHR) {
+ //        console.log(data);
+ //    }
 });
 
 $("#delete-container").droppable({
