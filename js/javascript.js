@@ -8,17 +8,19 @@ var arrowendX = 0;
 var arrowendY=0;
 var drawPath='none';	//flag for whenever draw arrow button is pressed
 var startDrawPath=false; 
+var movePath=false;
+var selectTool=false; //verifies the select tool
 var lastCanvasState;
 var listOfPaths=[];	//list of current paths on canvas
 var undoStack=[];	//stack of all actions to undo
 var redoStack=[];	//stack of all actions to redo
-console.log("gethere");
+
 $.getScript('http://code.createjs.com/easeljs-0.6.0.min.js', function()
 {
     // script is now loaded and executed.
     // put your dependent JS here.
 		console.log("createjs?");
-		console.log(createjs);
+		//console.log(createjs);
 	arrowStage= new createjs.Stage(document.getElementById("arrow-canvas"));
 	arrowStage.enableMouseOver();
 	arrowUpdate=false;
@@ -167,6 +169,7 @@ $('#undo').click( function(){
 					'width':action.oldSize.width,
 					'height':action.oldSize.height,
 				});
+				break;
 			case "rename":
 				console.log(action.object);
 				action.object.find('.text').text(action.oldName);
@@ -300,6 +303,35 @@ function drawCurvePathPrompt(){
 		document.getElementById('straightPathTool').disabled=true;
 		drawPath='curve';
 		disableDraggableObjects(true);
+	}
+}
+function movePathPrompt(){
+	console.log(movePath);
+	if(!movePath){
+		movePath=true;
+		var prompt = "<div id=\"pathNotif\"> Move an arrow by clicking and dragging on the stage<br> <button id=\"endPath\" onclick=\"endPath()\"> Cancel</div>"
+		
+		$(prompt).appendTo("#canvasWrapper").addClass('animated fadeIn');
+		////console.log(prompt);
+		console.log("moveTool");
+		
+		disableDraggableObjects(true);
+	}else{
+		movePath=false;
+		endPath();
+	}
+}
+function drawSelectPrompt(){
+	if(selectTool){
+		var prompt = "<div id=\"pathNotif\"> Draw an arrow by clicking and dragging on the stage<br> <button id=\"selectAll\" onclick=\"selectAll()\"> Select All <button id=\"endPath\" onclick=\"endPath()\"> Cancel</div>"
+		
+		$(prompt).appendTo("#canvasWrapper").addClass('animated fadeIn');
+		////console.log(prompt);
+		
+		//TODO add disable all other tools here? 
+		document.getElementById('straightPathTool').disabled=true;
+		
+		//disableDraggableObjects(true);
 	}
 }
 function endPath(){
@@ -646,7 +678,7 @@ function drawArrow(arrow){
 			var min=new Object();
 			min.top=minTop;
 			min.left=minLeft;
-			console.log(min);
+			//console.log(min);
 			shapeArrow.min=min;
 			shapeArrow.onPress = arrowPressHandler;
 			arrowStage.addChild(shapeArrow);
@@ -714,6 +746,12 @@ function tick(){
   arrowUpdate = false;
   arrowStage.update(); 
  }
+}
+
+function selectObject(){
+	selectTool=true;
+	drawSelectPrompt();
+	
 }
 function addDancers(){
 	if(!$('.dancer-selected').length > 0){

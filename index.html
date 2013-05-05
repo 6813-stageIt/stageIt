@@ -46,15 +46,6 @@
 					<!-- <div id="comments"><label id="commentsLabel">Comments</label><textarea class="input-small"></textarea></div> -->
 					</table></div>
 					<div class="labelContainer">
-					<label><h5>Project</h5></label>
-					</div>
-					<div id="formations-container">
-					<table id="formations">
-						<tr><td class="current" id="formation1"><a><label>Untitled Formation 1</label></a></td></tr>
-
-					</table>
-					</div>
-					<div class="labelContainer">
 
 					<label><h5>Tools</h5></label>
 					</div>
@@ -63,21 +54,38 @@
 						<a id="straightPathTool" class="toolButton tool" onclick="drawPathPrompt()" 
 							data-toggle="tooltip" title="Draw arrows on the stage" data-placement="right">
 								<img src="img/straight_arrow.png" class="img-tool"/>
-									<label class="inline">Straight</label></a>
+									<label class="inline"></label></a>
 						</td>
 						<td>
 						<a id="curvePathTool" class="toolButton tool" onclick="drawCurvePathPrompt()" 
 							data-toggle="tooltip" title="Draw arrows on the stage" data-placement="right">
 								<img src="img/freeform_arrow.png" class="img-tool"/>
-									<label class="inline">Freeform</label></a>
+									<label class="inline"></label></a>
+						</td>
+						<td>
+						<a id="movePathTool" class="toolButton tool" onclick="movePathPrompt()" 
+							data-toggle="tooltip" title="Move arrows on the Stage" data-placement="right">
+								<img src="img/move_arrow.png" class="img-tool"/>
+									<label class="inline"></label></a>
 						</td></tr>
-						<!---<tr><td>
-						<a id="curvePathTool" class="toolButton tool" onclick="drawCurvePathPrompt()" 
-							data-toggle="tooltip" title="Draw arrows on the stage" data-placement="right">
-								<img src="img/freeform_arrow.png" class="img-tool"/>
-									<label class="inline">Arrow</label></a>
-						</td></tr>-->
+						<tr><td>
+						<a id="selectTool" class="toolButton tool" onclick="selectObject()" 
+							data-toggle="tooltip" title="Select objects to implement formations" data-placement="right">
+								<img src="img/select_tool.png" class="img-tool"/>
+									<label class="inline"></label></a>
+						</td></tr>
 					</table>
+					
+					<div class="labelContainer">
+					<label><h5>Project</h5></label>
+					</div>
+					<div id="formations-container">
+					<table id="formations">
+						<tr><td class="current" id="formation1"><a><label>Untitled Formation 1</label></a></td></tr>
+
+					</table>
+					</div>
+					
 					
 				</div><!-- end of sidebar -->
 
