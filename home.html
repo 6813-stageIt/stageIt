@@ -8,8 +8,17 @@
 	<link rel="stylesheet" href="css/home.css" />
 	<link rel="stylesheet" href="css/animate.min.css" />
 	<link href='http://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
+  <script src="js/jquery-1.9.1.min.js"></script>
+  <script type="text/javascript" src="http://www.parsecdn.com/js/parse-1.2.7.min.js"></script>
+  <script src="js/jquery-ui-1.10.2.custom.min.js"></script>
+  <script src="js/bootstrap.min.js"></script> 
+  <script>
+    
+  </script>
+  <script src="signup.js"></script>
 </head>
 <body>
+  <div id="app">
 <div class="container">
    <div class="navbar navbar-fixed-top">
       <div class="navbar-inner">
@@ -41,35 +50,27 @@
 </div>
 <div class="span4">
     <div class="signup_container">
-      <form class="form-signin" action="signup.php" method="post">
+      <form class="form-signup" id="signup">
         <h2 class="form-signin-heading">Sign Up</h2>
-        
-        <input type="text" class="input-block-level" placeholder="Pick a user name" name="username">
-        <input type="text" class="input-block-level" placeholder="Your email address" name="email">
-        <input id="pass" type="password" class="input-block-level" placeholder="Create a password" name="password">
-        <input id="confirmpass" type="password" class="input-block-level" placeholder="Confirm password" name="confirmpassword">
-        
-        
-        <button class="btn btn-large btn-success" type="submit">Sign up</button>
+        <input type="text" class="input-block-level" placeholder="Pick a user name" id="rUsername">
+        <input type="text" class="input-block-level" placeholder="Your email address" id="rEmail">
+        <input type="password" class="input-block-level" placeholder="Create a password" id="rPassword">
+        <input type="password" class="input-block-level" placeholder="Confirm password" id="rConfirmpassword">
+        <button class="btn btn-large btn-success" type="submit" id="signup">Sign up</button>
       </form>
     </div> <!-- /container -->
 </div>
 </div>
-	<script src="js/jquery-1.9.1.min.js"></script>
-	<script src="js/jquery-ui-1.10.2.custom.min.js"></script>
-	<script src="js/bootstrap.min.js"></script> 
-	<script>
-//   function checkPasswordMatch() {
-//     var password = $("#pass").val();
-//     var confirmPassword = $("#confirmpass").val();
-//     if (password != confirmPassword)
-//         $("#checkpassmatch").html("Passwords do not match!");
-//     else
-//         $("#checkpassmatch").html("Passwords match.");
-// }
-	$(document).ready(function(){
+</div>
+</div>
+<script>
+$("#signup").on("submit", function(e) {
+  console.log("submit");
+  e.preventDefault();
+  checkForm();
 
-	});
-	</script>
+  });
+</script>
+
 </body>
 </html>
