@@ -4,14 +4,40 @@
 	<meta charset="UTF-8"/>
 	<title>StageIt</title>
 	<link rel="stylesheet" href="css/jquery-ui-1.10.2.custom.min.css" />
-	<link rel="stylesheet" href="css/bootstrap.min.css" />
+	<link rel="stylesheet" href="css/bootstrap-index.min.css" />
 	<link rel="stylesheet" href="css/styles.css" />
 	<link rel="stylesheet" href="css/animate.min.css" />
 	<link href='http://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
 </head>
 <body>
+	<!-- <div class="container"> -->
+   <div class="navbar navbar-static-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="brand" href="#">StageIt</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li><a href="#">Dashboard</a></li>
+              <li class="active"><a href="#">Current Project</a></li>
+              <li><a href="#about">Account</a></li>
+              <!-- <li><a href="#contact">Contact</a></li> -->
+            </ul>
+             <p class="navbar-text pull-right">
+              Logged in as <a href="#" class="navbar-link">Username</a>
+            </p>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+  <!-- </div> -->
+
 	<div id="outerWrapper" class="animated fadeIn">
-		<div id="topnavWrapper">
+		<!-- <div id="topnavWrapper">
 			<div id="topnav">
 				<div id="stageItLogo" class="animated fadeIn"><h2>StageIt</h2></div>
 				<ul id="topNavAccount">
@@ -20,12 +46,12 @@
 					<li><a id="project" href="#">Project Home</a></li>
 				</ul>
 			</div>
-		</div>
+		</div> -->
 		<div id="wrapper">
 			<div id="subHeader">
-				<div id="pageTitle"><h1><a id="projectName" class="tool" data-toggle="tooltip" title="Double click to change">Untitled Formation 1</a></h1></div>
+				<div id="pageTitle"><h1><a id="projectName" class="tool default" data-toggle="tooltip" title="Click to change title">Untitled Formation 1</a></h1></div>
 				<ul id="pageActionsNav">
-					<li><a id="newFormation" class="enabled-button tool" data-toggle="tooltip" title="Create a new formation"><img src="img/plus_blue.png" class="img-nav"/> New</a></li>
+					<li><a id="newFormation" class="enabled-button tool" data-toggle="tooltip" title="Create a new formation"><img src="img/plus_blue.png" class="img-nav"/>New</a></li>
 
 					<li><a id="undo" class="enabled-button"><img src="img/arrow_undo.png" class="img-nav"/> Undo</a></li>
 					<li><a id="redo" class="enabled-button"><img src="img/arrow_redo.png" class="img-nav" /> Redo</a></li>
@@ -36,7 +62,7 @@
 			<div id="content">
 				<div id="sidebarActions">
 					<div class="labelContainer">
-					<label><h5>Tasks</h5></label></div>
+					<label><h5><i class="icon-tasks"></i> Tasks</h5></label></div>
 					<div id="tasks-container">
 					<table id="tasks">
 					<tr><td><a id="editStage" href="#chooseStage" data-toggle="modal" class="tool" data-toggle="tooltip" title="Change the stage" data-placement="right"><label>Edit Stage</label></a></td></tr>
@@ -45,9 +71,10 @@
 					<tr class="last"><td class="last"><a id="arrangeDancers" href="#arrangeDancersModal" data-toggle="modal" class="tool" data-toggle="tooltip" title="Arrange dancers on stages in template formations" data-placement="right"><label>Arrange Dancers</label></a></td></tr>
 					<!-- <div id="comments"><label id="commentsLabel">Comments</label><textarea class="input-small"></textarea></div> -->
 					</table></div>
-					<div class="labelContainer">
 
-					<label><h5>Tools</h5></label>
+					<div class="labelContainer">
+					
+					<label><h5><i class="icon-wrench"></i> Tools</h5></label>
 					</div>
 					<table id="toolsTable">
 						<tr><td>
@@ -69,20 +96,18 @@
 									<label class="inline"></label></a>
 						</td></tr>
 						<tr><td>
-						<a id="selectTool" class="toolButton tool" onclick="selectObject()" 
+						<a id="selectTool" class="toolButton tool" onclick="drawSelectPrompt()" 
 							data-toggle="tooltip" title="Select objects to implement formations" data-placement="right">
 								<img src="img/select_tool.png" class="img-tool"/>
 									<label class="inline"></label></a>
 						</td></tr>
 					</table>
-					
-					<div class="labelContainer">
-					<label><h5>Project</h5></label>
-					</div>
+						<div class="labelContainer">
+						<label><h5><i class="icon-th-list"></i> Formations</h5></label>
+						</div>
 					<div id="formations-container">
 					<table id="formations">
-						<tr><td class="current" id="formation1"><a><label>Untitled Formation 1</label></a></td></tr>
-
+						<tr><td class="current formation-name" id="formation1"><a><label>Untitled Formation 1</label></a></td></tr>
 					</table>
 					</div>
 					
@@ -92,7 +117,7 @@
 				<div id="canvasWrapper">
 					<div id="canvas-container">
 						<label id="audienceLabel">Audience</label>
-<!-- 						<label id="stageLeftLabel">Stage Left</label>
+<!-- 					<label id="stageLeftLabel">Stage Left</label>
 						<label id="stageRightLabel">Stage Right</label> -->
 						<canvas id="canvas-stage"><p>Your browser does not support HTML5 canvas</p></canvas>
 						
@@ -238,7 +263,7 @@
     
 	
 	<script>
-	var debug = false;
+	var debug = true;
 	var stageHasBeenPicked = false;
 	$(document).ready(function(){
 				if(!debug){
@@ -247,8 +272,8 @@
 		$('.tool').tooltip();
 		var canvas = document.getElementById('arrow-canvas');
 		// Make it visually fill the positioned parent
-		canvas.style.width ='100%';
-		canvas.style.height='100%';
+		//canvas.style.width ='100%';
+		//canvas.style.height='100%';
 		// ...then set the internal size to match
 		canvas.width  = canvas.offsetWidth;
 		canvas.height = canvas.offsetHeight;

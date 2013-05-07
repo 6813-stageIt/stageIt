@@ -3,6 +3,7 @@
  **/
  var formation = function(id, stage){
  	this.objects = {};
+	this.paths = [];
  	this.id = id;
  	this.stage = stage //stage can initially be null
 
@@ -10,7 +11,7 @@
  	 * Adds a new dancer/prop to the formation
  	 */
  	 this.addObject = function(object){
-
+		
  	 }
 
  	 /**

@@ -12,18 +12,49 @@ var movePath=false;
 var selectTool=false; //verifies the select tool
 var lastCanvasState;
 var listOfPaths=[];	//list of current paths on canvas
+var listOfObjects=[];
+var selectedObjects=[];
 var undoStack=[];	//stack of all actions to undo
 var redoStack=[];	//stack of all actions to redo
+
 
 $.getScript('http://code.createjs.com/easeljs-0.6.0.min.js', function()
 {
     // script is now loaded and executed.
     // put your dependent JS here.
-		console.log("createjs?");
-		//console.log(createjs);
+		
 	arrowStage= new createjs.Stage(document.getElementById("arrow-canvas"));
 	arrowStage.enableMouseOver();
 	arrowUpdate=false;
+	console.log("createjs updated");
+});
+$(document).ready(function() {
+	//formation = new Formation(formationCounter, stage);
+	
+	
+});
+
+
+$('.formation-name').click(function(){
+	$.ajax({
+		url: 'tester.html',
+		success: function(data){
+			console.log(data);
+		}
+	});
+});
+
+$('#save').click(function(){
+	var divContents = $('#canvasWrapper').html();
+	// var formationName = $('#projectName');
+	$.ajax({  
+    type: 'GET',
+    url: 'saver.php', 
+    data: { contents: divContents },
+    success: function(data, textStatus, jqXHR) {
+        console.log(data);
+    }
+});
 });
 
 $("#delete-container").droppable({
@@ -49,7 +80,7 @@ $("#delete-container").droppable({
 $('#projectName').click(function(){
 	bootbox.prompt("Enter a name for the formation", function(result){
 		if(result!=null){
-			$('#projectName').text(result);
+			$('#projectName').text(result).removeClass("default");
 			$('#formation'+formationCounter).find('label').text(result);
 		}
 	});
@@ -62,6 +93,7 @@ function clearCanvas(clearDancers){
 	var path_canvas = document.getElementById('arrow-canvas');
 	var path_context = path_canvas.getContext('2d');
 	path_context.clearRect(0, 0, path_canvas.width, path_canvas.height);
+	arrowStage.removeAllChildren(); //deletes all the paths in the canvas
 	$('#notes > textarea').val("");
 	
 	listOfPaths=[];
@@ -70,13 +102,14 @@ function clearCanvas(clearDancers){
 	createNewFormation();
 }
 
+
 function createNewFormation(){
 	formationCounter++;
-	var newRow = $('<tr><td class="current" id="formation'+formationCounter+'"><a><label>Untitled Formation '+formationCounter
+	var newRow = $('<tr><td class="current formation-name" id="formation'+formationCounter+'"><a><label>Untitled Formation '+formationCounter
 	+'</label></a></td></tr>');
 	$('table#formations').find('*').removeClass("current");
 	newRow.appendTo($('#formations tbody'));
-	$('#projectName').text("Untitled Formation "+formationCounter);
+	$('#projectName').text("Untitled Formation "+formationCounter).addClass("default");
 }
 
 $('#newFormation').click( function(){
@@ -284,8 +317,8 @@ $('#spinner_numDancers').keyup(function (e) {
 	
 //path/arrow functions... we probably need to decide on a name, I used them interspersed...
 function drawPathPrompt(){
-	if(!(drawPath=='straight')){
-		var prompt = "<div id=\"pathNotif\"> Draw an arrow by clicking and dragging on the stage<br> <button id=\"endPath\" onclick=\"endPath()\"> Cancel</div>"
+	if(drawPath=='none'){
+		var prompt = "<div id=\"pathNotif\" class=\"notif\" > Draw an arrow by clicking and dragging on the stage<br> <button id=\"endPath\" onclick=\"endPath()\"> Cancel</div>"
 		
 		$(prompt).appendTo("#canvasWrapper").addClass('animated fadeIn');
 		////console.log(prompt);
@@ -296,10 +329,10 @@ function drawPathPrompt(){
 }
 function drawCurvePathPrompt(){
 	if(drawPath=='none'){
-		var prompt = "<div id=\"pathNotif\"> Draw an arrow by clicking and dragging on the stage<br> <button id=\"endPath\" onclick=\"endPath()\"> Cancel</div>"
+		var prompt = "<div id=\"pathNotif\" class=\"notif\"> Draw a curved arrow by clicking and dragging on the stage<br> <button id=\"endPath\" onclick=\"endPath()\"> Cancel</div>"
 		
 		$(prompt).appendTo("#canvasWrapper").addClass('animated fadeIn');
-		////console.log(prompt);
+		//console.log(prompt);
 		document.getElementById('straightPathTool').disabled=true;
 		drawPath='curve';
 		disableDraggableObjects(true);
@@ -309,7 +342,7 @@ function movePathPrompt(){
 	console.log(movePath);
 	if(!movePath){
 		movePath=true;
-		var prompt = "<div id=\"pathNotif\"> Move an arrow by clicking and dragging on the stage<br> <button id=\"endPath\" onclick=\"endPath()\"> Cancel</div>"
+		var prompt = "<div id=\"pathNotif\" class=\"notif\"> Move an arrow by clicking and dragging on the stage<br> <button id=\"endPath\" onclick=\"endPath()\"> Cancel</div>"
 		
 		$(prompt).appendTo("#canvasWrapper").addClass('animated fadeIn');
 		////console.log(prompt);
@@ -322,17 +355,159 @@ function movePathPrompt(){
 	}
 }
 function drawSelectPrompt(){
-	if(selectTool){
-		var prompt = "<div id=\"pathNotif\"> Draw an arrow by clicking and dragging on the stage<br> <button id=\"selectAll\" onclick=\"selectAll()\"> Select All <button id=\"endPath\" onclick=\"endPath()\"> Cancel</div>"
-		
+	if(!selectTool){
+		var prompt = "<div id=\"selectNotif\" class=\"notif\"> Click on each object that you would like to select <br> <button id=\"doneSelect\" onclick=\"doneSelect()\"> Done <button id=\"selectAll\" onclick=\"selectAll()\"> Select All <button id=\"endSelect\" onclick=\"endSelect()\"> Cancel</div>"
+		selectTool=true;
 		$(prompt).appendTo("#canvasWrapper").addClass('animated fadeIn');
-		////console.log(prompt);
-		
+		console.log('selectTool');
+		enableSelect();
 		//TODO add disable all other tools here? 
-		document.getElementById('straightPathTool').disabled=true;
 		
-		//disableDraggableObjects(true);
 	}
+	else{
+		selectTool=false;
+	}
+}
+function doneSelect(){
+	clearPrompt();
+	var prompt = "<div id=\"selectNotif\" class=\"notif\"> The next actions will correspond to all the dancers, you can drag, resize, ... <br> <button id=\"endSelect\" onclick=\"endSelect()\"> Done</div>";
+	$(prompt).appendTo("#canvasWrapper").addClass('animated fadeIn');
+	console.log('reenable things');	
+	for (var i = 0; i<dancerCounter; i++){
+	
+			var divname="#dancer-"+i;
+			var div = $(divname);
+			var img = $('<img class=\"overlay\">').attr('src', 'img/highlight.png');
+			$(div).append(img);
+			div.draggable({disabled:false,
+				zIndex:100,
+				containment:'#canvasWrapper',
+				grid: [ 20,20 ],
+				start: function(e, ui) {
+					//$(ui.helper).css("border", "1px solid red");
+					var img = $('<img class=\"overlay\">').attr('src', 'img/highlight.png');
+					div.append(img);
+					//beginDrag(ui);
+					posTopArray=[];
+					posLeftArray=[];
+					if($(div).hasClass("my-selected")){
+						$(".my-selected").each(function (i){
+							eachtop=$(this).css('top');
+							eachleft=$(this).css('left');
+							posTopArray[i]=parseInt(eachtop);
+							posLeftArray[i]=parseInt(eachleft);
+							
+						});
+					}
+					begintop = $(this).offset().top; 
+					beginleft = $(this).offset().left; 
+				},
+				stop: function(e, ui) {
+					//$(ui.helper).css("border", "none");
+					// $(ui.helper).width($(ui.helper).width()-10);
+					// $(ui.helper).height($(ui.helper).height()-10);
+					$(".overlay").remove();
+					endDrag(ui);
+				},
+				drag: function(event, ui) {
+					  var topdiff = $(this).offset().top - begintop;  // Current distance dragged element has traveled vertically
+					  var leftdiff = $(this).offset().left - beginleft; // Current distance dragged element has traveled horizontally
+
+					  if ($(this).hasClass("my-selected")) {
+						   $(".my-selected").each(function(i) {
+								$(this).css('top', posTopArray[i] + topdiff); // Move element veritically - current css top + distance dragged element has travelled vertically
+								$(this).css('left', posLeftArray[i] + leftdiff); // Move element horizontally - current css left + distance dragged element has travelled horizontally
+						   });
+					  }
+				 },
+			});
+			div.resizable({disabled:false});
+		/*	$(div).selectable({
+				helper: function(){
+				  var selected = $('input:checked').parents('li');
+				  console.log(selected);
+				  if (selected.length === 0) {
+					selected = $(this);
+				  }
+				  var container = $('<div/>').attr('id', 'draggingContainer');
+				  container.append(selected.clone());
+				  return container; 
+				}
+			});*/
+	}
+	
+}
+function selectAll(){
+	
+	for (var i = 0; i<dancerCounter; i++){
+			var divname="#dancer-"+i;
+			var div = $(divname);
+			$(div).addClass('my-selected');
+			var img = $('<img class=\"overlay\">').attr('src', 'img/highlight.png');
+			$(div).append(img);
+	}
+	doneSelect();
+}
+function enableSelect(){
+	dancerToggle = {};
+		for (var i = 0; i<dancerCounter; i++){
+			var divname="#dancer-"+i;
+			var div = $(divname);
+			console.log(div);
+			dancerToggle[i]=0;
+			div.selectable({
+				disabled:false,
+				//appendTo:".shape",
+				selected:function(e, ui){
+					var img = $('<img class=\"overlay\">').attr('src', 'img/highlight.png');
+					
+					var idnum = $(this)[0].id.replace('dancer-', '');
+					dancerToggle[idnum]=dancerToggle[idnum]+1;
+					console.log(idnum);
+					console.log(dancerToggle[idnum]);
+					if(dancerToggle[idnum]%2==0){
+						$(this).removeClass('my-selected');
+						$('div#dancer-'+idnum+' img:last-child').remove();
+						console.log($(this).context.id +' removed');
+					}else{
+						$(this).addClass('my-selected');
+						$(this).append(img);
+						console.log($(this)[0].id + ' selected');
+					}
+					//$(this).append(img);
+				},
+				unselected:function(e,ui){
+					//console.log(ui);
+					
+					//$(this).remove(".overlay");
+					//console.log($(this));
+					console.log($(this).context.id +' removed');
+					//$(this).css("border", "none");
+				},
+				
+			});
+			div.draggable({disabled:true});
+			div.resizable({disabled:true});
+		}
+}
+function selectObject(){
+	selectTool=true;
+	drawSelectPrompt();
+	
+}
+function clearPrompt(){
+	(elem=document.getElementById("selectNotif")).parentNode.removeChild(elem);
+}
+function endSelect(){
+	(elem=document.getElementById("selectNotif")).parentNode.removeChild(elem);
+	for (var i = 0; i<dancerCounter; i++){
+			var div = $("#dancer-"+i);
+			//console.log(div);
+			
+			div.removeClass('my-selected');
+			div.selectable({disabled:false});
+			div.draggable({disabled:false});
+		}
 }
 function endPath(){
 	(elem=document.getElementById("pathNotif")).parentNode.removeChild(elem);
@@ -685,7 +860,7 @@ function drawArrow(arrow){
 			arrowStage.update();
 			createjs.Ticker.addListener(window);
 			var canvas = document.getElementById('arrow-canvas');
-			
+			return shapeArrow;
 					////console.log('awesomesauce');
 					////console.log(startx+endy);
 					/*var context = canvas.getContext('2d');
@@ -733,7 +908,7 @@ function arrowPressHandler(e){
 			  if(Math.abs(e.target.min.top-e.target.y)<50){
 			  e.target.min.top = e.target.y;
 			  }*/
-	  
+				
 		  
 		//console.log(e.target);
 	  
@@ -748,11 +923,7 @@ function tick(){
  }
 }
 
-function selectObject(){
-	selectTool=true;
-	drawSelectPrompt();
-	
-}
+
 function addDancers(){
 	if(!$('.dancer-selected').length > 0){
 		$('#dancerHelper').css("display", "inline");
@@ -771,7 +942,7 @@ function addDancers(){
 			var id="dancer-"+dancerCounter;
 			dancerCounter++;
 			var wrap = $('<div><div class="text"></div></div>').attr('id', id);
-			var img = $('<img>').attr('src', 'img/'+shape+'-'+color+'.png');
+			var img = $('<img class=\'dancer-img\'>').attr('src', 'img/'+shape+'-'+color+'.png');
 			wrap.append(img);
 			// wrap.css('background','transparent url('+url+')');
 			if(y>440){
@@ -779,7 +950,7 @@ function addDancers(){
 				x+=60;		
 			}
 			addObjectAt(wrap, x,y, 'shape');
-			y+=60; //wont work for large amounts, add handling
+			y+=60; //wont work for large amounts, add handling.
 		}
 
 	}	 
@@ -803,17 +974,20 @@ function reAddObject(div, action){
 			containment:'#canvasWrapper',
 			grid: [ 20,20 ],
 			start: function(e, ui) {
-				$(ui.helper).width($(ui.helper).width()+10);
-				$(ui.helper).height($(ui.helper).height()+10);
-				//console.log(ui);
+				// $(ui.helper).width($(ui.helper).width()+10);
+				// $(ui.helper).height($(ui.helper).height()+10);
+				var img = $('<img class=\"overlay\">').attr('src', 'img/highlight.png');
+				div.append(img);
 				beginDrag(ui);
 			},
 			stop: function(e, ui) {
-				$(ui.helper).width($(ui.helper).width()-10);
-				$(ui.helper).height($(ui.helper).height()-10);
+				// $(ui.helper).width($(ui.helper).width()-10);
+				// $(ui.helper).height($(ui.helper).height()-10);
+				$(".overlay").remove();
 				endDrag(ui);
 			}
 		});
+	
 	console.log(div);
 	if(div.hasClass("shape")){
 		console.log('newShape');
@@ -860,14 +1034,19 @@ function addObjectAt(div,posX,posY,newClass){
             containment:'#canvasWrapper',
             grid: [ 20,20 ],
             start: function(e, ui) {
-		        $(ui.helper).width($(ui.helper).width()+10);
-		        $(ui.helper).height($(ui.helper).height()+10);
+            	//$(ui.helper).css("border", "1px solid red");
+				var img = $('<img class=\"overlay\">').attr('src', 'img/highlight.png');
+				div.append(img);
+		        // $(ui.helper).width($(ui.helper).width()+10);
+		        // $(ui.helper).height($(ui.helper).height()+10);
 				//console.log(ui);
 				beginDrag(ui);
 		    },
 		    stop: function(e, ui) {
-		        $(ui.helper).width($(ui.helper).width()-10);
-		        $(ui.helper).height($(ui.helper).height()-10);
+		    	//$(ui.helper).css("border", "none");
+		        // $(ui.helper).width($(ui.helper).width()-10);
+		        // $(ui.helper).height($(ui.helper).height()-10);
+				$(".overlay").remove();
 				endDrag(ui);
 		    }
         });
