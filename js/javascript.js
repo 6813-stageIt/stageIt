@@ -1083,6 +1083,7 @@ function addObjectAt(div,posX,posY,newClass){
 				endDrag(ui);
 		    }
         });
+    div.find('.text').text("Dancer");	//Default name: 'Dancer'
     if(newClass=="shape"){
 	    div.dblclick(function(){
 	    	action = new Object();
@@ -1248,8 +1249,9 @@ function arrangeInOneHorizLine(selector){
 	//console.log(objects.width);
 
 	var canvas = document.getElementById('canvas-stage');
-	//console.log("canvas height = "+canvas.height);
-	//console.log("canvas width = "+canvas.width);
+	console.log("canvas height = "+canvas.height);
+	console.log("canvas width = "+canvas.width);
+	
 	var xCenter = canvas.width/2;
 	var yCenter = canvas.height/2;
 
