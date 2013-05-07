@@ -8,6 +8,26 @@
 	<link rel="stylesheet" href="css/styles.css" />
 	<link rel="stylesheet" href="css/animate.min.css" />
 	<link href='http://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
+	<script src="js/jquery-1.9.1.min.js"></script>
+	<script src="http://www.parsecdn.com/js/parse-1.2.7.min.js"></script>
+	<script>
+  $(function(){
+      Parse.initialize("61JEjzEt8GyaXUNUmt80f9BKJWRQD8TZXb6FZcqt", "tkGBjxWtIgmIIcQk5X4h1vxYQj9E8Fbfrnqgi2kG");
+  var currentUser = Parse.User.current();
+  if(currentUser){
+    var username = currentUser.getUsername();
+    $('#username').html(username);
+  }
+  else{
+  	window.location = "home.html";
+  }
+  $('#logout').click(function(){
+        Parse.User.logOut();
+        // var currentUser = Parse.User.current();
+        window.location = "home.html";
+      })
+});
+      </script>
 </head>
 <body>
 	<!-- <div class="container"> -->
@@ -26,9 +46,15 @@
               <li class="active"><a href="#">Current Project</a></li>
               <!-- <li><a href="#contact">Contact</a></li> -->
             </ul>
-             <p class="navbar-text pull-right">
-              Logged in as <a href="#" class="navbar-link">Username</a>
-            </p>
+            <ul class="nav pull-right">  
+            <li class="dropdown pull-right">  
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-user"></i> <span id="username">Username</span> <b class="caret"></b></a>  
+              <ul class="dropdown-menu">  
+                <li><a href="#">Account</a></li>
+                <li><a href="#" id="logout">Logout</a></li>
+              </ul>  
+            </li>  
+          </ul>  
           </div><!--/.nav-collapse -->
         </div>
       </div>
@@ -109,6 +135,7 @@
 					<table id="formations">
 						<tr><td class="current formation-name" id="formation1"><a><label>Untitled Formation 1</label></a></td></tr>
 					</table>
+					<a class="text-right pull-right" id="add-formation"><i class="icon-plus"></i> <strong>New</strong></a>
 					</div>
 					
 					

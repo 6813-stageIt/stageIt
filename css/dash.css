@@ -1,0 +1,15 @@
+div.body{
+	margin-top: 20px;
+}
+
+a#create{
+	margin-top: 10px;
+}
+
+table tr td{
+	cursor: pointer;
+}
+
+.btn.pos-abs{
+	margin-top: 10px;
+}

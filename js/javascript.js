@@ -36,25 +36,57 @@ $(document).ready(function() {
 
 
 $('.formation-name').click(function(){
-	$.ajax({
-		url: 'tester.html',
-		success: function(data){
-			console.log(data);
+	console.log("this");
+	formationName = $(this).find('label').text();
+	var query = new Parse.Query(Formation);
+	query.equalTo("parent", Parse.User.current().getUsername());
+	// query.equalTo("name", formationName);
+	// console.log(query);
+	query.find({
+		success: function(results){
+			console.log(results)
+		},
+		error: function(error){
+			console.log("sux");
+			console.log(error);
 		}
 	});
 });
 
+$('#projectName').hover(function(){
+	$(this).append(' <i class="icon-pencil hidden"></i>')}, 
+	function(){
+	$(this).children("i").remove();
+	})
+
+
 $('#save').click(function(){
+	console.log("clicked");
 	var divContents = $('#canvasWrapper').html();
-	var formationName = $('#projectName');
-	
-	// $.ajax({  
- //    type: 'GET',
- //    url: 'saver.php', 
- //    data: { contents: divContents },
- //    success: function(data, textStatus, jqXHR) {
- //        console.log(data);
- //    }
+	var formationName = $('#projectName').text();
+	var currentUser = Parse.User.current();
+	if(currentUser){
+		//check if formation exists?
+
+
+
+		formation = new Formation();
+		formation.set("name", formationName);
+		formation.set("contents", divContents);
+		formation.set("parent", currentUser.getUsername());
+		formation.save(null, {
+			succes: function(formation){
+				console.log("saved");
+			},
+			error: function(formation, error){
+				console.log("could not be saved")
+				console.log(error);
+			}
+		});
+	}
+	else{
+		console.log("nope");
+	}
 });
 
 $("#delete-container").droppable({
