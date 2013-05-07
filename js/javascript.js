@@ -46,15 +46,15 @@ $('.formation-name').click(function(){
 
 $('#save').click(function(){
 	var divContents = $('#canvasWrapper').html();
-	// var formationName = $('#projectName');
-	$.ajax({  
-    type: 'GET',
-    url: 'saver.php', 
-    data: { contents: divContents },
-    success: function(data, textStatus, jqXHR) {
-        console.log(data);
-    }
-});
+	var formationName = $('#projectName');
+	
+	// $.ajax({  
+ //    type: 'GET',
+ //    url: 'saver.php', 
+ //    data: { contents: divContents },
+ //    success: function(data, textStatus, jqXHR) {
+ //        console.log(data);
+ //    }
 });
 
 $("#delete-container").droppable({
@@ -386,16 +386,17 @@ function doneSelect(){
 				start: function(e, ui) {
 					//$(ui.helper).css("border", "1px solid red");
 					var img = $('<img class=\"overlay\">').attr('src', 'img/highlight.png');
-					div.append(img);
+					
 					//beginDrag(ui);
 					posTopArray=[];
 					posLeftArray=[];
-					if($(div).hasClass("my-selected")){
-						$(".my-selected").each(function (i){
+					if($(div).hasClass("selected")){
+						$(".selected").each(function (i){
 							eachtop=$(this).css('top');
 							eachleft=$(this).css('left');
 							posTopArray[i]=parseInt(eachtop);
 							posLeftArray[i]=parseInt(eachleft);
+							div.append(img);
 							
 						});
 					}
@@ -413,8 +414,8 @@ function doneSelect(){
 					  var topdiff = $(this).offset().top - begintop;  // Current distance dragged element has traveled vertically
 					  var leftdiff = $(this).offset().left - beginleft; // Current distance dragged element has traveled horizontally
 
-					  if ($(this).hasClass("my-selected")) {
-						   $(".my-selected").each(function(i) {
+					  if ($(this).hasClass("selected")) {
+						   $(".selected").each(function(i) {
 								$(this).css('top', posTopArray[i] + topdiff); // Move element veritically - current css top + distance dragged element has travelled vertically
 								$(this).css('left', posLeftArray[i] + leftdiff); // Move element horizontally - current css left + distance dragged element has travelled horizontally
 						   });
@@ -442,7 +443,7 @@ function selectAll(){
 	for (var i = 0; i<dancerCounter; i++){
 			var divname="#dancer-"+i;
 			var div = $(divname);
-			$(div).addClass('my-selected');
+			$(div).addClass('selected');
 			var img = $('<img class=\"overlay\">').attr('src', 'img/highlight.png');
 			$(div).append(img);
 	}
@@ -466,11 +467,11 @@ function enableSelect(){
 					console.log(idnum);
 					console.log(dancerToggle[idnum]);
 					if(dancerToggle[idnum]%2==0){
-						$(this).removeClass('my-selected');
+						$(this).removeClass('selected');
 						$('div#dancer-'+idnum+' img:last-child').remove();
 						console.log($(this).context.id +' removed');
 					}else{
-						$(this).addClass('my-selected');
+						$(this).addClass('selected');
 						$(this).append(img);
 						console.log($(this)[0].id + ' selected');
 					}
@@ -504,7 +505,7 @@ function endSelect(){
 			var div = $("#dancer-"+i);
 			//console.log(div);
 			
-			div.removeClass('my-selected');
+			div.removeClass('selected');
 			div.selectable({disabled:false});
 			div.draggable({disabled:false});
 		}
