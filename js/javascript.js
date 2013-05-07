@@ -1206,33 +1206,38 @@ function arrangeDancers(){
 	closeArrangeDialog();
 	//alert("At this time, your dancers could not be automatically arranged in a '"+arrangement+"' format. We appologize for any inconvenience.", closeArrangeDialog());
 
-	var dancers = [];
-	dancers = $('.shape');
+
+	if($(".selected").length>0){
+		selector = ".selected";
+	}
+	else{
+		selector = ".shape";
+	}
 
 	 switch(arrangement){
 	 	case 'oneHorizLine': 
-	 		arrangeInOneHorizLine('.shape');
+	 		arrangeInOneHorizLine(selector);
 	 		break;
 		case 'twoHorizLines': 
-			arrangeInTwoHorizLines('.shape');
+			arrangeInTwoHorizLines(selector);
 			break;
 	 	case 'oneVertLine': 
-	 		arrangeInOneVertLine('.shape');
+	 		arrangeInOneVertLine(selector);
 	 		break;
 	 	case 'twoVertLines': 
-	 		arrangeInTwoVertLines('.shape');
+	 		arrangeInTwoVertLines(selector);
 	 		break;
 	 	case 'diamond': 
-	 		arrangeInDiamond('.shape');
+	 		arrangeInDiamond(selector);
 	 		break;
 	 	case 'circle': 
-	 		arrangeInCircle('.shape');
+	 		arrangeInCircle(selector);
 	 		break;
 	 	case 'V': 
-	 		arrangeInV('.shape');
+	 		arrangeInV(selector);
 	 		break;
 	 	case 'X': 
-	 		arrangeInX('.shape');
+	 		arrangeInX(selector);
 	 		break;
 	 }
 	// console.log("DANCERS: " + dancers);
