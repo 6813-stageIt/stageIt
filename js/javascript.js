@@ -1203,9 +1203,196 @@ function closePropDialog() {
 function arrangeDancers(){
 	var arrangement = $('input[name=arrangement]:radio:checked').attr('value');
 	closeArrangeDialog();
-	alert("At this time, your dancers could not be automatically arranged in a '"+arrangement+"' format. We appologize for any inconvenience.", closeArrangeDialog());
+	//alert("At this time, your dancers could not be automatically arranged in a '"+arrangement+"' format. We appologize for any inconvenience.", closeArrangeDialog());
+
+	var dancers = [];
+	dancers = $('.shape');
+
+	 switch(arrangement){
+	 	case 'oneHorizLine': 
+	 		arrangeInOneHorizLine('.shape');
+	 		break;
+		case 'twoHorizLines': 
+			arrangeInTwoHorizLines('.shape');
+			break;
+	 	case 'oneVertLine': 
+	 		arrangeInOneVertLine('.shape');
+	 		break;
+	 	case 'twoVertLines': 
+	 		arrangeInTwoVertLines('.shape');
+	 		break;
+	 	case 'diamond': 
+	 		arrangeInDiamond('.shape');
+	 		break;
+	 	case 'circle': 
+	 		arrangeInCircle('.shape');
+	 		break;
+	 	case 'V': 
+	 		arrangeInV('.shape');
+	 		break;
+	 	case 'X': 
+	 		arrangeInX('.shape');
+	 		break;
+	 }
+	// console.log("DANCERS: " + dancers);
+	// console.log($('.shape')[0]);
+	// console.log($('.shape')[1]);
+	// console.log($('.shape').length);
+
+	// dancers.css('top',300);
+	// dancers.css('left',300);
 }	 
 
+function arrangeInOneHorizLine(selector){
+	//console.log(objects.height);
+	//console.log(objects.width);
+
+	var canvas = document.getElementById('canvas-stage');
+	//console.log("canvas height = "+canvas.height);
+	//console.log("canvas width = "+canvas.width);
+	var xCenter = canvas.width/2;
+	var yCenter = canvas.height/2;
+
+	var x = xCenter - (getTotalWidth(selector)/2);
+	var y = yCenter - (getMaxHeight(selector)/2);
+	console.log("initial (x,y) = " + x + "," + y);
+
+	$(selector).each(function(index) {
+	  $(this).css('left',x);
+	  $(this).css('top',y);
+	  x = x + $(this).width();
+	});
+}
+
+function arrangeInTwoHorizLines(selector){
+	var canvas = document.getElementById('canvas-stage');
+	//console.log("canvas height = "+canvas.height);
+	//console.log("canvas width = "+canvas.width);
+
+	var xCenter = canvas.width/2;
+	var yCenter = canvas.height/2;
+
+	half = Math.floor($(selector).length/2);
+	console.log("half = "+half);
+
+	var x = xCenter - (getTotalWidth(selector+":lt("+half+")")/2);
+	var y = yCenter + (getMaxHeight(selector+":lt("+half+")"));
+	console.log("initial (x,y) = " + x + "," + y);
+
+	$(selector+":lt("+half+")").each(function(index) {
+	  $(this).css('left',x);
+	  $(this).css('top',y);
+	  x = x + $(this).width();
+	});
+
+	var x = xCenter - (getTotalWidth(selector+":gt("+(half-1)+")")/2);
+	var y = yCenter - (getMaxHeight(selector+":gt("+(half-1)+")"));
+	
+	$(selector+":gt("+(half-1)+")").each(function(index) {
+	  $(this).css('left',x);
+	  $(this).css('top',y);
+	  x = x + $(this).width();
+	});
+}
+
+function arrangeInOneVertLine(selector){
+	var canvas = document.getElementById('canvas-stage');
+	//console.log("canvas height = "+canvas.height);
+	//console.log("canvas width = "+canvas.width);
+	var xCenter = canvas.width/2;
+	var yCenter = canvas.height/2;
+
+	var x = xCenter - (getMaxWidth(selector)/2);
+	var y = yCenter - (getTotalHeight(selector)/2);
+	console.log("initial (x,y) = " + x + "," + y);
+
+	$(selector).each(function(index) {
+	  $(this).css('left',x);
+	  $(this).css('top',y);
+	  y = y + $(this).height();
+	});
+}
+
+function arrangeInTwoVertLines(selector){
+	var canvas = document.getElementById('canvas-stage');
+	//console.log("canvas height = "+canvas.height);
+	//console.log("canvas width = "+canvas.width);
+
+	var xCenter = canvas.width/2;
+	var yCenter = canvas.height/2;
+
+	half = Math.floor($(selector).length/2);
+	console.log("half = "+half);
+
+	var x = xCenter + (getMaxWidth(selector+":lt("+half+")"));
+	var y = yCenter - (getTotalHeight(selector+":lt("+half+")")/2);
+	console.log("initial (x,y) = " + x + "," + y);
+
+	$(selector+":lt("+half+")").each(function(index) {
+	  $(this).css('left',x);
+	  $(this).css('top',y);
+	  y = y + $(this).height();
+	});
+
+	var x = xCenter - (getMaxWidth(selector+":gt("+(half-1)+")"));
+	var y = yCenter - (getTotalHeight(selector+":gt("+(half-1)+")")/2);
+	
+	$(selector+":gt("+(half-1)+")").each(function(index) {
+	  $(this).css('left',x);
+	  $(this).css('top',y);
+	  y = y + $(this).height();
+	});
+}
+
+
+function getMaxHeight(selector){
+	var maxHeight = 0;
+	//console.log("initial max height = "+maxHeight);
+	
+	$(selector).each(function(index) {
+		if($(this).height()>maxHeight){
+			maxHeight = $(this).height();
+		}
+	});
+	//console.log("final max height = "+maxHeight);
+	return maxHeight;
+}
+
+function getMaxWidth(selector){
+	var maxWidth = 0;
+	//console.log("initial max width = "+maxWidth);
+	
+
+	$(selector).each(function(index) {
+		if($(this).width()>maxWidth){
+			maxWidth = $(this).width();
+		}
+	});
+	//console.log("final max width = "+maxWidth);
+	return maxWidth;
+}
+
+function getTotalHeight(selector){
+	var totHeight = 0;
+	//console.log("initial total height = "+totHeight);
+	
+	$(selector).each(function(index) {
+		totHeight = totHeight + $(this).height();
+	});
+	//console.log("final total height = "+totHeight);
+	return totHeight;
+}
+
+function getTotalWidth(selector){
+	var totWidth = 0;
+	//console.log("initial total width = "+totWidth);
+	
+	$(selector).each(function(index) {
+		totWidth = totWidth + $(this).width();
+	});
+	//console.log("final total width = "+totWidth);
+	return totWidth;
+}
 
 function closeArrangeDialog() {
 	$('#arrangeDancersModal').modal('hide'); 
