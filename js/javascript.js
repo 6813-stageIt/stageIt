@@ -1277,6 +1277,8 @@ function arrangeDancers(){
 		selector = ".shape";
 	}
 
+	setOriginalPositions(selector);
+
 	 switch(arrangement){
 	 	case 'oneHorizLine': 
 	 		arrangeInOneHorizLine(selector);
@@ -1290,8 +1292,11 @@ function arrangeDancers(){
 	 	case 'twoVertLines': 
 	 		arrangeInTwoVertLines(selector);
 	 		break;
-	 	case 'diamond': 
-	 		arrangeInDiamond(selector);
+	 	case 'topArc': 
+	 		arrangeInTopArc(selector);
+	 		break;
+	 	case 'bottomArc': 
+	 		arrangeInBottomArc(selector);
 	 		break;
 	 	case 'circle': 
 	 		arrangeInCircle(selector);
@@ -1312,6 +1317,12 @@ function arrangeDancers(){
 	// dancers.css('left',300);
 }	 
 
+var originalObjPositions = [];
+function setOriginalPositions(selector){
+	//originalObjPositions = $(selector).position();
+	//console.log(originalObjPositions);
+}
+
 function arrangeInOneHorizLine(selector){
 	//console.log(objects.height);
 	//console.log(objects.width);
@@ -1320,14 +1331,20 @@ function arrangeInOneHorizLine(selector){
 	console.log("canvas height = "+canvas.height);
 	console.log("canvas width = "+canvas.width);
 	
-	var xCenter = (canvas.width/2)+130;
-	var yCenter = (canvas.height/2);//-50;
+	var xCenter = 400;//(canvas.width/2)+130;
+	var yCenter = 200;//(canvas.height/2)-50;
 
-	var x = xCenter - (getTotalWidth(selector)/4);
-	var y = yCenter - (getMaxHeight(selector)/2);
 	//console.log("initial (x,y) = " + x + "," + y);
 	var overflow = getTotalWidth(selector)>canvas.width;
 	var squeeze = canvas.width/getTotalWidth(selector);
+
+	if(overflow){
+		var x = 160;
+	}else{
+		var x = xCenter - (getTotalWidth(selector)/4);
+	}
+	var y = yCenter - (getMaxHeight(selector)/2);
+
 	$(selector).each(function(index) {
 	  $(this).css('left',x);
 	  $(this).css('top',y);
@@ -1344,17 +1361,22 @@ function arrangeInTwoHorizLines(selector){
 	//console.log("canvas height = "+canvas.height);
 	//console.log("canvas width = "+canvas.width);
 
-	var xCenter = (canvas.width/2)+130;
-	var yCenter = (canvas.height/2)-50;
+	var xCenter = 400;//(canvas.width/2)+130;
+	var yCenter = 200;//(canvas.height/2)-50;
 
 	half = Math.floor($(selector).length/2);
 	//console.log("half = "+half);
 
-	var x = xCenter - (getTotalWidth(selector+":lt("+half+")")/2);
-	var y = yCenter + (getMaxHeight(selector+":lt("+half+")"));
 	//console.log("initial (x,y) = " + x + "," + y);
 	var overflow = getTotalWidth(selector+":lt("+half+")")>canvas.width;
 	var squeeze = canvas.width/getTotalWidth(selector+":lt("+half+")");
+	
+	if(overflow){
+		var x = 160;
+	}else{
+		var x = xCenter - (getTotalWidth(selector+":lt("+half+")")/2);
+	}
+	var y = yCenter + (getMaxHeight(selector+":lt("+half+")"));
 	
 
 	$(selector+":lt("+half+")").each(function(index) {
@@ -1367,10 +1389,15 @@ function arrangeInTwoHorizLines(selector){
 	  }
 	});
 
-	var x = xCenter - (getTotalWidth(selector+":gt("+(half-1)+")")/2);
-	var y = yCenter - (getMaxHeight(selector+":gt("+(half-1)+")"));
 	var overflow = getTotalWidth(selector+":gt("+(half-1)+")")>canvas.width;
 	var squeeze = canvas.width/getTotalWidth(selector+":gt("+(half-1)+")");
+	
+	if(overflow){
+		x = 80;
+	}else{
+		x = xCenter - (getTotalWidth(selector+":gt("+(half-1)+")")/2);
+	}
+	var y = yCenter - (getMaxHeight(selector+":gt("+(half-1)+")"));
 	
 	
 	$(selector+":gt("+(half-1)+")").each(function(index) {
@@ -1388,8 +1415,10 @@ function arrangeInOneVertLine(selector){
 	var canvas = document.getElementById('canvas-stage');
 	//console.log("canvas height = "+canvas.height);
 	//console.log("canvas width = "+canvas.width);
-	var xCenter = (canvas.width/2)+130;
-	var yCenter = (canvas.height/2)+100;
+	var xCenter = 400;//(canvas.width/2)+130;
+	var yCenter = 200;//(canvas.height/2)-50;
+	//var xCenter = (canvas.width/2)+130;
+	//var yCenter = (canvas.height/2)+100;
 
 	var x = xCenter - (getMaxWidth(selector)/2);
 	var y = 30;//yCenter - (getTotalHeight(selector)/4);
@@ -1414,8 +1443,8 @@ function arrangeInTwoVertLines(selector){
 	//console.log("canvas height = "+canvas.height);
 	//console.log("canvas width = "+canvas.width);
 
-	var xCenter = (canvas.width/2)+130;
-	var yCenter = (canvas.height/2)+100;
+	var xCenter = 400;//(canvas.width/2)+130;
+	var yCenter = 200;//(canvas.height/2)-50;
 
 	half = Math.floor($(selector).length/2);
 	//console.log("half = "+half);
@@ -1455,10 +1484,12 @@ function arrangeInTwoVertLines(selector){
 
 function arrangeInCircle(selector){
 	var canvas = document.getElementById('canvas-stage');
-	var xCenter = (canvas.width/2)+80;
-	var yCenter = (canvas.height/2);
+	var xCenter = 400;//(canvas.width/2)+130;
+	var yCenter = 200;//(canvas.height/2)-50;
+//	var xCenter = (canvas.width/2)+82;
+//	var yCenter = (canvas.height/2);
 	
-	var radius = 200;
+	var radius = 130;
 	// var circumference = Math.PI*2*radius;
 	// var avgTotDiameter = (getTotalHeight(selector)+getTotalWidth(selector))/2;
 
@@ -1473,6 +1504,71 @@ function arrangeInCircle(selector){
 	  $(this).css('left',x);
 	  $(this).css('top',y);
 	  t = t + (Math.PI*2/$(selector).length);//($(this).height()+$(this).width()));
+	  x = (radius*Math.cos(t))+ xCenter;
+      y = (radius*Math.sin(t))+ yCenter;
+
+	  console.log(t);
+	  console.log("x="+x);
+	  console.log("y="+y);
+	});
+}
+
+
+function arrangeInTopArc(selector){
+	var canvas = document.getElementById('canvas-stage');
+	var xCenter = 400;//(canvas.width/2)+130;
+	var yCenter = 200;//(canvas.height/2)-50;
+//	var xCenter = (canvas.width/2)+82;
+//	var yCenter = (canvas.height/2);
+	
+	var radius = 130;
+	// var circumference = Math.PI*2*radius;
+	// var avgTotDiameter = (getTotalHeight(selector)+getTotalWidth(selector))/2;
+
+	// //console.log("initial (x,y) = " + x + "," + y);
+	// var squeeze = circumference/avgTotDiameter;
+
+	var t = 0;
+	var x = (radius*Math.cos(t))+ xCenter;
+    var y = (radius*Math.sin(t))+ yCenter;
+
+	$(selector).each(function(index) {
+	  $(this).css('left',x);
+	  $(this).css('top',y);
+	  t = t + (-Math.PI/$(selector).length);//($(this).height()+$(this).width()));
+	  x = (radius*Math.cos(t))+ xCenter;
+      y = (radius*Math.sin(t))+ yCenter;
+
+	  console.log(t);
+	  console.log("x="+x);
+	  console.log("y="+y);
+	});
+}
+
+
+
+function arrangeInBottomArc(selector){
+	var canvas = document.getElementById('canvas-stage');
+	var xCenter = 400;//(canvas.width/2)+130;
+	var yCenter = 200;//(canvas.height/2)-50;
+//	var xCenter = (canvas.width/2)+82;
+//	var yCenter = (canvas.height/2);
+	
+	var radius = 130;
+	// var circumference = Math.PI*2*radius;
+	// var avgTotDiameter = (getTotalHeight(selector)+getTotalWidth(selector))/2;
+
+	// //console.log("initial (x,y) = " + x + "," + y);
+	// var squeeze = circumference/avgTotDiameter;
+
+	var t = 0;
+	var x = (radius*Math.cos(t))+ xCenter;
+    var y = (radius*Math.sin(t))+ yCenter;
+
+	$(selector).each(function(index) {
+	  $(this).css('left',x);
+	  $(this).css('top',y);
+	  t = t + (Math.PI/$(selector).length);//($(this).height()+$(this).width()));
 	  x = (radius*Math.cos(t))+ xCenter;
       y = (radius*Math.sin(t))+ yCenter;
 

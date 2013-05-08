@@ -45,7 +45,7 @@
           <div class="nav-collapse collapse">
             <ul class="nav">
               <li><a href="#">Dashboard</a></li>
-              <li class="active"><a href="#">Current Project</a></li>
+              <li class="active"><a href="#" id="currproj">Current Project</a></li>
             </ul>
             <ul class="nav pull-right">  
             <li class="dropdown pull-right">  
@@ -86,16 +86,29 @@
 
 				
 			</div>
-			<div id="content">
-<!-- 				<div id="toolbar">
-				<ul id="pageActionsNav" class="nav nav-pills">
-					<li><a id="newFormation" class="enabled-button tool" data-toggle="tooltip" title="Create a new formation" data-placement="left" data-container="body"><img src="img/plus_blue.png" class="img-nav" /> New</a></li>
-
-					<li><a id="undo" class="enabled-button"><img src="img/arrow_undo.png" class="img-nav"/> Undo</a></li>
-					<li><a id="redo" class="enabled-button"><img src="img/arrow_redo.png" class="img-nav" /> Redo</a></li>
-					<li><a id="save" class="enabled-button"><img src="img/save.png" class="img-nav"/> Save</a></li>
+						<div id="content">
+				<div id="toolbar">
+				<ul class="nav nav-pills">
+					<li><a id="straightPathTool" class="toolButton tool" onclick="drawPathPrompt()" data-toggle="tooltip" title="Draw arrows on the stage" data-placement="bottom" data-container="body">
+						<img src="img/straight_arrow.png" class="img-tool"/><label class="inline"></label>
+					</a></li>
+					<li><a id="curvePathTool" class="toolButton tool" onclick="drawCurvePathPrompt()" 
+							data-toggle="tooltip" title="Draw arrows on the stage" data-placement="bottom" data-container="body">
+								<img src="img/freeform_arrow.png" class="img-tool"/>
+									<label class="inline"></label>
+					</a></li>
+					<li><a id="movePathTool" class="toolButton tool" onclick="movePathPrompt()" 
+							data-toggle="tooltip" title="Move arrows on the Stage" data-placement="bottom" data-container="body">
+								<img src="img/move_arrow.png" class="img-tool"/>
+									<label class="inline"></label>
+					</a></li>
+					<li><a id="selectTool" class="toolButton tool" onclick="drawSelectPrompt()" 
+							data-toggle="tooltip" title="Select objects to implement formations" data-placement="bottom" data-container="body">
+								<img src="img/select_tool.png" class="img-tool"/>
+									<label class="inline"></label>
+					</a></li>
 				</ul>
-				</div> -->
+				</div>
 
 				<div id="sidebarActions">
 					<div class="labelContainer">
@@ -107,7 +120,7 @@
 					<tr class="last"><td><a id="addProps" href="#choosePropModal" data-toggle="modal" class="tool" data-toggle="tooltip" title="Add prop objects to the stage" data-placement="right"><label>Add Props</label></a></td></tr>
 					<tr class="last"><td class="last"><a id="arrangeDancers" href="#arrangeDancersModal" data-toggle="modal" class="tool" data-toggle="tooltip" title="Arrange dancers on stages in template formations" data-placement="right"><label>Arrange Dancers</label></a></td></tr>
 					</table></div>
-					<div class="labelContainer">
+<!-- 					<div class="labelContainer">
 					
 					<label><h5><i class="icon-wrench"></i> Tools</h5></label>
 					</div>
@@ -136,7 +149,7 @@
 								<img src="img/select_tool.png" class="img-tool"/>
 									<label class="inline"></label></a>
 						</td></tr>
-					</table>
+					</table> -->
 						<div class="labelContainer">
 						<label><h5><i class="icon-th-list"></i> Formations</h5></label>
 						</div>
@@ -275,7 +288,8 @@
 					<input type="radio" name="arrangement" value="twoHorizLines">Two Horizontal Lines<br>
 					<input type="radio" name="arrangement" value="oneVertLine">One Vertical Line<br>
 					<input type="radio" name="arrangement" value="twoVertLines">Two Vertical Lines<br>
-					<input type="radio" name="arrangement" value="diamond">Diamond<br>
+					<input type="radio" name="arrangement" value="topArc">Top Arc<br>
+					<input type="radio" name="arrangement" value="bottomArc">Bottom Arc<br>
 					<input type="radio" name="arrangement" value="circle">Circle<br>
 					<input type="radio" name="arrangement" value="V">V-shaped<br>
 					<input type="radio" name="arrangement" value="X">X-shaped<br>
