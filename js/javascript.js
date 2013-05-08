@@ -746,6 +746,17 @@ function changeColorOfImage(color){
 }
 
 
+// feedback:
+function showFeedback(type){
+	switch(type){
+		case 'save':
+			$('#showFeedback').text = "Save Successful.";
+			window.setTimeout("closeFeedbackDiv();", 5000);
+			break;
+}
+function closeFeedbackDiv(){
+	document.getElementById("showFeedback").style.display=" none";
+}
 
 
 
