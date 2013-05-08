@@ -54,7 +54,7 @@ $(document).ready(function() {
 // });
 
 $('#projectName').hover(function(){
-	$(this).append(' <i class="icon-pencil"></i>')}, 
+	$(this).append(' <i class="icon-pencil" id="icon-pencil"></i>')}, 
 	function(){
 	$(this).children("i").remove();
 	});

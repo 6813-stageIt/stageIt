@@ -111,6 +111,7 @@ $('#save').click(function(){
 });
 
 $('#projectName').click(function(){
+	console.log("merp");
 	bootbox.prompt("Enter a name for the formation", function(result){
 		if(result!=null){
 			$('#projectName').text(result).removeClass("default");
@@ -119,11 +120,46 @@ $('#projectName').click(function(){
 			if(currentUser){
 				var query = new Parse.Query(Formation);
 				query.get(id, {
-					sucess: function(formation){
-						
+					success: function(formation){
+						formation.set("name", result);
+						formation.save(null, {
+							success: function(formation) {
+								console.log("saved successfully");
+							},
+							error: function(object, error) {
+								console.log(error);
+							}
+						});
+					},
+					error: function(object, error){
+						console.log(error);
 					}
-				})
+				});
 			}
 		}
 	});
 });
+
+// //fields -> {object} where object = 
+// function save(formationId, fields){
+// 	if(Parse.User.current()){
+// 		var query = new Parse.Query(Formation);
+// 			query.get(formationId, {
+// 				success: function(formation){
+// 					for(field in fields)
+// 					formation.set("name", result);
+// 					formation.save(null, {
+// 						success: function(formation) {
+// 							console.log("saved successfully");
+// 						},
+// 						error: function(object, error) {
+// 							console.log(error);
+// 						}
+// 					});
+// 				},
+// 				error: function(object, error){
+// 					console.log(error);
+// 				}
+// 			});
+// 	}
+// }

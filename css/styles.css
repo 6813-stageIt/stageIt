@@ -96,7 +96,11 @@ td, th{
 i, img.img-nav{
 	opacity: 0.8;
 }
+i#icon-pencil{
+	position: absolute;
+	/*top: 5px;*/
 
+}
 .break{
 	clear:both;
 }
