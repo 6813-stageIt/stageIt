@@ -16,7 +16,6 @@ var listOfObjects=[];
 var selectedObjects=[];
 var undoStack=[];	//stack of all actions to undo
 var redoStack=[];	//stack of all actions to redo
-var tempDragArray=[];
 
 $.getScript('http://code.createjs.com/easeljs-0.6.0.min.js', function()
 {
@@ -171,7 +170,7 @@ $('#undo').click( function(){
 				break;
 			case "drag":
 				//console.log("about to undo drag");
-				console.log(action);
+				
 				div = action.object;
 				div.css({
 					'position':'absolute',
@@ -286,7 +285,7 @@ $('#redo').click( function(){
 					'height':action.newSize.height,
 				});
 			case "rename":
-				console.log(action.object);
+				//console.log(action.object);
 				action.object.find('.text').text(action.newName);
 				break;
 			case "multDrag":
@@ -374,7 +373,7 @@ function drawCurvePathPrompt(){
 	}
 }
 function movePathPrompt(){
-	console.log(movePath);
+	//console.log(movePath);
 	if(!movePath){
 		movePath=true;
 		var prompt = "<div id=\"pathNotif\" class=\"notif\"> Move an arrow by clicking and dragging on the stage<br> <button id=\"endPath\" onclick=\"endPath()\"> Cancel</div>"
@@ -433,7 +432,7 @@ function enableSelect(){
 		for (var i = 0; i<dancerCounter; i++){
 			var divname="#dancer-"+i;
 			var div = $(divname);
-			console.log(div);
+		//	console.log(div);
 			dancerToggle[i]=0;
 			div.selectable({
 				disabled:false,
@@ -443,17 +442,17 @@ function enableSelect(){
 					
 					var idnum = $(this)[0].id.replace('dancer-', '');
 					dancerToggle[idnum]=dancerToggle[idnum]+1;
-					console.log(idnum);
-					console.log(dancerToggle[idnum]);
+					//console.log(idnum);
+					//console.log(dancerToggle[idnum]);
 					if(dancerToggle[idnum]%2==0){
 						$(this).removeClass('selected');
 						idname = $(this).attr('id');
 						$('div#'+idname+' > img.overlay').remove();
-						console.log($(this).context.id +' removed');
+						//console.log($(this).context.id +' removed');
 					}else{
 						$(this).addClass('selected');
 						$(this).append(img);
-						console.log($(this)[0].id + ' selected');
+						//console.log($(this)[0].id + ' selected');
 					}
 					//$(this).append(img);
 				},
@@ -462,7 +461,7 @@ function enableSelect(){
 					
 					//$(this).remove(".overlay");
 					//console.log($(this));
-					console.log($(this).context.id +' removed');
+					//console.log($(this).context.id +' removed');
 					//$(this).css("border", "none");
 				},
 				
@@ -511,7 +510,7 @@ function redrawPaths(){
 		arrowStage.canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
 		arrowStage.removeAllChildren();
 		for(var i=0; i<listOfPaths.length; i++){
-			drawArrow(listOfPaths[i]);
+			drawShapeArrow(listOfPaths[i]);
 		}
 		////console.log(listOfPaths);
 }
@@ -544,7 +543,6 @@ $('#arrow-canvas').mousemove( function(e){
 		}
 		move.startx = arrowstartX;
 		move.starty = arrowstartY;
-		
 		if(move.type=='curve'){
 			arrowPath.push(pos)
 			move.path=arrowPath;
@@ -580,13 +578,14 @@ $('body').mouseup( function(e){
 					move.path=arrowPath
 					arrowPath=[]
 				}
-				drawArrow(move);
-				listOfPaths.push(move);
+				shapeArrow=drawArrow(move);
+				listOfPaths.push(shapeArrow);
 				//console.log('path pushed');
 				move.undoType="arrow";
+				move.arrow=shapeArrow;
 				undoStack.push(move);
 				redoStack=[];
-			}else{console.log('not moved');}
+			}else{console.log('not moved'); redrawPaths(); arrowPath=[]}
 			
 			endPath();
 		}
@@ -799,7 +798,6 @@ function drawArrow(arrow){
 		ratio=10;
 		var offset=$("#arrow-canvas").offset();
 			
-			
 			starty=arrow.starty-offset.top;
 			startx=arrow.startx-offset.left;
 			endy=arrow.endy-offset.top;
@@ -809,7 +807,7 @@ function drawArrow(arrow){
 			shapeArrow.graphics.setStrokeStyle(6,1);
 			shapeArrow.graphics.beginStroke(createjs.Graphics.getRGB(0,0,0,.5));
 			shapeArrow.graphics.moveTo(startx, starty);
-			var minLeft=endx;var minTop=endy;
+			var minLeft=arrow.endx;var minTop=arrow.endy;
 			if(arrow.type=='curve'){
 					var anglesum=0;
 					var anglesumcount=0;
@@ -820,10 +818,10 @@ function drawArrow(arrow){
 							anglesum+=Math.atan2(endy-arrow.path[i].y+offset.top,endx-arrow.path[i].x+offset.left);
 						}
 						if (arrow.path[i].x<minLeft){
-							minLeft=arrow.path[i].x-offset.left;
+							minLeft=arrow.path[i].x;
 						}
 						if (arrow.path[i].y<minTop){
-							minTop=arrow.path[i].y-offset.top;
+							minTop=arrow.path[i].y;
 						}
 					}
 					angle=anglesum/anglesumcount;
@@ -839,61 +837,49 @@ function drawArrow(arrow){
 			var min=new Object();
 			min.top=minTop;
 			min.left=minLeft;
-			//console.log(min);
+			console.log(min);
 			shapeArrow.min=min;
+			shapeArrow.diff=min;
 			shapeArrow.onPress = arrowPressHandler;
+			drawShapeArrow(shapeArrow);
+			var canvas = document.getElementById('arrow-canvas');
+			return shapeArrow;
+}
+function drawShapeArrow(shapeArrow){
 			arrowStage.addChild(shapeArrow);
 			arrowStage.update();
 			createjs.Ticker.addListener(window);
-			var canvas = document.getElementById('arrow-canvas');
-			return shapeArrow;
-					////console.log('awesomesauce');
-					////console.log(startx+endy);
-					/*var context = canvas.getContext('2d');
-					context.lineCap='round';
-					
-					context.strokeStyle = 'rgba(0, 0, 0, .5)'; //black arrow
-					context.lineWidth  =5;
-					
-					context.beginPath();
-					context.moveTo(startx, starty);
-					if(arrow.type=='curve'){
-						var anglesum=0;
-						var anglesumcount=0;
-						for (var i=0;i<arrow.path.length; i++){
-							context.lineTo(arrow.path[i].x-offset.left,arrow.path[i].y-offset.top);
-							if (arrow.path.length-i<10){
-								anglesumcount++;
-								anglesum+=Math.atan2(endy-arrow.path[i].y+offset.top,endx-arrow.path[i].x+offset.left);
-							}
-						}
-						angle=anglesum/anglesumcount;
-					}
-					context.lineTo(endx+1, endy+1);
-					context.moveTo(endx, endy);
-						context.lineTo(endx-ratio*Math.cos(angle+Math.PI/4),endy-ratio*Math.sin(angle+Math.PI/4)); //first tip of arrow
-						context.moveTo(endx, endy);
-						context.lineTo(endx-ratio*Math.cos(angle-Math.PI/4),endy-ratio*Math.sin(angle-Math.PI/4)); //second tip of arrow
-						context.moveTo(endx, endy);	
-					//context.closePath();
-					context.stroke();*/
-					
-		
-			
-		
+	
 }
 function arrowPressHandler(e){
-	 e.onMouseMove = function(ev){	
-		 	  e.target.x = ev.stageX-e.target.min.left;
-			  e.target.y = ev.stageY-e.target.min.top;
-			  console.log("x:"+ev.stageX)
-			  console.log("startx:"+e.target.min.left);
-			  /*if(Math.abs(e.target.min.left-e.target.x)<50){
+	
+	 e.onMouseMove = function(ev){
+			var offset=$("#arrow-canvas").offset();
+			/*
+			if(e.target.diff.left==0){
+				e.target.diff.left=e.target.min.left;
+			}
+		 	  e.target.x = ev.stageX+offset.left-e.target.min.left;
+			  e.target.y = ev.stageY+offset.top-e.target.min.top;
+			  console.log("ev.stageX:"+ev.stageX)
+			  console.log("min.x:"+e.target.min.left);
+			  console.log("e.target.diff.left: " +e.target.diff.left);
+			if(Math.abs(ev.stageX-e.target.diff.left)>100){
+				console.log('conspiracy');
+				oldTargetLeft=e.target.min.left;
+				e.target.min.left-=ev.stageX-e.target.diff.left;
+				e.target.diff.left=ev.stageX;
+			}*/
+			e.target.x = ev.stageX+offset.left-e.target.min.left;
+			e.target.y = ev.stageY+offset.top-e.target.min.top;
+			  /*(Math.abs(e.target.min.left-e.target.x)<50){
 			  e.target.min.left = e.target.x;
 			  }
 			  if(Math.abs(e.target.min.top-e.target.y)<50){
 			  e.target.min.top = e.target.y;
 			  }*/
+			  //e.target.min.left = e.target.x;
+			  //e.target.min.top = e.target.y;
 				
 		  
 		//console.log(e.target);
@@ -1007,12 +993,11 @@ function reAddObject(div, action){
 				if(!$(this).hasClass("selected")){
 					idname = $(this).attr('id');
 					$('div#'+idname+' > img.overlay').remove();
-						console.log('removed overlay');
 						endDrag(ui);
 				}else{
 					
 						$(".selected").each(function(i) {
-							console.log(undoArray[i]);
+							//console.log(undoArray[i]);
 							count++;
 							undoArray[i].undoType='drag';
 							undoStack.push(undoArray[i]);
@@ -1030,7 +1015,6 @@ function reAddObject(div, action){
 			}
 		});
 	
-	console.log(div);
 	if(div.hasClass("shape")){
 		//console.log('newShape');
 		
@@ -1096,7 +1080,7 @@ function addObjectAt(div,posX,posY,newClass){
 							moreDrag=new Object();
 							moreDrag.object=$(this);
 							moreDrag.oldPos=$(this).position();
-							console.log(moreDrag);
+							//console.log(moreDrag);
 							undoArray[i]=moreDrag;
 							
 						});
@@ -1124,12 +1108,11 @@ function addObjectAt(div,posX,posY,newClass){
 				if(!$(this).hasClass("selected")){
 					idname = $(this).attr('id');
 					$('div#'+idname+' > img.overlay').remove();
-						console.log('removed overlay');
 						endDrag(ui);
 				}else{
 					
 						$(".selected").each(function(i) {
-							console.log(undoArray[i]);
+							//console.log(undoArray[i]);
 							count++;
 							undoArray[i].undoType='drag';
 							undoStack.push(undoArray[i]);
