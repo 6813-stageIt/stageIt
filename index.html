@@ -89,11 +89,17 @@
 						<div id="content">
 				<div id="toolbar">
 				<ul class="nav nav-pills">
-					<li><a id="straightPathTool" class="toolButton tool" onclick="drawPathPrompt()" data-toggle="tooltip" title="Draw arrows on the stage" data-placement="bottom" data-container="body">
+					
+					<li><a id="resizeToggle" class="toggle" onclick="toggleResize()" 
+							data-toggle="tooltip" title="Toggle the resize function of objects" data-placement="bottom" data-container="body">
+								<img src="img/resize_on.png" class="img-toggle"/>
+									<label class="inline"></label>
+					</a></li>
+					<li><a id="straightPathTool" class="toolButton tool" onclick="drawPathPrompt()" data-toggle="tooltip" title="Draw a straight arrow on the stage" data-placement="bottom" data-container="body">
 						<img src="img/straight_arrow.png" class="img-tool"/><label class="inline"></label>
 					</a></li>
 					<li><a id="curvePathTool" class="toolButton tool" onclick="drawCurvePathPrompt()" 
-							data-toggle="tooltip" title="Draw arrows on the stage" data-placement="bottom" data-container="body">
+							data-toggle="tooltip" title="Draw a freeform arrow on the stage" data-placement="bottom" data-container="body">
 								<img src="img/freeform_arrow.png" class="img-tool"/>
 									<label class="inline"></label>
 					</a></li>
@@ -107,6 +113,7 @@
 								<img src="img/select_tool.png" class="img-tool"/>
 									<label class="inline"></label>
 					</a></li>
+					
 				</ul>
 				</div>
 

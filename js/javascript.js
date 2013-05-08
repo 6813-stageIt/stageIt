@@ -422,7 +422,7 @@ function drawSelectPrompt(){
 }
 function doneSelect(){
 	clearPrompt();
-	var prompt = "<div id=\"selectNotif\" class=\"notif\"> The next actions will correspond to all the dancers, you can drag, resize, ... <br> <button id=\"endSelect\" onclick=\"endSelect()\"> Done</div>";
+	var prompt = "<div id=\"selectNotif\" class=\"notif\"> The next actions will correspond to all the dancers, you can drag, delete, arrange, ... <br> <button id=\"endSelect\" onclick=\"endSelect()\"> Done</div>";
 	$(prompt).appendTo("#canvasWrapper").addClass('animated fadeIn');
 	console.log('reenable things');	
 	for (var i = 0; i<dancerCounter; i++){
@@ -510,6 +510,31 @@ function endSelect(){
 			div.resizable({disabled:false});
 			
 		}
+}
+function toggleResize(){
+	if($("#resizeToggle").hasClass('toggle')){
+	$("#resizeToggle").removeClass('toggle');
+	$("#resizeToggle img").attr('src', 'img/resize_off.png');
+	console.log($("#resizeToggle img").attr('src'));
+	for (var i = 0; i<dancerCounter; i++){
+			var div = $("#dancer-"+i);
+			//console.log(div);
+			
+			div.resizable({disabled:true});
+			
+		}
+	}else{
+		$("#resizeToggle").addClass('toggle');
+		$("#resizeToggle img").attr('src', 'img/resize_on.png');
+		console.log($("#resizeToggle img").attr('src'));
+		for (var i = 0; i<dancerCounter; i++){
+			var div = $("#dancer-"+i);
+			//console.log(div);
+			
+			div.resizable({disabled:false});
+			
+		}
+	}
 }
 function endPath(){
 	(elem=document.getElementById("pathNotif")).parentNode.removeChild(elem);
@@ -1312,8 +1337,15 @@ function endResize(ui){
 function closePropDialog() {
 	$('#choosePropModal').modal('hide'); 
 };
-
+$('.shape').click(function(e){
+	console.log(e);
+	console.log($(this));
+});
 function arrangeDancers(){
+	$("#selectNotif").remove();
+	//clearPrompt();
+	var prompt = "<div id=\"selectNotif\" class=\"notif\"> The next actions will correspond to all the dancers, you can drag, delete, arrange, ... <br> <button id=\"endSelect\" onclick=\"endSelect()\"> Done</div>";
+	$(prompt).appendTo("#canvasWrapper").addClass('animated fadeIn');
 	var arrangement = $('input[name=arrangement]:radio:checked').attr('value');
 	closeArrangeDialog();
 	//alert("At this time, your dancers could not be automatically arranged in a '"+arrangement+"' format. We appologize for any inconvenience.", closeArrangeDialog());
