@@ -16,6 +16,7 @@ var listOfObjects=[];
 var selectedObjects=[];
 var undoStack=[];	//stack of all actions to undo
 var redoStack=[];	//stack of all actions to redo
+var saveStage=null;
 
 $.getScript('http://code.createjs.com/easeljs-0.6.0.min.js', function()
 {
@@ -107,6 +108,26 @@ function createNewFormation(){
 	$('table#formations').find('*').removeClass("current");
 	newRow.appendTo($('#formations tbody'));
 	$('#projectName').text("Untitled Formation "+formationCounter).addClass("default");
+	var formation = new Formation();
+	formation.set("project", $("#currproj").text());
+	formation.set("user", Parse.User.current());
+	formation.set("name", "Untitled Formation "+formationCounter);
+	formation.set("contents", null);
+	formation.set("stage", saveStage);
+	// formation.set("parent", project);
+	formation.save(null, {
+		success: function(formation) {
+    // The object was saved successfully.
+	    console.log("success bitches");
+	    console.log($('.current.formation-name'));
+	    $('.current.formation-name').attr("data-id", formation.id);
+	  },
+	  error: function(formation, error) {
+    // The save failed.
+    // error is a Parse.Error with an error code and description.
+	    console.log("ok.jpg");
+	  }
+	});
 }
 
 $('#newFormation').click( function(){
@@ -704,6 +725,8 @@ function drawStageShape(stage){
 			drawTrapezoidBigFrontStage();
 			break;
 	}
+	saveStage = stage;
+	saveStagetoParse(stage);
 }
 
 function drawRectangleStage(){

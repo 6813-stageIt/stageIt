@@ -53,7 +53,7 @@ function validateProject(name){
   var Project = Parse.Object.extend("Project");
   var query = new Parse.Query(Project);
   query.equalTo("name", name);
-  var bool;
+  query.equalTo("user", Parse.User.current());
   query.first({
       success: function(object) {
         if (object) {

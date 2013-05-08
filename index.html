@@ -51,7 +51,7 @@
             <li class="dropdown pull-right">  
               <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-user"></i> <span id="username">Username</span> <b class="caret"></b></a>  
               <ul class="dropdown-menu">  
-                <li><a href="#">Account</a></li>
+                <!-- <li><a href="#">Account</a></li> -->
                 <li><a href="#" id="logout">Logout</a></li>
               </ul>  
             </li>  
@@ -77,6 +77,7 @@
 					<li class="active"><a id="undo" class="enabled-button"><img src="img/arrow_undo.png" class="img-nav"/> Undo</a></li>
 					<li class="active"><a id="redo" class="enabled-button"><img src="img/arrow_redo.png" class="img-nav" /> Redo</a></li>
 					<li class="active"><a id="save" class="enabled-button"><img src="img/save.png" class="img-nav"/> Save</a></li>
+					<li class="active"><a id="delete" class="enabled-button"><img src="img/blue_delete.png" class="img-nav"/> Delete</a></li>
 					<li class="active dropdown"><a id="settings" class="enabled-button dropdown-toggle" data-toggle="dropdown" href="#"><img src="img/gear_blue.png" class="img-nav"/> Project Settings <b class="caret"></b></a>
 						<ul class="dropdown-menu">
 							<li><a id="rename">Rename Project</a></li>
@@ -90,22 +91,22 @@
 				<div id="toolbar">
 				<ul class="nav nav-pills">
 					<li><a id="straightPathTool" class="toolButton tool" onclick="drawPathPrompt()" data-toggle="tooltip" title="Draw arrows on the stage" data-placement="bottom" data-container="body">
-						<img src="img/straight_arrow.png" class="img-tool"/><label class="inline"></label>
+						<img src="img/straight_arrow.png" class="img-tool"/><label class="inline">Draw Straight Arrow</label>
 					</a></li>
 					<li><a id="curvePathTool" class="toolButton tool" onclick="drawCurvePathPrompt()" 
 							data-toggle="tooltip" title="Draw arrows on the stage" data-placement="bottom" data-container="body">
 								<img src="img/freeform_arrow.png" class="img-tool"/>
-									<label class="inline"></label>
+									<label class="inline">Draw Freeform Arrow</label>
 					</a></li>
 					<li><a id="movePathTool" class="toolButton tool" onclick="movePathPrompt()" 
-							data-toggle="tooltip" title="Move arrows on the Stage" data-placement="bottom" data-container="body">
+							data-toggle="tooltip" title="Move arrows on the stage" data-placement="bottom" data-container="body">
 								<img src="img/move_arrow.png" class="img-tool"/>
-									<label class="inline"></label>
+									<label class="inline">Move Arrow</label>
 					</a></li>
 					<li><a id="selectTool" class="toolButton tool" onclick="drawSelectPrompt()" 
-							data-toggle="tooltip" title="Select objects to implement formations" data-placement="bottom" data-container="body">
+							data-toggle="tooltip" title="Select multiple objects" data-placement="bottom" data-container="body">
 								<img src="img/select_tool.png" class="img-tool"/>
-									<label class="inline"></label>
+									<label class="inline">Select</label>
 					</a></li>
 				</ul>
 				</div>
@@ -307,7 +308,7 @@
 					$('#chooseStage').modal();
 				}	
 		$('.tool').tooltip();
-		$("#editStage").mouseenter();
+		
 		// window.setTimeout(function() {
 		//     $(".alert").slideUp(500, function(){
 		//         $(this).remove(); 
