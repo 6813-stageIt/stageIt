@@ -36,6 +36,7 @@ if($.getUrlVar('var')){
 	formation.set("user", currentUser);
 	formation.set("name", "Untitled Formation 1");
 	formation.set("contents", divContents);
+	formation.set("stage", null);
 	
 
 	// formation.set("parent", project);
