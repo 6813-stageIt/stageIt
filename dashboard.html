@@ -14,6 +14,7 @@
   <script src="js/jquery-ui-1.10.2.custom.min.js"></script>
   <script src="js/bootstrap.min.js"></script>
   <script src="js/bootbox.min.js"></script>
+  <script src="js/ejs_production.js"></script>
   <script>
       $(function(){
       Parse.initialize("61JEjzEt8GyaXUNUmt80f9BKJWRQD8TZXb6FZcqt", "tkGBjxWtIgmIIcQk5X4h1vxYQj9E8Fbfrnqgi2kG");
@@ -25,6 +26,7 @@
       else{
         var username = currentUser.getUsername();
         $('#username').html(username);
+        getProjects();
       }
 
       //logout and redirect to home page
@@ -36,19 +38,77 @@
       //create new project
       $('#create').click(function(){
         bootbox.prompt("Enter a name for the project.", function(result) {                
-          if (result === null) {                                             
-            // Example.show("Prompt dismissed");                              
-          } else {
+          if (result != null) { //cancel wasn't called                                          
             if(result.trim().length==0){
               console.log("nope");
+            } else {
+              //check if exists and go to create a new one
+              validateProject(result.trim());
             }
-            else{
-              str = encodeURIComponent(result.trim());
-              window.location = "index.html?var="+str;
-            }                          
           }
         });
       });
+
+function validateProject(name){
+  var Project = Parse.Object.extend("Project");
+  var query = new Parse.Query(Project);
+  query.equalTo("name", name);
+  var bool;
+  query.first({
+      success: function(object) {
+        if (object) {
+          console.log(object);
+          bootbox.alert("<strong>Error:</strong> A project with that name already exists!");
+        } else{
+          project = new Project();
+          project.set("name", name);
+          project.set("user", Parse.User.current());
+          project.save(null, {
+            success: function(project){
+                str = encodeURIComponent(name);
+                window.location = "index.html?var="+name;
+            },
+            error: function(project, error){
+              console.log(error);
+            }
+          });
+          
+        }
+      },
+      error: function(error) {
+        bootbox.alert("An unknown error occurred; Please try again later.");
+
+      }
+
+    });
+}
+
+function getProjects(name){
+  var Project = Parse.Object.extend("Project");
+  var query = new Parse.Query(Project);
+  query.equalTo("user", Parse.User.current());
+  query.limit(20);
+  query.find({
+  success: function(results) {
+    console.log(results);
+    if(results.length > 0){
+    
+    populateTable(results);
+    }
+  },
+  error: function(error) {
+    bootbox.alert("Error: " + error.code + " " + error.message);
+  }
+});
+}
+
+function populateTable(projects){
+  $("#projects").find("tr:gt(0)").remove();
+  
+}
+
+
+
     });
   </script>
 </head>
@@ -83,7 +143,7 @@
   <a id="create" class="btn pull-right pos-abs btn-success">Create new project!</a>
   <h2>Your Projects</h2>
   <hr>  
-  <table class="table table-hover table-striped">
+  <table id="projects" class="table table-hover table-striped">
     <thead>
       <tr>
         <th>#</th>
