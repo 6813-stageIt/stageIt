@@ -16,7 +16,8 @@ var listOfObjects=[];
 var selectedObjects=[];
 var undoStack=[];	//stack of all actions to undo
 var redoStack=[];	//stack of all actions to redo
-var saveStage=null;
+var resize = true;
+var saveStage;
 
 $.getScript('http://code.createjs.com/easeljs-0.6.0.min.js', function()
 {
@@ -28,10 +29,26 @@ $.getScript('http://code.createjs.com/easeljs-0.6.0.min.js', function()
 	arrowUpdate=false;
 	console.log("createjs updated");
 });
-$(document).ready(function() {
-	//formation = new Formation(formationCounter, stage);
-	
-	
+
+
+$('#resizeOn').click(function(){
+	resize = true;
+	$('.shape').resizable({
+		aspectRatio: 1 / 1,
+      maxWidth: 140,
+      addClasses: false,
+      disabled: !resize,
+	  start:function(e,ui){ 
+		beginResize(ui);
+	  },
+	  stop:function(e,ui){
+		endResize(ui);
+	  },
+    });
+});
+$('#resizeOff').click(function(){
+	resize = false;
+	$('.shape').resizable('destroy');
 });
 
 
@@ -1061,6 +1078,7 @@ function reAddObject(div, action){
       aspectRatio: 1 / 1,
       maxWidth: 140,
       addClasses: false,
+      disabled: !resize,
 	  start:function(e,ui){ 
 		beginResize(ui);
 	  },
@@ -1171,17 +1189,20 @@ function addObjectAt(div,posX,posY,newClass){
 	div.addClass("added");
 	div.addClass('animated bounceIn');
 	div.addClass(newClass);
-	div.resizable({
-      aspectRatio: 1 / 1,
-      maxWidth: 140,
-      addClasses: false,
-	  start:function(e,ui){ 
-		beginResize(ui);
-	  },
-	  stop:function(e,ui){
-		endResize(ui);
-	  },
-    });
+	if(resize){
+		div.resizable({
+	      aspectRatio: 1 / 1,
+	      maxWidth: 140,
+	      addClasses: false,
+	      disabled: !resize,
+		  start:function(e,ui){ 
+			beginResize(ui);
+		  },
+		  stop:function(e,ui){
+			endResize(ui);
+		  },
+	    });
+	}
 	
     div.draggable({
 			zIndex:100,
