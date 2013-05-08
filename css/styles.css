@@ -345,9 +345,18 @@ div#tasks-container{
 div#formations-container{
 	width:100%;
 	/*height:100%;*/
-	overflow: scroll;
+	height:150px;
+	/*height: inherit;*/
+	/*overflow-y: scroll;*/
 	/*border-bottom:1px solid #AAA;*/
 	/*border-top:1px solid black;*/
+}
+table#formations{
+	display: block;
+	max-height:100px;
+	/*height: inherit;*/
+	overflow-y:auto;
+
 }
 
 #sidebarActions table{
@@ -418,6 +427,7 @@ a#add-formation{
 	height: auto;
 
 }
+
 
 /*********** notes ******************/
 div#notes{

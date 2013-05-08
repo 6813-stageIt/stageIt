@@ -87,7 +87,7 @@ function getProjects(name){
   var Project = Parse.Object.extend("Project");
   var query = new Parse.Query(Project);
   query.equalTo("user", Parse.User.current());
-  query.limit(20);
+  // query.limit(20);
   query.find({
   success: function(results) {
     console.log(results);
@@ -110,12 +110,15 @@ function populateTable(projects){
     var dateCreated = new Date(project.createdAt);
     var id = project.id;
     var row = $('<tr></tr>').attr("data-id", id);
-    row.append('<td>'+i+'</td>')
-        .append('<td>'+name+'</td>')
+    row.append('<td>'+(i+1)+'</td>')
+        .append('<td class="name">'+name+'</td>')
         .append('<td>'+dateCreated.toLocaleDateString()+'</td>');
     row.click(function(){
-      bootbox.alert("clicked");
-    })
+      // bootbox.alert("clicked");
+      var name = $(this).find('.name').text();
+      var str = encodeURIComponent(name);
+      window.location = "index.html?open="+str;
+    });
     $('#projects').append(row);
 
   }

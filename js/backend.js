@@ -24,13 +24,15 @@ $.extend({
 });
 
 if($.getUrlVar('var')){
+	var projname = decodeURIComponent($.getUrlVar('var'));
 	var divContents = $('#canvasWrapper').html();
-	var project = new Project();
-	project.set("name",$.getUrlVar('var'));
-	project.set("user", currentUser);
-	$('#project').html($.getUrlVar('var'));
+	$('#currproj').text(projname);
+	// var project = new Project();
+	// project.set("name",$.getUrlVar('var'));
+	// project.set("user", currentUser);
+	$('#project').html(projname);
 	var formation = new Formation();
-	formation.set("project", $.getUrlVar('var'));
+	formation.set("project", projname);
 	formation.set("user", currentUser);
 	formation.set("name", "Untitled Formation 1");
 	formation.set("contents", divContents);
@@ -51,6 +53,58 @@ if($.getUrlVar('var')){
   }
 });
 	
+} else if ($.getUrlVar('open')){
+	var projname = decodeURIComponent($.getUrlVar('open'));
+	var divContents = $('#canvasWrapper').html();
+	$('#currproj').text(projname);
+	getFormations(projname);
+}
+
+function getFormations(projectName){
+  // var Project = Parse.Object.extend("Formation");
+  var query = new Parse.Query(Formation);
+  query.equalTo("user", Parse.User.current());
+  query.equalTo("project", projectName);
+  // query.limit(20);
+  query.find({
+  success: function(results) {
+    console.log(results);
+    if(results.length > 0){
+    
+    populateTable(results);
+    }
+  },
+  error: function(error) {
+    bootbox.alert("Error: " + error.code + " " + error.message);
+  }
+});
+}
+
+function populateTable(formations){
+  $("#formations").find("tr:gt(0)").remove();
+  for(var i=0; i<formations.length; i++){
+    var formation = formations[i];
+    var name = formation.get("name");
+    var id = formation.id;
+    var row = $('<tr></tr>');
+    row.append('<td><a class="formation-name" data-id="'+id+'"><label>'+name+'</label></a></td>')
+  //   row.click(function(){
+	 //    var id =  $(this).attr("data-id");
+		// var query = new Parse.Query(Formation);
+		// query.get(id,{
+		// 	success: function(formation) {
+		// 	    console.log("yay");
+		// 	    $('#canvasWrapper').html(formation.get("contents"));
+		// 	},
+		// 	error: function(object, error) {
+		// 	// The object was not retrieved successfully.
+		// 	// error is a Parse.Error with an error code and description.
+		// 	}
+		// });
+  //   });
+    $('#formations').append(row);
+
+  }
 }
 
 
