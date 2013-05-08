@@ -630,6 +630,7 @@ $('#chooseArrangementModal').on('hidden', function(){
 
 //close stage modal dialog
 function closeStageDialog() {
+	console.log("close dialog");
 	$('#chooseStage').modal('hide'); 
 };
 
@@ -1336,6 +1337,7 @@ function arrangeInTwoVertLines(selector){
 
 function arrangeInCircle(selector){
 	var canvas = document.getElementById('canvas-stage');
+	var xCenter = (canvas.width/2)+80;
 	var yCenter = (canvas.height/2);
 	
 	var radius = 200;
@@ -1359,6 +1361,7 @@ function arrangeInCircle(selector){
 	  console.log(t);
 	  console.log("x="+x);
 	  console.log("y="+y);
+	});
 }
 
 
