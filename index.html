@@ -72,7 +72,7 @@
 			<div id="subHeader">
 				<div id="pageTitle"><h1><a id="projectName" class="tool default" data-toggle="tooltip" title="Click to change title">Untitled Formation 1</a></h1></div>
 				<ul id="pageActionsNav" class="nav nav-tabs">
-					<li class="active"><a id="newFormation" class="enabled-button tool active" data-toggle="tooltip" title="Create a new formation"><img src="img/plus_blue.png" class="img-nav"/>New</a></li>
+					<li class="active"><a id="newFormation" class="enabled-button tool active new" data-toggle="tooltip" title="Create a new formation"><img src="img/plus_blue.png" class="img-nav"/>New</a></li>
 
 					<li class="active"><a id="undo" class="enabled-button"><img src="img/arrow_undo.png" class="img-nav"/> Undo</a></li>
 					<li class="active"><a id="redo" class="enabled-button"><img src="img/arrow_redo.png" class="img-nav" /> Redo</a></li>
@@ -156,9 +156,9 @@
 						</div>
 					<div id="formations-container">
 					<table id="formations">
-						<tr><td class="current formation-name" id="formation1"><a><label>Untitled Formation 1</label></a></td></tr>
+						<!-- <tr><td class="current formation-name" id="formation1"><a class="formation-row"><label>Untitled Formation 1</label></a></td></tr> -->
 					</table>
-					<a class="text-right pull-right" id="add-formation"><i class="icon-plus"></i> <strong>New</strong></a>
+					<a class="text-right pull-right new" id="add-formation"><i class="icon-plus"></i> <strong>New</strong></a>
 					</div>
 					
 					
@@ -173,8 +173,7 @@
 						
 						<canvas id="arrow-canvas" style="z-index:120"><p>Your browser does not support HTML5 canvas</p></canvas>
 					</div>
-					<div id="delete-container" class="content tool" data-toggle="tooltip" title="Drag items on the stage here to delete"></div>
-					<!-- <div id="preview"><label>Preview</label></div> -->		
+					<div id="delete-container" class="content tool" data-toggle="tooltip" title="Drag items on the stage here to delete"></div>	
 				</div>
 			</div>
 			<div id="notes"><textarea placeholder="Tap to add notes"></textarea></div>

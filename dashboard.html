@@ -14,7 +14,7 @@
   <script src="js/jquery-ui-1.10.2.custom.min.js"></script>
   <script src="js/bootstrap.min.js"></script>
   <script src="js/bootbox.min.js"></script>
-  <script src="js/ejs_production.js"></script>
+  
   <script>
       $(function(){
       Parse.initialize("61JEjzEt8GyaXUNUmt80f9BKJWRQD8TZXb6FZcqt", "tkGBjxWtIgmIIcQk5X4h1vxYQj9E8Fbfrnqgi2kG");
@@ -47,7 +47,10 @@
             }
           }
         });
+
       });
+
+
 
 function validateProject(name){
   var Project = Parse.Object.extend("Project");
@@ -123,6 +126,8 @@ function populateTable(projects){
 
   }
 }
+  // $("table#projects").tablesorter({ sortList: [[1,0]] });
+
 
 
 

@@ -386,7 +386,7 @@ table#toolsTable tr, table#toolsTable td{
 	line-height: 30px;
 }
 
-td.current{
+.current{
 	background-color: #e5e2e2;
 }
 
@@ -406,6 +406,7 @@ label.inline{
 #sidebarActions label{
 	/*line-height: 40px;*/
 	padding-left:5px;
+	pointer-events: none;
 }
 
 #sidebarActions a:hover{

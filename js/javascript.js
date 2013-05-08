@@ -101,36 +101,37 @@ function clearCanvas(clearDancers){
 }
 
 
-function createNewFormation(){
-	formationCounter++;
-	var newRow = $('<tr><td class="current formation-name" id="formation'+formationCounter+'"><a><label>Untitled Formation '+formationCounter
-	+'</label></a></td></tr>');
-	$('table#formations').find('*').removeClass("current");
-	newRow.appendTo($('#formations tbody'));
-	$('#projectName').text("Untitled Formation "+formationCounter).addClass("default");
-	var formation = new Formation();
-	formation.set("project", $("#currproj").text());
-	formation.set("user", Parse.User.current());
-	formation.set("name", "Untitled Formation "+formationCounter);
-	formation.set("contents", null);
-	formation.set("stage", saveStage);
-	// formation.set("parent", project);
-	formation.save(null, {
-		success: function(formation) {
-    // The object was saved successfully.
-	    console.log("success bitches");
-	    console.log($('.current.formation-name'));
-	    $('.current.formation-name').attr("data-id", formation.id);
-	  },
-	  error: function(formation, error) {
-    // The save failed.
-    // error is a Parse.Error with an error code and description.
-	    console.log("ok.jpg");
-	  }
-	});
-}
+// function createNewFormation(){
+// 	formationCounter++;
+// 	var newRow = $('<tr><td class="current formation-name" id="formation'+formationCounter+'"><a><label>Untitled Formation '+formationCounter
+// 	+'</label></a></td></tr>');
+// 	$('table#formations').find('*').removeClass("current");
+// 	newRow.appendTo($('#formations tbody'));
+// 	$('#projectName').text("Untitled Formation "+formationCounter).addClass("default");
 
-$('#newFormation').click( function(){
+// 	var formation = new Formation();
+// 	formation.set("project", $("#currproj").text());
+// 	formation.set("user", Parse.User.current());
+// 	formation.set("name", "Untitled Formation "+formationCounter);
+// 	formation.set("contents", null);
+// 	formation.set("stage", saveStage);
+// 	// formation.set("parent", project);
+// 	formation.save(null, {
+// 		success: function(formation) {
+//     // The object was saved successfully.
+// 	    console.log("success bitches");
+// 	    console.log($('.current.formation-name'));
+// 	    $('.current.formation-name').attr("data-id", formation.id);
+// 	  },
+// 	  error: function(formation, error) {
+//     // The save failed.
+//     // error is a Parse.Error with an error code and description.
+// 	    console.log("ok.jpg");
+// 	  }
+// 	});
+// }
+
+$('.new').click( function(){
 	if($('div.added').length>0){
 		bootbox.dialog("Would you like to keep the dancers on the stage in the next formation?", 
 			[
