@@ -643,11 +643,11 @@ ul#stages{
 	margin:0;
 }
 
-ul#stages li, ul#props li{
+ul#stages li, ul #props li, ul #arrangement li{
 	border:none;
 }
 li.stage-selected > img, li.prop-selected > img, li.dancer-selected > img,
-li.color-selected > img {
+li.color-selected > img , li.arrangement-selected > img{
     border:1px solid gray;
 }
 

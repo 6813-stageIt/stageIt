@@ -1493,6 +1493,8 @@ function arrangeInDiagonalT(selector){
 	var squeezeX = (canvas.width-60)/(getTotalWidth(selector)+90);
 	var squeezeY = (canvas.height)/(getTotalHeight(selector)+90);
 
+	console.log("overflow="+overflow);
+	
 	if(overflow){
 		var x = 150;
 		var y = 30;
@@ -1525,7 +1527,7 @@ function arrangeInDiagonalB(selector){
 	var squeezeX = (canvas.width-60)/(getTotalWidth(selector)+90);
 	var squeezeY = canvas.height/(getTotalHeight(selector)+90);
 
-
+	console.log("overflow="+overflow);
 	if(overflow){
 		var x = 150;
 		var y = 300;
@@ -1549,8 +1551,8 @@ function arrangeInDiagonalB(selector){
 
 function arrangeInCircle(selector){
 	var canvas = document.getElementById('canvas-stage');
-	var xCenter = 400;//(canvas.width/2)+130;
-	var yCenter = 200;//(canvas.height/2)-50;
+	var xCenter = (canvas.width/2)+100;
+	var yCenter = (canvas.height/2);
 //	var xCenter = (canvas.width/2)+82;
 //	var yCenter = (canvas.height/2);
 	
@@ -1615,7 +1617,7 @@ function arrangeInTopArc(selector){
 function arrangeInBottomArc(selector){
 	var canvas = document.getElementById('canvas-stage');
 	var xCenter = 400;//(canvas.width/2)+130;
-	var yCenter = 200;//(canvas.height/2)-50;
+	var yCenter = 100;//(canvas.height/2)-50;
 //	var xCenter = (canvas.width/2)+82;
 //	var yCenter = (canvas.height/2);
 	

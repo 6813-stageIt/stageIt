@@ -184,7 +184,7 @@
 	<div id="chooseStage" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="chooseStageLabel" aria-hidden="false" data-backdrop="static">
 	  <div class="modal-header">
 	    <button type="button" class="close hidden" data-dismiss="modal" aria-hidden="false" style="display:none"><i class="icon-remove"></i></button>
-	    <h4 id="chooseStageLabel">Select a stage to begin.</h4>
+	    <h4 id="chooseStageLabel">Choose a stage.</h4>
 	  </div>
 	  <div class="modal-body">
 	    <!-- <button id="stage1" class="btn">Stage 1</button> -->
@@ -250,7 +250,7 @@
 	    <h4 id="choosePropLabel">Add a Prop to the Stage</h4>
 	  </div>
 	  <div class="modal-body">
-	  	<label for="arrangement">Select a prop:</label>
+	  	<label for="prop">Select a prop:</label>
 	    <ul id="props" class="option" data-option="prop">
 		    <li id="prop-castChair" class="prop"><img  alt="prop4" src="img/prop-castChair.png" class="img-prop"/></li>
 			<li id="prop-ball" class="prop"><img  alt="prop1" src="img/prop-ball.png" class="img-prop"/></li>
@@ -274,28 +274,18 @@
 	    <h4 id="arrangeDancersLabel">Arrange Dancers on the Stage</h4>
 	  </div>
 	  <div class="modal-body">
-	  	<div id="arrangementOptions" class="cell">
-			<ol>
-<!-- 				<li><label for="dancers">Select dancer shape</label>
-				  <ul id="dancers" class="option" data-option="dancer">
-				    <li id="circle"><img src="img/circle-gray.png" alt="circle" class="img-dancer"/></li>
-					<li id="triangle"><img src="img/triangle-gray.png" alt="triangle" class="img-dancer"/></li>
-				    <li id="square"><img src="img/square-gray.png" alt="square" class="img-dancer"/></li>
-				  </ul><div class="break"></div>
-				</li> -->
-				<li id="arrangement"><label for="arrangement">Choose a template formation.</label>
-					<input type="radio" name="arrangement" value="oneHorizLine">One Horizontal Line<br>
-					<input type="radio" name="arrangement" value="twoHorizLines">Two Horizontal Lines<br>
-					<input type="radio" name="arrangement" value="oneVertLine">One Vertical Line<br>
-					<input type="radio" name="arrangement" value="twoVertLines">Two Vertical Lines<br>
-					<input type="radio" name="arrangement" value="diagonalT">Diagonal Top-Botton<br>
-					<input type="radio" name="arrangement" value="diagonalB">Diagonal Bottom-Top<br>
-					<input type="radio" name="arrangement" value="topArc">Top Arc<br>
-					<input type="radio" name="arrangement" value="bottomArc">Bottom Arc<br>
-					<input type="radio" name="arrangement" value="circle">Circle<br>
-				</li>
-			</ol>
-		</div>
+	  	<label for="arrangement">Select an automatic arrangement:</label>
+	    <ul id="arrangement" class="option" data-option="arrangement">
+		    <li id="oneHorizLine"><img src="img/oneHorizLine.png" alt="One Horizontal Line" /></li>
+		    <li id="twoHorizLines"><img src="img/twoHorizLines.png" alt="Two Horizontal Lines" /></li>
+		    <li id="oneVertLine"><img src="img/oneVertLine.png" alt="One Vertical Line" /></li>
+		    <li id="twoVertLines"><img src="img/twoVertLines.png" alt="Two Vertical Lines" /></li>
+		    <li id="diagonalT"><img src="img/diagonalT.png" alt="Diagonal Top to Bottom" /></li>
+		    <li id="diagonalB"><img src="img/diagonalB.png" alt="Diagonal Bottom to Top" /></li>
+		    <li id="topArc"><img src="img/topArc.png" alt="Top Arc" /></li>
+		    <li id="bottomArc"><img src="img/bottomArc.png" alt="Bottom Arc" /></li>
+		    <li id="circle"><img src="img/circle.png" alt="Circle" /></li>
+		</ul>
 	  </div>
 	  <div class="modal-footer">
 	  	<button class="btn btn-primary" onclick="arrangeDancers()">Arrange</button>
