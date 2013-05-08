@@ -133,7 +133,7 @@ $('#newFormation').click( function(){
 
 });
 $('#undo').click( function(){
-	//console.log("undo");
+	console.log("undo");
 	
 	if(undoStack.length==0){
 		//disable undo stack
@@ -166,7 +166,11 @@ $('#undo').click( function(){
 				console.log("delete has been undone");
 				break;
 			case "delete_arrow":
-				alert("this action has not be implemented, sorry");
+				//alert("this action has not be implemented, sorry");
+				action.object.target.alpha=1;
+				action.object.target.x-=action.newPos.x;
+				action.object.target.y-=action.newPos.y;
+				arrowUpdate=true;					
 				break;
 			case "drag":
 				//console.log("about to undo drag");
@@ -222,6 +226,11 @@ $('#undo').click( function(){
 					redoStack.push(loopAction);
 				}
 				break;
+			case "arrow_drag":
+				action.object.target.x-=action.newPos.x;
+				action.object.target.y-=action.newPos.y;
+				arrowUpdate=true;	
+				break;
 		}
 		redoStack.push(action);
 	}	
@@ -260,7 +269,10 @@ $('#redo').click( function(){
 				action.object.remove();
 				break;
 			case "delete_arrow":
-				alert("this action has not be implemented, sorry");
+				action.object.target.alpha=0;
+				action.object.target.x+=action.newPos.x;
+				action.object.target.y+=action.newPos.y;
+				arrowUpdate=true;		
 				break;
 			case "drag":
 				//console.log("about to undo drag");
@@ -308,6 +320,12 @@ $('#redo').click( function(){
 					undoStack.push(loopAction);
 				}
 				break;
+			case "arrow_drag":
+				action.object.target.x+=action.newPos.x;
+				action.object.target.y+=action.newPos.y;
+				arrowUpdate=true;	
+				break;
+			
 		}
 		undoStack.push(action);
 	}	
@@ -807,7 +825,14 @@ function drawArrow(arrow){
 			shapeArrow.graphics.setStrokeStyle(6,1);
 			shapeArrow.graphics.beginStroke(createjs.Graphics.getRGB(0,0,0,.5));
 			shapeArrow.graphics.moveTo(startx, starty);
-			var minLeft=arrow.endx;var minTop=arrow.endy;
+			var minLeft=arrow.endx;
+			if(arrow.endx>arrow.startx){
+				minLeft=arrow.startx;
+			}
+			var minTop=arrow.endy;
+			if(arrow.endy>arrow.starty){
+				minTop=arrow.starty;
+			}
 			if(arrow.type=='curve'){
 					var anglesum=0;
 					var anglesumcount=0;
@@ -840,6 +865,7 @@ function drawArrow(arrow){
 			console.log(min);
 			shapeArrow.min=min;
 			shapeArrow.diff=min;
+			shapeArrow.index=listOfPaths.length;
 			shapeArrow.onPress = arrowPressHandler;
 			drawShapeArrow(shapeArrow);
 			var canvas = document.getElementById('arrow-canvas');
@@ -852,9 +878,17 @@ function drawShapeArrow(shapeArrow){
 	
 }
 function arrowPressHandler(e){
-	
+	action=new Object();
+	action.object=e;
+	action.undoType='arrow_drag';
+	action.oldPos=new Object();
+	action.oldPos.x=-1;
+	action.oldPos.y=-1;
+	action.newPos=new Object();
+	var canvas =$("#arrow-canvas");
+	var offset=canvas.offset();
 	 e.onMouseMove = function(ev){
-			var offset=$("#arrow-canvas").offset();
+			
 			/*
 			if(e.target.diff.left==0){
 				e.target.diff.left=e.target.min.left;
@@ -870,8 +904,18 @@ function arrowPressHandler(e){
 				e.target.min.left-=ev.stageX-e.target.diff.left;
 				e.target.diff.left=ev.stageX;
 			}*/
+			//console.log(e);
+			//console.log(ev);
+			if(action.oldPos.x==-1){
+				action.oldPos.x=e.target.x;
+				console.log('set oldpos.x');
+			}
+			if(action.oldPos.y==-1){
+				action.oldPos.y=e.target.y;
+			}
 			e.target.x = ev.stageX+offset.left-e.target.min.left;
 			e.target.y = ev.stageY+offset.top-e.target.min.top;
+			
 			  /*(Math.abs(e.target.min.left-e.target.x)<50){
 			  e.target.min.left = e.target.x;
 			  }
@@ -885,6 +929,28 @@ function arrowPressHandler(e){
 		//console.log(e.target);
 	  
 		arrowUpdate = true;
+	 }
+	 e.onMouseUp=function(ev){
+		//TODO: hardcoded delete for now
+		console.log(e);
+		var trashX=offset.left+canvas.width()-65;
+		var trashY=offset.top+canvas.height()-60;
+		var mouseX=ev.nativeEvent.clientX;
+		var mouseY=ev.nativeEvent.clientY;
+		
+		console.log(offset.left+canvas.width()-65);
+		console.log(action);
+		action.newPos.x= e.target.x;
+		action.newPos.y =e.target.y;
+		arrowUpdate=true;
+		if(mouseX>trashX&&mouseY>trashY){
+			console.log('delete_arrow');
+			action.object.target.alpha=0;
+			e.target.alpha=0;
+			action.undoType='delete_arrow';
+		}
+		
+		undoStack.push(action);
 	 }
  
 }
