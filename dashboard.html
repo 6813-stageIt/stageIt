@@ -104,7 +104,21 @@ function getProjects(name){
 
 function populateTable(projects){
   $("#projects").find("tr:gt(0)").remove();
-  
+  for(var i=0; i<projects.length; i++){
+    var project = projects[i];
+    var name = project.get("name");
+    var dateCreated = new Date(project.createdAt);
+    var id = project.id;
+    var row = $('<tr></tr>').attr("data-id", id);
+    row.append('<td>'+i+'</td>')
+        .append('<td>'+name+'</td>')
+        .append('<td>'+dateCreated.toLocaleDateString()+'</td>');
+    row.click(function(){
+      bootbox.alert("clicked");
+    })
+    $('#projects').append(row);
+
+  }
 }
 
 
