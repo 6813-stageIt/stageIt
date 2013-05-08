@@ -1341,6 +1341,12 @@ function arrangeDancers(){
 	 	case 'twoVertLines': 
 	 		arrangeInTwoVertLines(selector);
 	 		break;
+	 	case 'diagonalT':
+	 		arrangeInDiagonalT(selector);
+	 		break;
+	 	case 'diagonalB':
+	 		arrangeInDiagonalB(selector);
+	 		break;
 	 	case 'topArc': 
 	 		arrangeInTopArc(selector);
 	 		break;
@@ -1349,12 +1355,6 @@ function arrangeDancers(){
 	 		break;
 	 	case 'circle': 
 	 		arrangeInCircle(selector);
-	 		break;
-	 	case 'V': 
-	 		arrangeInV(selector);
-	 		break;
-	 	case 'X': 
-	 		arrangeInX(selector);
 	 		break;
 	 }
 	// console.log("DANCERS: " + dancers);
@@ -1531,10 +1531,77 @@ function arrangeInTwoVertLines(selector){
 	});
 }
 
-function arrangeInCircle(selector){
+function arrangeInDiagonalT(selector){
 	var canvas = document.getElementById('canvas-stage');
+	
 	var xCenter = 400;//(canvas.width/2)+130;
 	var yCenter = 200;//(canvas.height/2)-50;
+
+	//console.log("initial (x,y) = " + x + "," + y);
+	var overflow = getTotalWidth(selector)+30>canvas.width;
+	var squeezeX = (canvas.width-60)/(getTotalWidth(selector)+90);
+	var squeezeY = (canvas.height)/(getTotalHeight(selector)+90);
+
+	console.log("overflow="+overflow);
+	
+	if(overflow){
+		var x = 150;
+		var y = 30;
+	}else{
+		var x = xCenter - (getTotalWidth(selector)/2);
+		var y = yCenter - (getTotalHeight(selector)/2);
+	}
+	
+	$(selector).each(function(index) {
+	  $(this).css('left',x);
+	  $(this).css('top',y);
+	  if(overflow){
+	  	x = x+(squeezeX*$(this).width());
+	  	y = y+(squeezeY*$(this).height());
+	  }else{
+	  	x = x + $(this).width();
+	  	y = y + $(this).height();
+	  }
+	});
+}
+
+function arrangeInDiagonalB(selector){
+	var canvas = document.getElementById('canvas-stage');
+	
+	var xCenter = 400;//(canvas.width/2)+130;
+	var yCenter = 200;//(canvas.height/2)-50;
+
+	//console.log("initial (x,y) = " + x + "," + y);
+	var overflow = getTotalWidth(selector)+30>canvas.width;
+	var squeezeX = (canvas.width-60)/(getTotalWidth(selector)+90);
+	var squeezeY = canvas.height/(getTotalHeight(selector)+90);
+
+	console.log("overflow="+overflow);
+	if(overflow){
+		var x = 150;
+		var y = 300;
+	}else{
+		var x = xCenter - (getTotalWidth(selector)/2);
+		var y = yCenter + (getTotalHeight(selector)/3);
+	}
+	
+	$(selector).each(function(index) {
+	  $(this).css('left',x);
+	  $(this).css('top',y);
+	  if(overflow){
+	  	x = x+(squeezeX*$(this).width());
+	  	y = y-(squeezeY*$(this).height());
+	  }else{
+	  	x = x + $(this).width();
+	  	y = y - $(this).height();
+	  }
+	});
+}
+
+function arrangeInCircle(selector){
+	var canvas = document.getElementById('canvas-stage');
+	var xCenter = (canvas.width/2)+100;
+	var yCenter = (canvas.height/2);
 //	var xCenter = (canvas.width/2)+82;
 //	var yCenter = (canvas.height/2);
 	
@@ -1599,7 +1666,7 @@ function arrangeInTopArc(selector){
 function arrangeInBottomArc(selector){
 	var canvas = document.getElementById('canvas-stage');
 	var xCenter = 400;//(canvas.width/2)+130;
-	var yCenter = 200;//(canvas.height/2)-50;
+	var yCenter = 100;//(canvas.height/2)-50;
 //	var xCenter = (canvas.width/2)+82;
 //	var yCenter = (canvas.height/2);
 	
