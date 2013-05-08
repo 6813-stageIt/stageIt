@@ -109,3 +109,21 @@ $('#save').click(function(){
 	});
 }
 });
+
+$('#projectName').click(function(){
+	bootbox.prompt("Enter a name for the formation", function(result){
+		if(result!=null){
+			$('#projectName').text(result).removeClass("default");
+			$('#formation'+formationCounter).find('label').text(result);
+			var id = $('.current.formation-name').attr("data-id");
+			if(currentUser){
+				var query = new Parse.Query(Formation);
+				query.get(id, {
+					sucess: function(formation){
+						
+					}
+				})
+			}
+		}
+	});
+});
