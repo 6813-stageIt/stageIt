@@ -1201,17 +1201,22 @@ function arrangeInOneHorizLine(selector){
 	console.log("canvas height = "+canvas.height);
 	console.log("canvas width = "+canvas.width);
 	
-	var xCenter = canvas.width/2;
-	var yCenter = canvas.height/2;
+	var xCenter = (canvas.width/2)+80;
+	var yCenter = (canvas.height/2)+50;
 
 	var x = xCenter - (getTotalWidth(selector)/2);
 	var y = yCenter - (getMaxHeight(selector)/2);
-	console.log("initial (x,y) = " + x + "," + y);
-
+	//console.log("initial (x,y) = " + x + "," + y);
+	var overflow = getTotalWidth(selector)>canvas.width;
+	var squeeze = canvas.width/getTotalWidth(selector);
 	$(selector).each(function(index) {
 	  $(this).css('left',x);
 	  $(this).css('top',y);
-	  x = x + $(this).width();
+	  if(overflow){
+	  	x = x+(squeeze*$(this).width());
+	  }else{
+	  	x = x + $(this).width();
+	  }
 	});
 }
 
@@ -1224,25 +1229,39 @@ function arrangeInTwoHorizLines(selector){
 	var yCenter = canvas.height/2;
 
 	half = Math.floor($(selector).length/2);
-	console.log("half = "+half);
+	//console.log("half = "+half);
 
 	var x = xCenter - (getTotalWidth(selector+":lt("+half+")")/2);
 	var y = yCenter + (getMaxHeight(selector+":lt("+half+")"));
-	console.log("initial (x,y) = " + x + "," + y);
+	//console.log("initial (x,y) = " + x + "," + y);
+	var overflow = getTotalWidth(selector+":lt("+half+")")>canvas.width;
+	var squeeze = canvas.width/getTotalWidth(selector+":lt("+half+")");
+	
 
 	$(selector+":lt("+half+")").each(function(index) {
 	  $(this).css('left',x);
 	  $(this).css('top',y);
-	  x = x + $(this).width();
+	  if(overflow){
+	  	x = x+(squeeze*$(this).width());
+	  }else{
+	  	x = x + $(this).width();
+	  }
 	});
 
 	var x = xCenter - (getTotalWidth(selector+":gt("+(half-1)+")")/2);
 	var y = yCenter - (getMaxHeight(selector+":gt("+(half-1)+")"));
+	var overflow = getTotalWidth(selector+":gt("+(half-1)+")")>canvas.width;
+	var squeeze = canvas.width/getTotalWidth(selector+":gt("+(half-1)+")");
+	
 	
 	$(selector+":gt("+(half-1)+")").each(function(index) {
 	  $(this).css('left',x);
 	  $(this).css('top',y);
-	  x = x + $(this).width();
+	  if(overflow){
+	  	x = x+(squeeze*$(this).width());
+	  }else{
+	  	x = x + $(this).width();
+	  }
 	});
 }
 
@@ -1255,12 +1274,19 @@ function arrangeInOneVertLine(selector){
 
 	var x = xCenter - (getMaxWidth(selector)/2);
 	var y = yCenter - (getTotalHeight(selector)/2);
-	console.log("initial (x,y) = " + x + "," + y);
+	//console.log("initial (x,y) = " + x + "," + y);
+	var overflow = getTotalHeight(selector)>canvas.height;
+	var squeeze = canvas.height/getTotalHeight(selector);
+	
 
 	$(selector).each(function(index) {
 	  $(this).css('left',x);
 	  $(this).css('top',y);
-	  y = y + $(this).height();
+	  if(overflow){
+	  	y = y+(squeeze*$(this).height());
+	  }else{
+	  	y = y + $(this).height();
+	  }
 	});
 }
 
@@ -1273,25 +1299,38 @@ function arrangeInTwoVertLines(selector){
 	var yCenter = canvas.height/2;
 
 	half = Math.floor($(selector).length/2);
-	console.log("half = "+half);
+	//console.log("half = "+half);
 
 	var x = xCenter + (getMaxWidth(selector+":lt("+half+")"));
 	var y = yCenter - (getTotalHeight(selector+":lt("+half+")")/2);
-	console.log("initial (x,y) = " + x + "," + y);
+	//console.log("initial (x,y) = " + x + "," + y);
+	var overflow = getTotalHeight(selector+":lt("+half+")")>canvas.height;
+	var squeeze = canvas.height/getTotalHeight(selector+":lt("+half+")");
+	
 
 	$(selector+":lt("+half+")").each(function(index) {
 	  $(this).css('left',x);
 	  $(this).css('top',y);
-	  y = y + $(this).height();
+	  if(overflow){
+	  	y = y+(squeeze*$(this).height());
+	  }else{
+	  	y = y + $(this).height();
+	  }
 	});
 
 	var x = xCenter - (getMaxWidth(selector+":gt("+(half-1)+")"));
 	var y = yCenter - (getTotalHeight(selector+":gt("+(half-1)+")")/2);
+	var overflow = getTotalHeight(selector+":gt("+(half-1)+")")>canvas.height;
+	var squeeze = canvas.height/getTotalHeight(selector+":gt("+(half-1)+")");
 	
 	$(selector+":gt("+(half-1)+")").each(function(index) {
 	  $(this).css('left',x);
 	  $(this).css('top',y);
-	  y = y + $(this).height();
+	  if(overflow){
+	  	y = y+(squeeze*$(this).height());
+	  }else{
+	  	y = y + $(this).height();
+	  }
 	});
 }
 
