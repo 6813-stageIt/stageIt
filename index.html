@@ -44,7 +44,7 @@
           <a class="brand" href="#">StageIt</a>
           <div class="nav-collapse collapse">
             <ul class="nav">
-              <li><a href="#">Dashboard</a></li>
+              <li><a href="dashboard.html">Dashboard</a></li>
               <li class="active"><a href="#" id="currproj">Current Project</a></li>
             </ul>
             <ul class="nav pull-right">  
@@ -61,11 +61,11 @@
       </div>
     </div>
   <!-- </div> -->
-  <div style="display:none;" id="project"></div>
-<!-- 	<div class="alert" id="alert">
-	<button type="button" class="close" data-dismiss="alert">&times;</button>
-	X dancers added.
-	</div> -->
+	<div style="display:none;" id="project"></div>
+	<div class="alert"  id="alert">
+	<button type="button" class="close">&times;</button>
+	<span>merp</span>
+	</div>
 
 	<div id="outerWrapper" class="animated fadeIn">
 		<div id="wrapper">
@@ -115,7 +115,7 @@
 					<label><h5><i class="icon-tasks"></i> Tasks</h5></label></div>
 					<div id="tasks-container">
 					<table id="tasks">
-					<tr><td><a id="editStage" href="#chooseStage" data-toggle="modal" class="tool" data-toggle="tooltip" title="Change the stage" data-placement="right"><label>Edit Stage</label></a></td></tr>
+					<tr><td><a id="editStage" href="#chooseStage" data-toggle="modal" class="tool" data-toggle="tooltip" title="Start by selecting a stage" data-placement="right"><label>Edit Stage</label></a></td></tr>
 					<tr><td><a id="addDancers" href="#addDancersModal" data-toggle="modal" class="tool" data-toggle="tooltip" title="Add dancer objects to the stage" data-placement="right"><label>Add Dancers</label></a></td></tr>
 					<tr class="last"><td><a id="addProps" href="#choosePropModal" data-toggle="modal" class="tool" data-toggle="tooltip" title="Add prop objects to the stage" data-placement="right"><label>Add Props</label></a></td></tr>
 					<tr class="last"><td class="last"><a id="arrangeDancers" href="#arrangeDancersModal" data-toggle="modal" class="tool" data-toggle="tooltip" title="Arrange dancers on stages in template formations" data-placement="right"><label>Arrange Dancers</label></a></td></tr>
@@ -307,12 +307,16 @@
 					$('#chooseStage').modal();
 				}	
 		$('.tool').tooltip();
+		$("#editStage").mouseenter();
 		// window.setTimeout(function() {
 		//     $(".alert").slideUp(500, function(){
 		//         $(this).remove(); 
 		//     });
 		// }, 5000);
-		// $('.alert').alert();
+		$('.alert').alert();
+		$('.close').click(function() {
+		   $('.alert').hide();
+		});
 		var canvas = document.getElementById('arrow-canvas');
 		// Make it visually fill the positioned parent
 		//canvas.style.width ='100%';

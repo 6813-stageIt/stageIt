@@ -71,7 +71,6 @@ function getFormations(projectName){
   success: function(results) {
     console.log(results);
     if(results.length > 0){
-    
     populateTable(results);
     }
   },

@@ -301,8 +301,9 @@ ul#pageActionsNav a:hover{
 #alert{
 	position: absolute;
 	width: 200px;
-	top: 80px;
-	left: 500px;
+	top: 130px;
+	left: 580px;
+	z-index: 10;
 }
 
 /**** sidebar *****/ 
@@ -770,3 +771,9 @@ div.ui-resizable-handle.ui-resizable-se.ui-icon.ui-icon-gripsmall-diagonal-se{
 #arrangement input{
 	margin: 0 10px 3px 0;
 }
+
+.tooltip.in {
+  opacity: 0.8;
+  filter: alpha(opacity=80);
+  font-size: 14px;
+} 

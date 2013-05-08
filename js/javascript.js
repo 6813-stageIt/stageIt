@@ -72,6 +72,16 @@ $("#delete-container").droppable({
 	}
 });
 
+function showAlert(text){
+	$('#alert').find('span').text(text);
+		window.setTimeout(function() {
+	    $("#alert").slideUp(500, function(){
+	        $(this).hide(); 
+	    });
+	}, 5000);
+	// $('.alert').alert();
+}
+
 
 function clearCanvas(clearDancers){
 	if(clearDancers){
