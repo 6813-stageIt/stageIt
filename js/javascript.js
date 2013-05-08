@@ -48,7 +48,6 @@ $("#delete-container").droppable({
 	drop: function (event, ui){
 		tempDrag.undoType="delete_object";
 		
-		redoStack=[];
 		if($(ui.helper).hasClass('selected')){
 			console.log('multDelete');
 			console.log(undoArray);
@@ -68,6 +67,7 @@ $("#delete-container").droppable({
 			$(ui.draggable).remove();
 			undoStack.push(tempDrag);
 		}
+		redoStack=[];
 		tempDrag=new Object();
 		//console.log(ui);
 	}
@@ -194,6 +194,9 @@ $('#undo').click( function(){
 					/*'width':action.size.width-10,
 					'height':action.size.height-10,*/
 				});
+				idname = $(div).attr('id');
+				console.log(idname);
+				$('div#'+idname+' > img.overlay').remove();
 				$("#canvasWrapper").append(div);
 				console.log("delete has been undone");
 				break;
@@ -262,6 +265,24 @@ $('#undo').click( function(){
 				action.object.target.x-=action.newPos.x;
 				action.object.target.y-=action.newPos.y;
 				arrowUpdate=true;	
+				break;
+			case "arranged":
+				console.log(action);
+				for(var i = 0; i < action.oldPosArr.length; i++){
+				console.log(action.oldPosArr[i]);
+					action.oldPosArr[i].object.css({
+						'position':'absolute',
+						'top':action.oldPosArr[i].pos.top,
+						'left':action.oldPosArr[i].pos.left,
+					});
+					if($(action.selector).length>0){
+						console.log($(action.selector));
+						$(selector).each(function(i){
+							idname = $(this).attr('id');
+							$('div#'+idname+' > img.overlay').remove();
+						});
+					}
+				}
 				break;
 		}
 		redoStack.push(action);
@@ -356,6 +377,24 @@ $('#redo').click( function(){
 				action.object.target.x+=action.newPos.x;
 				action.object.target.y+=action.newPos.y;
 				arrowUpdate=true;	
+				break;
+			case "arranged":
+				console.log(action);
+				for(var i = 0; i < action.newPosArr.length; i++){
+				console.log(action.newPosArr[i]);
+					action.newPosArr[i].object.css({
+						'position':'absolute',
+						'top':action.newPosArr[i].pos.top,
+						'left':action.newPosArr[i].pos.left,
+					});
+					if($(action.selector).length>0){
+						console.log($(action.selector));
+						$('.selected').each(function(i){
+							var img = $('<img class=\"overlay\">').attr('src', 'img/highlight.png');
+							$(this).append(img);
+						});
+					}
+				}
 				break;
 			
 		}
@@ -528,8 +567,9 @@ function selectObject(){
 function clearPrompt(){
 	$("#selectNotif").remove();
 }
+	
 function endSelect(){
-	(elem=document.getElementById("selectNotif")).parentNode.removeChild(elem);
+$("#selectNotif").remove();
 	for (var i = 0; i<dancerCounter; i++){
 			var div = $("#dancer-"+i);
 			//console.log(div);
@@ -569,7 +609,7 @@ function toggleResize(){
 	}
 }
 function endPath(){
-	(elem=document.getElementById("pathNotif")).parentNode.removeChild(elem);
+	$("#pathNotif").remove();
 	//(elem=document.getElementById("cancelPath")).parentNode.removeChild(elem); removed whole div, not needed
 	document.getElementById('straightPathTool').disabled=false;
 	drawPath='none';
@@ -1012,6 +1052,7 @@ function arrowPressHandler(e){
 		}
 		
 		undoStack.push(action);
+		redoStack=[];
 	 }
  
 }
@@ -1135,6 +1176,7 @@ function reAddObject(div, action){
 					   undo.undoType="multDrag";
 					   undo.count=count;
 					   undoStack.push(undo);
+					   redoStack=[];
 					   
 					   
 				}
@@ -1250,7 +1292,7 @@ function addObjectAt(div,posX,posY,newClass){
 					   undo.undoType="multDrag";
 					   undo.count=count;
 					   undoStack.push(undo);
-					   
+					   redoStack=[];
 					   
 				}
 				
@@ -1281,7 +1323,7 @@ function addObjectAt(div,posX,posY,newClass){
 	position=new Object();
 	position.top=posY;
 	position.left=posX;
-	undoStack.oldPos=position;
+	action.oldPos=position;
 	size=new Object;
 	size.width = div.css('width');
 	size.height = div.css('height');
@@ -1399,9 +1441,11 @@ function arrangeDancersInForm(arrangement){
 	else{
 		selector = ".shape";
 	}
-
-	setOriginalPositions(selector);
-
+	action = new Object();
+	action.undoType='arranged';
+	action.selector=selector;
+	action.oldPosArr=getPositions(selector);
+	
 	 switch(arrangement){
 	 	case 'oneHorizLine': 
 	 		arrangeInOneHorizLine(selector);
@@ -1435,15 +1479,26 @@ function arrangeDancersInForm(arrangement){
 	// console.log($('.shape')[0]);
 	// console.log($('.shape')[1]);
 	// console.log($('.shape').length);
-
+	action.newPosArr = getPositions(selector);
+	
+	undoStack.push(action);
+	redoStack = [];
+	
 	// dancers.css('top',300);
 	// dancers.css('left',300);
 }	 
 
-var originalObjPositions = [];
-function setOriginalPositions(selector){
-	//originalObjPositions = $(selector).position();
-	//console.log(originalObjPositions);
+function getPositions(selector){
+
+	positions = [];
+	$(selector).each(function(i){
+		arranged=new Object();
+		arranged.object=$(this);
+		arranged.pos = $(this).position();
+		
+		positions.push(arranged);
+	});
+	return positions;
 }
 
 function arrangeInOneHorizLine(selector){
