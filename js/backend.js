@@ -24,6 +24,9 @@ $.extend({
 });
 
 if($.getUrlVar('var')){
+	// $(document).ready(function(){
+	// 	$("#editStage").mouseenter();
+	// });
 	var projname = decodeURIComponent($.getUrlVar('var'));
 	var divContents = $('#canvasWrapper').html();
 	$('#currproj').text(projname);
@@ -39,7 +42,7 @@ if($.getUrlVar('var')){
     		populateTable([formation]);
 		}
 });
-	$("#editStage").mouseenter();
+	
 	
 } else if ($.getUrlVar('open')){
 	var projname = decodeURIComponent($.getUrlVar('open'));
@@ -97,6 +100,7 @@ function getFormations(projectName){
 		formationCounter = results.length;
 		populateTable(results);
 		renderStage(results[0]);
+		$('#formations tr:first').find("a").addClass("current");
     }
   },
   error: function(error) {
@@ -297,7 +301,22 @@ function saveCurrentFormation(){
 		formation.set("name", formationName);
 		formation.set("contents", divContents);
 		formation.set("project", project);
-		formation.save();
+		formation.save(null, {
+			success: function(formation) {
+				console.log("saved successfully");
+				showFeedback("save");
+			},
+			error: function(object, error) {
+				console.log(error);
+			}
+		});
+	
+		},
+		error: function(object, error) {
+		// The object was not retrieved successfully.
+		// error is a Parse.Error with an error code and description.
+		}
+	});
 }
 }
 
@@ -319,7 +338,25 @@ $('#save').click(function(){
 		formation.set("name", formationName);
 		formation.set("contents", divContents);
 		formation.set("project", project);
-		formation.save();
+		formation.save(null, {
+			success: function(formation) {
+				// console.log("saved successfully");
+				formation.set("contents",$('#canvasWrapper').html());
+				formation.save();
+				showFeedback("save");
+				// alert(formation.get("contents"));
+			},
+			error: function(object, error) {
+				console.log(error);
+			}
+		});
+	
+		},
+		error: function(object, error) {
+		// The object was not retrieved successfully.
+		// error is a Parse.Error with an error code and description.
+		}
+	});
 }
 });
 
@@ -351,6 +388,22 @@ $('#projectName').click(function(){
 			}
 		}
 	});
+});
+
+$('#delete').click(function(){
+	bootbox.dialog("Are you sure you want to delete this formation?<br>This action cannot be undone.", [{
+	    "label" : "Yes",
+	    "class" : "btn-danger",
+	    "callback": function() {
+	    	console.log("would have been deleted here");
+	    }
+	},  {
+	    "label" : "Cancel",
+	    "class" : "btn",
+	    "callback": function() {
+	       console.log("delete cancelled"); 
+	    }
+	}]);
 });
 
 

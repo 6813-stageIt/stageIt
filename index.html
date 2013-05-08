@@ -7,8 +7,10 @@
 	<link rel="stylesheet" href="css/bootstrap-test.min.css" />
 	<link rel="stylesheet" href="css/styles.css" />
 	<link rel="stylesheet" href="css/animate.min.css" />
+	<link rel="stylesheet" href="css/bootstrapSwitch.css" />
 	<link href='http://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
 	<script src="js/jquery-1.9.1.min.js"></script>
+	<script src="js/bootstrapSwitch.js"></script>
 	<script src="http://www.parsecdn.com/js/parse-1.2.7.min.js"></script>
 	<script>
   $(function(){
@@ -25,6 +27,7 @@
 			Parse.User.logOut();
 			window.location = "home.html";
 		});
+
 
 
 
@@ -91,13 +94,19 @@
 				<div id="toolbar">
 				<ul class="nav nav-pills">
 					
-					<li><a id="resizeToggle" class="toggle" onclick="toggleResize()" 
+					<li>
+<!-- 						<a id="resizeToggle" class="toggle tool" onclick="toggleResize()" 
 							data-toggle="tooltip" title="Toggle the resize function of objects" data-placement="bottom" data-container="body">
 								<img src="img/resize_on.png" class="img-toggle"/>
-									<label class="inline"></label>
-					</a></li>
+									<label class="inline"></label></a> -->
+						<label class="inline" style="margin-top:5px;margin-left:5px;font-size:13px;color:black;">Resize:</label>
+						<div class="btn-group" style="margin-left:5px;margin-top:5px;" data-toggle="buttons-radio">
+						  <a class="btn active btn-small" id="resizeOn">On</a>
+						  <a class="btn btn-small" id="resizeOff">Off</a>
+						</div>
+					</li>
 					<li><a id="straightPathTool" class="toolButton tool" onclick="drawPathPrompt()" data-toggle="tooltip" title="Draw a straight arrow on the stage" data-placement="bottom" data-container="body">
-						<img src="img/straight_arrow.png" class="img-tool"/><label class="inline"></label>
+						<img src="img/straight_arrow.png" class="img-tool"/><label class="inline">Draw Straight Arrow</label>
 
 					</a></li>
 					<li><a id="curvePathTool" class="toolButton tool" onclick="drawCurvePathPrompt()" 
@@ -241,7 +250,7 @@
 		</div></td>
 		<td id="previewcell"><div id="dancer-preview" class="cell"><label>Preview</label>
 			<img id="preview-img" class="tool" alt="preview image" data-toggle="tooltip" title="Double click a dancer on the stage to add text" data-placement="bottom">
-		</div></td>
+		</div><label>Note: Double click on a dancer to insert text.</label></td>
 	</tr>
 	</table>
 	  </div>
@@ -316,16 +325,7 @@
 					$('#chooseStage').modal();
 				}	
 		$('.tool').tooltip();
-		
-		// window.setTimeout(function() {
-		//     $(".alert").slideUp(500, function(){
-		//         $(this).remove(); 
-		//     });
-		// }, 5000);
-		$('.alert').alert();
-		$('.close').click(function() {
-		   $('.alert').hide();
-		});
+			$("#editStage").mouseenter();
 		var canvas = document.getElementById('arrow-canvas');
 		// Make it visually fill the positioned parent
 		//canvas.style.width ='100%';
