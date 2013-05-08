@@ -1270,7 +1270,8 @@ function arrangeDancers(){
 
 var originalObjPositions = [];
 function setOriginalPositions(selector){
-	//$(selector).position();
+	//originalObjPositions = $(selector).position();
+	//console.log(originalObjPositions);
 }
 
 function arrangeInOneHorizLine(selector){
