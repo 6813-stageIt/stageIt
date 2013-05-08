@@ -16,7 +16,7 @@ var listOfObjects=[];
 var selectedObjects=[];
 var undoStack=[];	//stack of all actions to undo
 var redoStack=[];	//stack of all actions to redo
-
+var tempDragArray=[];
 
 $.getScript('http://code.createjs.com/easeljs-0.6.0.min.js', function()
 {
@@ -46,16 +46,28 @@ $("#delete-container").droppable({
 	hoverClass: "delete-hover",
 	tolerance: "touch",
 	drop: function (event, ui){
-		//console.log(ui.helper.css("height"));
-			
-		var size = new Object();
-		size.height =$(ui.helper).height();
-		size.width = $(ui.helper).width();
-		tempDrag.size = size;
 		tempDrag.undoType="delete_object";
-		$(ui.draggable).remove();
-		undoStack.push(tempDrag);
+		
 		redoStack=[];
+		if($(ui.helper).hasClass('selected')){
+			console.log('multDelete');
+			console.log(undoArray);
+			count=0;
+			$(".selected").each(function(i) {
+							count++;
+							toPush=undoArray[i];
+							toPush.undoType='delete_object';
+							undoStack.push(toPush);
+							$(this).remove();
+					   });
+					   undo=new Object();
+					   undo.undoType="multDel";
+					   undo.count=count;
+					   undoStack.push(undo);
+		}else{
+			$(ui.draggable).remove();
+			undoStack.push(tempDrag);
+		}
 		tempDrag=new Object();
 		//console.log(ui);
 	}
@@ -142,18 +154,17 @@ $('#undo').click( function(){
 				break;
 			case "delete_object":
 				//console.log(action);
-				div = action.object.helper;
+				div = action.object;
 				div = reAddObject(div, action);
 				div.css({
 					'position':'absolute',
 					'top':action.oldPos.top,
 					'left':action.oldPos.left,
-					'width':action.size.width-10,
-					'height':action.size.height-10,
+					/*'width':action.size.width-10,
+					'height':action.size.height-10,*/
 				});
-				console.log(action.size.width-10);
 				$("#canvasWrapper").append(div);
-				//console.log("delete has been undone");
+				console.log("delete has been undone");
 				break;
 			case "delete_arrow":
 				alert("this action has not be implemented, sorry");
@@ -188,13 +199,27 @@ $('#undo').click( function(){
 			case "multDrag":
 				for(var i = 0; i<action.count; i++){
 					loopAction = undoStack.pop();
-					console.log(loopAction);
+					//console.log(loopAction);
 					div = loopAction.object;
 					div.css({
 						'position':'absolute',
 						'top':loopAction.oldPos.top,
 						'left':loopAction.oldPos.left,
 					});
+					redoStack.push(loopAction);
+				}
+				break;
+			case "multDel":
+				for(var i = 0; i<action.count; i++){
+					loopAction = undoStack.pop();
+					div = loopAction.object;
+					div = reAddObject(div, loopAction);
+					div.css({
+						'position':'absolute',
+						'top':loopAction.oldPos.top,
+						'left':loopAction.oldPos.left,
+					});
+					$("#canvasWrapper").append(div);
 					redoStack.push(loopAction);
 				}
 				break;
@@ -233,15 +258,15 @@ $('#redo').click( function(){
 				break;
 			case "delete_object":
 				//console.log(action.object);
-				action.object.helper.remove();
+				action.object.remove();
 				break;
 			case "delete_arrow":
 				alert("this action has not be implemented, sorry");
 				break;
 			case "drag":
 				//console.log("about to undo drag");
-				//action.object.helper.offsetTop=action.oldPos.top;
-				//action.object.helper.offsetLeft=action.oldPos.left;
+				//action.object.offsetTop=action.oldPos.top;
+				//action.object.offsetLeft=action.oldPos.left;
 				div = action.object;
 				div.css({
 					'position':'absolute',
@@ -273,6 +298,14 @@ $('#redo').click( function(){
 						'top':loopAction.newPos.top,
 						'left':loopAction.newPos.left,
 					});
+					undoStack.push(loopAction);
+				}
+				break;
+			case "multDel":
+				for(var i = 0; i<action.count; i++){
+					loopAction = redoStack.pop();
+					div = loopAction.object;
+					$(div).remove()
 					undoStack.push(loopAction);
 				}
 				break;
@@ -414,7 +447,8 @@ function enableSelect(){
 					console.log(dancerToggle[idnum]);
 					if(dancerToggle[idnum]%2==0){
 						$(this).removeClass('selected');
-						$('div#dancer-'+idnum+' img:last-child').remove();
+						idname = $(this).attr('id');
+						$('div#'+idname+' > img.overlay').remove();
 						console.log($(this).context.id +' removed');
 					}else{
 						$(this).addClass('selected');
@@ -452,9 +486,8 @@ function endSelect(){
 			//console.log(div);
 			
 			div.removeClass('selected');
-			if(!$(this).hasClass("selected")){
-					$('div#dancer-'+i+' img:last-child').remove();
-			}
+			idname = $(this).attr('id');
+			$('div#dancer-'+i+'> img.overlay').remove();
 			div.selectable({disabled:true});
 			div.draggable({disabled:false});
 			div.resizable({disabled:false});
@@ -912,16 +945,16 @@ function addDancers(){
 
 function reAddObject(div, action){
 	div.resizable({
-		  aspectRatio: 1 / 1,
-		  maxWidth: 140,
-		  addClasses: false,
-		  start:function(e,ui){ 
-			beginResize(ui);
-		  },
-		  stop:function(e,ui){
-			endResize(ui);
-		  },
-		});
+      aspectRatio: 1 / 1,
+      maxWidth: 140,
+      addClasses: false,
+	  start:function(e,ui){ 
+		beginResize(ui);
+	  },
+	  stop:function(e,ui){
+		endResize(ui);
+	  },
+    });
 	div.draggable({
 			zIndex:100,
 			containment:'#canvasWrapper',
@@ -930,21 +963,27 @@ function reAddObject(div, action){
 				// $(ui.helper).width($(ui.helper).width()+10);
 				// $(ui.helper).height($(ui.helper).height()+10);
 				var img = $('<img class=\"overlay\">').attr('src', 'img/highlight.png');
-				div.append(img);
+				
 				beginDrag(ui);
 				//begin code to add multiple drag capability	
 					posTopArray=[];
 					posLeftArray=[];
+					undoArray=[];
 					if($(div).hasClass("selected")){
+						//console.log('selected drag begin');
 						$(".selected").each(function (i){
 							eachtop=$(this).css('top');
 							eachleft=$(this).css('left');
 							posTopArray[i]=parseInt(eachtop);
 							posLeftArray[i]=parseInt(eachleft);
-							$(this).append(img);
+							moreDrag=new Object();
+							moreDrag.object=$(this);
+							moreDrag.oldPos=$(this).position();
+							console.log(moreDrag);
+							undoArray[i]=moreDrag;
 							
 						});
-					}
+					}else{div.append(img);}
 					begintop = $(this).offset().top; 
 					beginleft = $(this).offset().left; 
 				//end code
@@ -957,25 +996,43 @@ function reAddObject(div, action){
 					   $(".selected").each(function(i) {
 							$(this).css('top', posTopArray[i] + topdiff); // Move element veritically - current css top + distance dragged element has travelled vertically
 							$(this).css('left', posLeftArray[i] + leftdiff); // Move element horizontally - current css left + distance dragged element has travelled horizontally
+							//console.log("top: "+topdiff + " left:"+leftdiff);
+							undoArray[i].newPos=$(this).position();
+							undoArray[i].object=$(this);
 					   });
 				  }
 			 },
 			stop: function(e, ui) {
-				// $(ui.helper).width($(ui.helper).width()-10);
-				// $(ui.helper).height($(ui.helper).height()-10);
-				//overlay").remove();
+				count=0;
 				if(!$(this).hasClass("selected")){
-				
-					$(this).remove('img:last-child');
+					idname = $(this).attr('id');
+					$('div#'+idname+' > img.overlay').remove();
+						console.log('removed overlay');
+						endDrag(ui);
+				}else{
+					
+						$(".selected").each(function(i) {
+							console.log(undoArray[i]);
+							count++;
+							undoArray[i].undoType='drag';
+							undoStack.push(undoArray[i]);
+							
+					   });
+					   redoStack=[];
+					   undo=new Object();
+					   undo.undoType="multDrag";
+					   undo.count=count;
+					   undoStack.push(undo);
+					   
+					   
 				}
-				else{}
-				endDrag(ui);
+				
 			}
 		});
 	
 	console.log(div);
 	if(div.hasClass("shape")){
-		console.log('newShape');
+		//console.log('newShape');
 		
 	    div.dblclick(function(){
 	    	action = new Object();
@@ -1023,7 +1080,7 @@ function addObjectAt(div,posX,posY,newClass){
 				// $(ui.helper).width($(ui.helper).width()+10);
 				// $(ui.helper).height($(ui.helper).height()+10);
 				var img = $('<img class=\"overlay\">').attr('src', 'img/highlight.png');
-				div.append(img);
+				
 				beginDrag(ui);
 				//begin code to add multiple drag capability	
 					posTopArray=[];
@@ -1036,7 +1093,6 @@ function addObjectAt(div,posX,posY,newClass){
 							eachleft=$(this).css('left');
 							posTopArray[i]=parseInt(eachtop);
 							posLeftArray[i]=parseInt(eachleft);
-							$(this).append(img);
 							moreDrag=new Object();
 							moreDrag.object=$(this);
 							moreDrag.oldPos=$(this).position();
@@ -1044,7 +1100,7 @@ function addObjectAt(div,posX,posY,newClass){
 							undoArray[i]=moreDrag;
 							
 						});
-					}
+					}else{div.append(img);}
 					begintop = $(this).offset().top; 
 					beginleft = $(this).offset().left; 
 				//end code
@@ -1064,28 +1120,21 @@ function addObjectAt(div,posX,posY,newClass){
 				  }
 			 },
 			stop: function(e, ui) {
-				// $(ui.helper).width($(ui.helper).width()-10);
-				// $(ui.helper).height($(ui.helper).height()-10);
-				//$(".overlay").remove();
-				//$('div#dancer-'+idnum+' img:last-child').remove();
 				count=0;
 				if(!$(this).hasClass("selected")){
-					$(this).remove('img:last-child');	
+					idname = $(this).attr('id');
+					$('div#'+idname+' > img.overlay').remove();
 						console.log('removed overlay');
 						endDrag(ui);
 				}else{
 					
 						$(".selected").each(function(i) {
-							//$(this).css('top', posTopArray[i] + topdiff); // Move element veritically - current //css top + distance dragged element has travelled vertically
-							//$(this).css('left', posLeftArray[i] + leftdiff); // Move element horizontally - current css left + distance dragged element has travelled horizontally
-							//console.log("top: "+topdiff + " left:"+leftdiff);
 							console.log(undoArray[i]);
 							count++;
 							undoArray[i].undoType='drag';
 							undoStack.push(undoArray[i]);
 							
 					   });
-					   count++;
 					   redoStack=[];
 					   undo=new Object();
 					   undo.undoType="multDrag";
