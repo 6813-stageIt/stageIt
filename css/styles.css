@@ -316,8 +316,9 @@ ul#pageActionsNav a:hover{
 #alert{
 	position: absolute;
 	width: 200px;
-	top: 80px;
-	left: 500px;
+	top: 130px;
+	left: 580px;
+	z-index: 10;
 }
 
 /**** sidebar *****/ 
@@ -400,7 +401,7 @@ table#toolsTable tr, table#toolsTable td{
 	line-height: 30px;
 }
 
-td.current{
+.current{
 	background-color: #e5e2e2;
 }
 
@@ -420,6 +421,7 @@ label.inline{
 #sidebarActions label{
 	/*line-height: 40px;*/
 	padding-left:5px;
+	pointer-events: none;
 }
 
 #sidebarActions a:hover{
@@ -785,3 +787,9 @@ div.ui-resizable-handle.ui-resizable-se.ui-icon.ui-icon-gripsmall-diagonal-se{
 #arrangement input{
 	margin: 0 10px 3px 0;
 }
+
+.tooltip.in {
+  opacity: 0.8;
+  filter: alpha(opacity=80);
+  font-size: 14px;
+} 

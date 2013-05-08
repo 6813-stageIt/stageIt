@@ -27,32 +27,19 @@ if($.getUrlVar('var')){
 	var projname = decodeURIComponent($.getUrlVar('var'));
 	var divContents = $('#canvasWrapper').html();
 	$('#currproj').text(projname);
-	// var project = new Project();
-	// project.set("name",$.getUrlVar('var'));
-	// project.set("user", currentUser);
 	$('#project').html(projname);
 	var formation = new Formation();
 	formation.set("project", projname);
 	formation.set("user", currentUser);
 	formation.set("name", "Untitled Formation 1");
 	formation.set("contents", divContents);
-	formation.set("stage", null);
-	
-
-	// formation.set("parent", project);
+	formation.set("stage", saveStage);
 	formation.save(null, {
-  success: function(formation) {
-    // The object was saved successfully.
-    console.log("success bitches");
-    console.log($('.current.formation-name'));
-    $('.current.formation-name').attr("data-id", formation.id);
-  },
-  error: function(formation, error) {
-    // The save failed.
-    // error is a Parse.Error with an error code and description.
-    console.log("ok.jpg");
-  }
+		success: function(formation) {
+    		populateTable([formation]);
+		}
 });
+	$("#editStage").mouseenter();
 	
 } else if ($.getUrlVar('open')){
 	var projname = decodeURIComponent($.getUrlVar('open'));
@@ -61,18 +48,55 @@ if($.getUrlVar('var')){
 	getFormations(projname);
 }
 
+function saveStagetoParse(stage){
+	var query = new Parse.Query(Formation);
+	query.equalTo("user", Parse.User.current());
+	query.equalTo("project", $('#currproj').text());
+	query.find({
+	  success: function(results) {
+	    // console.log(results);
+	    if(results.length > 0){
+	    updateStage(results, stage);
+	    }
+	  },
+	  error: function(error) {
+	    bootbox.alert("Error: " + error.code + " " + error.message);
+	  }
+	});
+
+}
+
+function updateStage(formations, stage){
+	for(var i=0; i<formations.length; i++){
+    var formation = formations[i];
+    formation.set("stage", stage);
+    formation.save(null,{
+		success: function(formation) {
+			console.log("yey");
+		},
+		error: function(formation, error) {
+			bootbox.alert("Error: " + error.code + " " + error.message);
+			}
+		});
+	}
+}
+
 function getFormations(projectName){
   // var Project = Parse.Object.extend("Formation");
+
   var query = new Parse.Query(Formation);
   query.equalTo("user", Parse.User.current());
   query.equalTo("project", projectName);
+  query.ascending("createdAt");
   // query.limit(20);
   query.find({
   success: function(results) {
     console.log(results);
     if(results.length > 0){
-    
-    populateTable(results);
+		$("#formations").empty();
+		formationCounter = results.length;
+		populateTable(results);
+		renderStage(results[0]);
     }
   },
   error: function(error) {
@@ -81,58 +105,206 @@ function getFormations(projectName){
 });
 }
 
+function createNewFormation(){
+	formationCounter++;
+
+	
+	var formation = new Formation();
+	formation.set("project", $("#currproj").text());
+	formation.set("user", Parse.User.current());
+	formation.set("name", "Untitled Formation "+formationCounter);
+	formation.set("contents", $("#canvasWrapper").html());
+	formation.set("stage", saveStage);
+	// formation.set("parent", project);
+	formation.save(null, {
+		success: function(formation) {
+			populateTable([formation]);
+	  }
+	});
+}
+
 function populateTable(formations){
-  $("#formations").find("tr:gt(0)").remove();
   for(var i=0; i<formations.length; i++){
     var formation = formations[i];
     var name = formation.get("name");
+    $('#projectName').text(name)
     var id = formation.id;
     var row = $('<tr></tr>');
-    row.append('<td><a class="formation-name" data-id="'+id+'"><label>'+name+'</label></a></td>')
-  //   row.click(function(){
-	 //    var id =  $(this).attr("data-id");
-		// var query = new Parse.Query(Formation);
-		// query.get(id,{
-		// 	success: function(formation) {
-		// 	    console.log("yay");
-		// 	    $('#canvasWrapper').html(formation.get("contents"));
-		// 	},
-		// 	error: function(object, error) {
-		// 	// The object was not retrieved successfully.
-		// 	// error is a Parse.Error with an error code and description.
-		// 	}
-		// });
-  //   });
-    $('#formations').append(row);
+    var a = $('<a data-id="'+id+'"><label>'+name+'</label></a>').click(function(){
+    	var old = $('#formations td').find('a');//.removeClass("current");
+    	var self = $(this).addClass("current");
+	bootbox.dialog("Save changes before switching formations?", [{
+	    "label" : "Yes",
+	    "class" : "btn-primary",
+	    "callback": function() {
+	    	saveCurrentFormation();
+	        // Example.show("great success");
+	        var query = new Parse.Query(Formation);
+			query.get(id,{
+				success: function(formation) {
+		    // The object was retrieved successfully.
+			    // $('#canvasWrapper').html(formation.get("contents"));
+			    old.removeClass("current");
+			    self.addClass("current");
+			    renderStage(formation);
+		  },
+		  error: function(object, error) {
+		    // The object was not retrieved successfully.
+		    // error is a Parse.Error with an error code and description.
+		  }
+		});
 
+	    }
+	}, {
+	    "label" : "No",
+	    "class" : "btn",
+	    "callback": function() {
+	        var query = new Parse.Query(Formation);
+			query.get(id,{
+				success: function(formation) {
+		    // The object was retrieved successfully.
+			    // console.log("yay");
+			    old.removeClass("current");
+			    self.addClass("current");
+			    renderStage(formation);
+			    // $('#canvasWrapper').html(formation.get("contents"));
+			    }
+		});
+		}
+		    
+	}, {
+	    "label" : "Cancel",
+	    "class" : "btn",
+	    "callback": function() {
+	        
+	    }
+	}]);
+	
+    }); ///end of click function
+    row.append($('<td></td>').append(a));
+    $('#formations').append(row);
   }
+}
+
+function renameProject(formations, newName){
+	for(var i=0; i<formations.length; i++){
+		var formation = formations[i];
+		formation.set("project", newName);
+		formation.save(null,{
+			success: function(formation) {
+				console.log("yey");
+			},
+			error: function(formation, error) {
+				bootbox.alert("Error: " + error.code + " " + error.message);
+				}
+			});
+	}
+}
+
+function renderStage(formation){
+	console.log(formation.get("contents"));
+	console.log(formation.get("stage"));
+	$('#canvasWrapper').html("").append(formation.get("contents"));
+	var stage = formation.get("stage");
+	drawStageShape(stage);
+	$('#projectName').text(formation.get("name"));
+
+}
+
+function renameProjectonParse(oldName, newName){
+	var Project = Parse.Object.extend("Project");
+  var query = new Parse.Query(Project);
+  query.equalTo("name", name);
+}
+
+$('#rename').click(function(){
+	bootbox.prompt("Enter a new name for the project.", function(result){
+		if(result && result.trim().length>0){
+			validateProject(result.trim());		
+		}
+	})
+});
+
+function validateProject(name){
+  var Project = Parse.Object.extend("Project");
+  var query = new Parse.Query(Project);
+  query.equalTo("name", name);
+  query.equalTo("user", Parse.User.current());
+  query.first({
+      success: function(object) {
+        if (object) { //if there exists a project with this name, stop. 
+          console.log(object);
+          bootbox.alert("<strong>Error:</strong> You already have a project with that name. Please choose another name!");
+        } else{ //get formations and rename them.
+          var newQuery = new Parse.Query(Formation);
+			newQuery.equalTo("user", Parse.User.current());
+			newQuery.equalTo("project", $('#currproj').text());
+			// query.limit(20);
+			newQuery.find({
+				success: function(results) {
+					console.log(results);
+					console.log(name);
+					if(results.length > 0){
+						renameProject(results,name);
+					}
+				},
+				error: function(error) {
+					bootbox.alert("Error: " + error.code + " " + error.message);
+				}
+			});
+			var projQuery = new Parse.Query(Project);
+			projQuery.equalTo("user", Parse.User.current());
+			projQuery.equalTo("name", $('#currproj').text());
+			projQuery.first({
+				success: function(object) {
+					if(object){
+						console.log("renaming actual project");
+						object.set("name", name);
+						object.save();
+					}
+				},
+				error: function(object, error) {
+					bootbox.alert("Error: " + error.code + " " + error.message);
+				}
+			});
+		$('#currproj').text(name);
+		// window.location = "index.html?open="+encodeURIComponent(name);	
+        }
+      },
+      error: function(error) {
+        bootbox.alert("An unknown error occurred; Please try again later.");
+      }
+
+    });
 }
 
 
 
-$('.formation-name').click(function(){
-	formationName = $(this).find('label').text();
+
+function saveCurrentFormation(){
+	var divContents = $('#canvasWrapper').html();
+	var formationName = $('#projectName').text();
 	var project = $('#project').html();
 	var id =  $(this).attr("data-id");
+	var currentUser = Parse.User.current();
+	if(currentUser){
 	var query = new Parse.Query(Formation);
 	query.get(id,{
 		success: function(formation) {
     // The object was retrieved successfully.
-	    console.log("yay");
-	    $('#canvasWrapper').html(formation.get("contents"));
-  },
-  error: function(object, error) {
-    // The object was not retrieved successfully.
-    // error is a Parse.Error with an error code and description.
-  }
-});
-
-});
-
+	    console.log("yay-from saveCurrentFormation");
+	    // formation.set("user", currentUser);
+		formation.set("name", formationName);
+		formation.set("contents", divContents);
+		formation.set("project", project);
+		formation.save();
+}
+}
 
 
 $('#save').click(function(){
 	var divContents = $('#canvasWrapper').html();
+	console.log(divContents);
 	var formationName = $('#projectName').text();
 	var project = $('#project').html();
 	var id =  $(this).attr("data-id");
@@ -147,21 +319,7 @@ $('#save').click(function(){
 		formation.set("name", formationName);
 		formation.set("contents", divContents);
 		formation.set("project", project);
-		formation.save(null, {
-			success: function(formation) {
-				console.log("saved successfully");
-			},
-			error: function(object, error) {
-				console.log(error);
-			}
-		});
-	
-		},
-		error: function(object, error) {
-		// The object was not retrieved successfully.
-		// error is a Parse.Error with an error code and description.
-		}
-	});
+		formation.save();
 }
 });
 
@@ -169,9 +327,9 @@ $('#projectName').click(function(){
 	console.log("merp");
 	bootbox.prompt("Enter a name for the formation", function(result){
 		if(result!=null){
-			$('#projectName').text(result).removeClass("default");
-			$('#formation'+formationCounter).find('label').text(result);
-			var id = $('.current.formation-name').attr("data-id");
+			$('#projectName').text(result.trim()).removeClass("default");
+			// $('#formation'+formationCounter).find('label').text(result);
+			// var id = $('.current.formation-name').attr("data-id");
 			if(currentUser){
 				var query = new Parse.Query(Formation);
 				query.get(id, {
@@ -195,26 +353,6 @@ $('#projectName').click(function(){
 	});
 });
 
-// //fields -> {object} where object = 
-// function save(formationId, fields){
-// 	if(Parse.User.current()){
-// 		var query = new Parse.Query(Formation);
-// 			query.get(formationId, {
-// 				success: function(formation){
-// 					for(field in fields)
-// 					formation.set("name", result);
-// 					formation.save(null, {
-// 						success: function(formation) {
-// 							console.log("saved successfully");
-// 						},
-// 						error: function(object, error) {
-// 							console.log(error);
-// 						}
-// 					});
-// 				},
-// 				error: function(object, error){
-// 					console.log(error);
-// 				}
-// 			});
-// 	}
-// }
+
+
+

@@ -16,6 +16,7 @@ var listOfObjects=[];
 var selectedObjects=[];
 var undoStack=[];	//stack of all actions to undo
 var redoStack=[];	//stack of all actions to redo
+var saveStage=null;
 
 $.getScript('http://code.createjs.com/easeljs-0.6.0.min.js', function()
 {
@@ -72,6 +73,16 @@ $("#delete-container").droppable({
 	}
 });
 
+function showAlert(text){
+	$('#alert').find('span').text(text);
+		window.setTimeout(function() {
+	    $("#alert").slideUp(500, function(){
+	        $(this).hide(); 
+	    });
+	}, 5000);
+	// $('.alert').alert();
+}
+
 
 function clearCanvas(clearDancers){
 	if(clearDancers){
@@ -90,16 +101,37 @@ function clearCanvas(clearDancers){
 }
 
 
-function createNewFormation(){
-	formationCounter++;
-	var newRow = $('<tr><td class="current formation-name" id="formation'+formationCounter+'"><a><label>Untitled Formation '+formationCounter
-	+'</label></a></td></tr>');
-	$('table#formations').find('*').removeClass("current");
-	newRow.appendTo($('#formations tbody'));
-	$('#projectName').text("Untitled Formation "+formationCounter).addClass("default");
-}
+// function createNewFormation(){
+// 	formationCounter++;
+// 	var newRow = $('<tr><td class="current formation-name" id="formation'+formationCounter+'"><a><label>Untitled Formation '+formationCounter
+// 	+'</label></a></td></tr>');
+// 	$('table#formations').find('*').removeClass("current");
+// 	newRow.appendTo($('#formations tbody'));
+// 	$('#projectName').text("Untitled Formation "+formationCounter).addClass("default");
 
-$('#newFormation').click( function(){
+// 	var formation = new Formation();
+// 	formation.set("project", $("#currproj").text());
+// 	formation.set("user", Parse.User.current());
+// 	formation.set("name", "Untitled Formation "+formationCounter);
+// 	formation.set("contents", null);
+// 	formation.set("stage", saveStage);
+// 	// formation.set("parent", project);
+// 	formation.save(null, {
+// 		success: function(formation) {
+//     // The object was saved successfully.
+// 	    console.log("success bitches");
+// 	    console.log($('.current.formation-name'));
+// 	    $('.current.formation-name').attr("data-id", formation.id);
+// 	  },
+// 	  error: function(formation, error) {
+//     // The save failed.
+//     // error is a Parse.Error with an error code and description.
+// 	    console.log("ok.jpg");
+// 	  }
+// 	});
+// }
+
+$('.new').click( function(){
 	if($('div.added').length>0){
 		bootbox.dialog("Would you like to keep the dancers on the stage in the next formation?", 
 			[
@@ -494,7 +526,7 @@ function selectObject(){
 	
 }
 function clearPrompt(){
-	(elem=document.getElementById("selectNotif")).parentNode.removeChild(elem);
+	$("#selectNotif").remove();
 }
 function endSelect(){
 	(elem=document.getElementById("selectNotif")).parentNode.removeChild(elem);
@@ -675,7 +707,9 @@ $('#choosePropModal').on('hidden', function(){
 });
 
 $('#chooseArrangementModal').on('hidden', function(){
-	//console.log("#chooseArrangmentModal closed");
+	//$('#arrangement li').removeClass('arrangement-selected');
+	//$('#arrangementHelper').css("display", "none");
+	//$('.hidden').css("display", "inline");
 });
 
 //close stage modal dialog
@@ -719,6 +753,8 @@ function drawStageShape(stage){
 			drawTrapezoidBigFrontStage();
 			break;
 	}
+	saveStage = stage;
+	saveStagetoParse(stage);
 }
 
 function drawRectangleStage(){
@@ -1281,24 +1317,24 @@ function addProp() {
 	}
 	else{
 		var item = $('.prop-selected').attr('id');
-		////console.log(item);
-
 		closePropDialog();
-		var x = 30;
-		var y = 10;
-
-		var id="prop-"+propCounter;
-		propCounter++;
-		////console.log("id="+id);
-		var wrap = $('<div></div>').attr('id', id); //id's need to be unique
-		var img = $('<img>').attr('src', 'img/'+item+'.png');
-		wrap.append(img);
-		////console.log(wrap);
-		addObjectAt(wrap, x,y, 'propImage');
-		////console.log("prop has been added?")
-	}	 
-	
+		addItemAt(item,30,10);
+	}
 }
+
+function addItemAt(item,x,y){
+	var id="prop-"+propCounter;
+	propCounter++;
+	////console.log("id="+id);
+	var wrap = $('<div></div>').attr('id', id); //id's need to be unique
+	var img = $('<img>').attr('src', 'img/'+item+'.png');
+	wrap.append(img);
+	////console.log(wrap);
+	addObjectAt(wrap, x,y, 'propImage');
+	////console.log("prop has been added?")	 
+}
+
+
 var tempDrag=new Object();
 function beginDrag(ui){
 	//also the beginning of the delete undo path
@@ -1342,15 +1378,21 @@ $('.shape').click(function(e){
 	console.log($(this));
 });
 function arrangeDancers(){
-	$("#selectNotif").remove();
-	//clearPrompt();
-	var prompt = "<div id=\"selectNotif\" class=\"notif\"> The next actions will correspond to all the dancers, you can drag, delete, arrange, ... <br> <button id=\"endSelect\" onclick=\"endSelect()\"> Done</div>";
-	$(prompt).appendTo("#canvasWrapper").addClass('animated fadeIn');
-	var arrangement = $('input[name=arrangement]:radio:checked').attr('value');
-	closeArrangeDialog();
-	//alert("At this time, your dancers could not be automatically arranged in a '"+arrangement+"' format. We appologize for any inconvenience.", closeArrangeDialog());
+	doneSelect();
+	/*var arrangement = $('input[name=arrangement]:radio:checked').attr('value');
+	closeArrangeDialog();*/
+	if(!$('.arrangement-selected').length > 0){
+		//$('#arrangementHelper').css("display", "inline");
+		closeArrangeDialog(arrangement);
+	}
+	else{
+		var arrangement = $('.arrangement-selected').attr('id');
+		closeArrangeDialog();
+		arrangeDancersInForm(arrangement);
+	}
+}
 
-
+function arrangeDancersInForm(arrangement){
 	if($(".selected").length>0){
 		selector = ".selected";
 	}
