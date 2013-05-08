@@ -185,7 +185,7 @@ $('#undo').click( function(){
 	}
 	else{
 		var action = undoStack.pop();
-		//console.log(action.undoType);
+		console.log(action.undoType);
 		switch(action.undoType){
 			case "arrow": //means arrow
 				action.object=listOfPaths.pop();
@@ -216,7 +216,8 @@ $('#undo').click( function(){
 				break;
 			case "drag":
 				//console.log("about to undo drag");
-				div = action.object.helper;
+				console.log(action);
+				div = action.object;
 				div.css({
 					'position':'absolute',
 					'top':action.oldPos.top,
@@ -228,7 +229,7 @@ $('#undo').click( function(){
 				break;
 			case "resize":
 				//console.log("about to undo resize");
-				div = action.object.helper;
+				div = action.object;
 				div.css({
 					'position':'absolute',
 					'width':action.oldSize.width,
@@ -236,9 +237,22 @@ $('#undo').click( function(){
 				});
 				break;
 			case "rename":
-				console.log(action.object);
+				//console.log(action.object);
 				action.object.find('.text').text(action.oldName);
 				//action.object[0].innerHTML(action.oldName);
+				break;
+			case "multDrag":
+				for(var i = 0; i<action.count; i++){
+					loopAction = undoStack.pop();
+					console.log(loopAction);
+					div = loopAction.object;
+					div.css({
+						'position':'absolute',
+						'top':loopAction.oldPos.top,
+						'left':loopAction.oldPos.left,
+					});
+					redoStack.push(loopAction);
+				}
 				break;
 		}
 		redoStack.push(action);
@@ -284,7 +298,7 @@ $('#redo').click( function(){
 				//console.log("about to undo drag");
 				//action.object.helper.offsetTop=action.oldPos.top;
 				//action.object.helper.offsetLeft=action.oldPos.left;
-				div = action.object.helper;
+				div = action.object;
 				div.css({
 					'position':'absolute',
 					'top':action.newPos.top,
@@ -296,7 +310,7 @@ $('#redo').click( function(){
 				break;
 			case "resize":
 				//console.log("about to undo resize");
-				div = action.object.helper;
+				div = action.object;
 				div.css({
 					'position':'absolute',
 					'width':action.newSize.width,
@@ -305,6 +319,18 @@ $('#redo').click( function(){
 			case "rename":
 				console.log(action.object);
 				action.object.find('.text').text(action.newName);
+				break;
+			case "multDrag":
+				for(var i = 0; i<action.count; i++){
+					loopAction = redoStack.pop();
+					div = loopAction.object;
+					div.css({
+						'position':'absolute',
+						'top':loopAction.newPos.top,
+						'left':loopAction.newPos.left,
+					});
+					undoStack.push(loopAction);
+				}
 				break;
 		}
 		undoStack.push(action);
@@ -409,64 +435,8 @@ function doneSelect(){
 	
 			var divname="#dancer-"+i;
 			var div = $(divname);
-			var img = $('<img class=\"overlay\">').attr('src', 'img/highlight.png');
-			$(div).append(img);
-			div.draggable({disabled:false,
-				zIndex:100,
-				containment:'#canvasWrapper',
-				grid: [ 20,20 ],
-				start: function(e, ui) {
-					//$(ui.helper).css("border", "1px solid red");
-					var img = $('<img class=\"overlay\">').attr('src', 'img/highlight.png');
-					
-					//beginDrag(ui);
-					posTopArray=[];
-					posLeftArray=[];
-					if($(div).hasClass("selected")){
-						$(".selected").each(function (i){
-							eachtop=$(this).css('top');
-							eachleft=$(this).css('left');
-							posTopArray[i]=parseInt(eachtop);
-							posLeftArray[i]=parseInt(eachleft);
-							div.append(img);
-							
-						});
-					}
-					begintop = $(this).offset().top; 
-					beginleft = $(this).offset().left; 
-				},
-				stop: function(e, ui) {
-					//$(ui.helper).css("border", "none");
-					// $(ui.helper).width($(ui.helper).width()-10);
-					// $(ui.helper).height($(ui.helper).height()-10);
-					$(".overlay").remove();
-					endDrag(ui);
-				},
-				drag: function(event, ui) {
-					  var topdiff = $(this).offset().top - begintop;  // Current distance dragged element has traveled vertically
-					  var leftdiff = $(this).offset().left - beginleft; // Current distance dragged element has traveled horizontally
-
-					  if ($(this).hasClass("selected")) {
-						   $(".selected").each(function(i) {
-								$(this).css('top', posTopArray[i] + topdiff); // Move element veritically - current css top + distance dragged element has travelled vertically
-								$(this).css('left', posLeftArray[i] + leftdiff); // Move element horizontally - current css left + distance dragged element has travelled horizontally
-						   });
-					  }
-				 },
-			});
-			div.resizable({disabled:false});
-		/*	$(div).selectable({
-				helper: function(){
-				  var selected = $('input:checked').parents('li');
-				  console.log(selected);
-				  if (selected.length === 0) {
-					selected = $(this);
-				  }
-				  var container = $('<div/>').attr('id', 'draggingContainer');
-				  container.append(selected.clone());
-				  return container; 
-				}
-			});*/
+			div.selectable({disabled:true});
+			div.draggable({disabled:false});
 	}
 	
 }
@@ -538,8 +508,13 @@ function endSelect(){
 			//console.log(div);
 			
 			div.removeClass('selected');
-			div.selectable({disabled:false});
+			if(!$(this).hasClass("selected")){
+					$('div#dancer-'+i+' img:last-child').remove();
+			}
+			div.selectable({disabled:true});
 			div.draggable({disabled:false});
+			div.resizable({disabled:false});
+			
 		}
 }
 function endPath(){
@@ -1012,11 +987,43 @@ function reAddObject(div, action){
 				var img = $('<img class=\"overlay\">').attr('src', 'img/highlight.png');
 				div.append(img);
 				beginDrag(ui);
+				//begin code to add multiple drag capability	
+					posTopArray=[];
+					posLeftArray=[];
+					if($(div).hasClass("selected")){
+						$(".selected").each(function (i){
+							eachtop=$(this).css('top');
+							eachleft=$(this).css('left');
+							posTopArray[i]=parseInt(eachtop);
+							posLeftArray[i]=parseInt(eachleft);
+							$(this).append(img);
+							
+						});
+					}
+					begintop = $(this).offset().top; 
+					beginleft = $(this).offset().left; 
+				//end code
 			},
+			drag: function(event, ui) {
+				  var topdiff = $(this).offset().top - begintop;  // Current distance dragged element has traveled vertically
+				  var leftdiff = $(this).offset().left - beginleft; // Current distance dragged element has traveled horizontally
+
+				  if ($(this).hasClass("selected")) {
+					   $(".selected").each(function(i) {
+							$(this).css('top', posTopArray[i] + topdiff); // Move element veritically - current css top + distance dragged element has travelled vertically
+							$(this).css('left', posLeftArray[i] + leftdiff); // Move element horizontally - current css left + distance dragged element has travelled horizontally
+					   });
+				  }
+			 },
 			stop: function(e, ui) {
 				// $(ui.helper).width($(ui.helper).width()-10);
 				// $(ui.helper).height($(ui.helper).height()-10);
-				$(".overlay").remove();
+				//overlay").remove();
+				if(!$(this).hasClass("selected")){
+				
+					$(this).remove('img:last-child');
+				}
+				else{}
 				endDrag(ui);
 			}
 		});
@@ -1062,27 +1069,89 @@ function addObjectAt(div,posX,posY,newClass){
 		endResize(ui);
 	  },
     });
+	
     div.draggable({
-            zIndex:100,
-            containment:'#canvasWrapper',
-            grid: [ 20,20 ],
-            start: function(e, ui) {
-            	//$(ui.helper).css("border", "1px solid red");
+			zIndex:100,
+			containment:'#canvasWrapper',
+			grid: [ 20,20 ],
+			start: function(e, ui) {
+				// $(ui.helper).width($(ui.helper).width()+10);
+				// $(ui.helper).height($(ui.helper).height()+10);
 				var img = $('<img class=\"overlay\">').attr('src', 'img/highlight.png');
 				div.append(img);
-		        // $(ui.helper).width($(ui.helper).width()+10);
-		        // $(ui.helper).height($(ui.helper).height()+10);
-				//console.log(ui);
 				beginDrag(ui);
-		    },
-		    stop: function(e, ui) {
-		    	//$(ui.helper).css("border", "none");
-		        // $(ui.helper).width($(ui.helper).width()-10);
-		        // $(ui.helper).height($(ui.helper).height()-10);
-				$(".overlay").remove();
-				endDrag(ui);
-		    }
-        });
+				//begin code to add multiple drag capability	
+					posTopArray=[];
+					posLeftArray=[];
+					undoArray=[];
+					if($(div).hasClass("selected")){
+						//console.log('selected drag begin');
+						$(".selected").each(function (i){
+							eachtop=$(this).css('top');
+							eachleft=$(this).css('left');
+							posTopArray[i]=parseInt(eachtop);
+							posLeftArray[i]=parseInt(eachleft);
+							$(this).append(img);
+							moreDrag=new Object();
+							moreDrag.object=$(this);
+							moreDrag.oldPos=$(this).position();
+							console.log(moreDrag);
+							undoArray[i]=moreDrag;
+							
+						});
+					}
+					begintop = $(this).offset().top; 
+					beginleft = $(this).offset().left; 
+				//end code
+			},
+			drag: function(event, ui) {
+				  var topdiff = $(this).offset().top - begintop;  // Current distance dragged element has traveled vertically
+				  var leftdiff = $(this).offset().left - beginleft; // Current distance dragged element has traveled horizontally
+
+				  if ($(this).hasClass("selected")) {
+					   $(".selected").each(function(i) {
+							$(this).css('top', posTopArray[i] + topdiff); // Move element veritically - current css top + distance dragged element has travelled vertically
+							$(this).css('left', posLeftArray[i] + leftdiff); // Move element horizontally - current css left + distance dragged element has travelled horizontally
+							//console.log("top: "+topdiff + " left:"+leftdiff);
+							undoArray[i].newPos=$(this).position();
+							undoArray[i].object=$(this);
+					   });
+				  }
+			 },
+			stop: function(e, ui) {
+				// $(ui.helper).width($(ui.helper).width()-10);
+				// $(ui.helper).height($(ui.helper).height()-10);
+				//$(".overlay").remove();
+				//$('div#dancer-'+idnum+' img:last-child').remove();
+				count=0;
+				if(!$(this).hasClass("selected")){
+					$(this).remove('img:last-child');	
+						console.log('removed overlay');
+						endDrag(ui);
+				}else{
+					
+						$(".selected").each(function(i) {
+							//$(this).css('top', posTopArray[i] + topdiff); // Move element veritically - current //css top + distance dragged element has travelled vertically
+							//$(this).css('left', posLeftArray[i] + leftdiff); // Move element horizontally - current css left + distance dragged element has travelled horizontally
+							//console.log("top: "+topdiff + " left:"+leftdiff);
+							console.log(undoArray[i]);
+							count++;
+							undoArray[i].undoType='drag';
+							undoStack.push(undoArray[i]);
+							
+					   });
+					   count++;
+					   redoStack=[];
+					   undo=new Object();
+					   undo.undoType="multDrag";
+					   undo.count=count;
+					   undoStack.push(undo);
+					   
+					   
+				}
+				
+			}
+		});
     div.find('.text').text("Dancer");	//Default name: 'Dancer'
     if(newClass=="shape"){
 	    div.dblclick(function(){
@@ -1170,10 +1239,10 @@ function beginDrag(ui){
 	
 	//console.log(ui);
 	//console.log("beginDrag");
-	tempDrag.object=ui;
+	tempDrag.object=ui.helper;
 }
 function endDrag(ui){
-	tempDrag.object=ui;
+	tempDrag.object=ui.helper;
 	tempDrag.newPos=ui.position;
 	undoStack.push(tempDrag);
 	redoStack=[];
@@ -1188,7 +1257,7 @@ function beginResize(ui){
 	tempResize.oldSize =ui.originalSize;
 }
 function endResize(ui){
-	tempResize.object=ui;
+	tempResize.object=ui.helper;
 	tempResize.size=ui.size;
 	tempResize.newSize=ui.size;
 	undoStack.push(tempResize);
