@@ -238,7 +238,7 @@ a#projectName{
 
 a#projectName:hover{
 	/*background-color: #E6E6E6;*/
-	color:black;
+	/*color:black;*/
 }
 
 
@@ -291,6 +291,14 @@ ul#pageActionsNav a:hover{
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
     overflow: hidden;
+}
+
+/******** alert ***********/
+#alert{
+	position: absolute;
+	width: 200px;
+	top: 80px;
+	left: 500px;
 }
 
 /**** sidebar *****/ 
