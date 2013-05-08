@@ -4,7 +4,7 @@ var formationCounter=1;
 var arrowstartX = 0; //used to keep track of an arrow object beginning and end
 var arrowstartY=0;
 var arrowendX = 0;
-
+var isSaved = false;
 var arrowendY=0;
 var drawPath='none';	//flag for whenever draw arrow button is pressed
 var startDrawPath=false; 
@@ -35,59 +35,11 @@ $(document).ready(function() {
 });
 
 
-$('.formation-name').click(function(){
-	console.log("this");
-	formationName = $(this).find('label').text();
-	var query = new Parse.Query(Formation);
-	query.equalTo("parent", Parse.User.current().getUsername());
-	// query.equalTo("name", formationName);
-	// console.log(query);
-	query.find({
-		success: function(results){
-			console.log(results)
-		},
-		error: function(error){
-			console.log("sux");
-			console.log(error);
-		}
-	});
-});
-
 $('#projectName').hover(function(){
-	$(this).append(' <i class="icon-pencil hidden"></i>')}, 
+	$(this).append(' <i class="icon-pencil" id="icon-pencil"></i>')}, 
 	function(){
 	$(this).children("i").remove();
-	})
-
-
-$('#save').click(function(){
-	console.log("clicked");
-	var divContents = $('#canvasWrapper').html();
-	var formationName = $('#projectName').text();
-	var currentUser = Parse.User.current();
-	if(currentUser){
-		//check if formation exists?
-
-
-
-		formation = new Formation();
-		formation.set("name", formationName);
-		formation.set("contents", divContents);
-		formation.set("parent", currentUser.getUsername());
-		formation.save(null, {
-			succes: function(formation){
-				console.log("saved");
-			},
-			error: function(formation, error){
-				console.log("could not be saved")
-				console.log(error);
-			}
-		});
-	}
-	else{
-		console.log("nope");
-	}
-});
+	});
 
 $("#delete-container").droppable({
 	accept:".added",
@@ -109,14 +61,6 @@ $("#delete-container").droppable({
 	}
 });
 
-$('#projectName').click(function(){
-	bootbox.prompt("Enter a name for the formation", function(result){
-		if(result!=null){
-			$('#projectName').text(result).removeClass("default");
-			$('#formation'+formationCounter).find('label').text(result);
-		}
-	});
-});
 
 function clearCanvas(clearDancers){
 	if(clearDancers){
@@ -661,6 +605,7 @@ $('#chooseArrangementModal').on('hidden', function(){
 
 //close stage modal dialog
 function closeStageDialog() {
+	console.log("close dialog");
 	$('#chooseStage').modal('hide'); 
 };
 
@@ -1326,17 +1271,22 @@ function arrangeInOneHorizLine(selector){
 	console.log("canvas height = "+canvas.height);
 	console.log("canvas width = "+canvas.width);
 	
-	var xCenter = canvas.width/2;
-	var yCenter = canvas.height/2;
+	var xCenter = (canvas.width/2)+130;
+	var yCenter = (canvas.height/2);//-50;
 
-	var x = xCenter - (getTotalWidth(selector)/2);
+	var x = xCenter - (getTotalWidth(selector)/4);
 	var y = yCenter - (getMaxHeight(selector)/2);
-	console.log("initial (x,y) = " + x + "," + y);
-
+	//console.log("initial (x,y) = " + x + "," + y);
+	var overflow = getTotalWidth(selector)>canvas.width;
+	var squeeze = canvas.width/getTotalWidth(selector);
 	$(selector).each(function(index) {
 	  $(this).css('left',x);
 	  $(this).css('top',y);
-	  x = x + $(this).width();
+	  if(overflow){
+	  	x = x+(squeeze*$(this).width());
+	  }else{
+	  	x = x + $(this).width();
+	  }
 	});
 }
 
@@ -1345,29 +1295,43 @@ function arrangeInTwoHorizLines(selector){
 	//console.log("canvas height = "+canvas.height);
 	//console.log("canvas width = "+canvas.width);
 
-	var xCenter = canvas.width/2;
-	var yCenter = canvas.height/2;
+	var xCenter = (canvas.width/2)+130;
+	var yCenter = (canvas.height/2)-50;
 
 	half = Math.floor($(selector).length/2);
-	console.log("half = "+half);
+	//console.log("half = "+half);
 
 	var x = xCenter - (getTotalWidth(selector+":lt("+half+")")/2);
 	var y = yCenter + (getMaxHeight(selector+":lt("+half+")"));
-	console.log("initial (x,y) = " + x + "," + y);
+	//console.log("initial (x,y) = " + x + "," + y);
+	var overflow = getTotalWidth(selector+":lt("+half+")")>canvas.width;
+	var squeeze = canvas.width/getTotalWidth(selector+":lt("+half+")");
+	
 
 	$(selector+":lt("+half+")").each(function(index) {
 	  $(this).css('left',x);
 	  $(this).css('top',y);
-	  x = x + $(this).width();
+	  if(overflow){
+	  	x = x+(squeeze*$(this).width());
+	  }else{
+	  	x = x + $(this).width();
+	  }
 	});
 
 	var x = xCenter - (getTotalWidth(selector+":gt("+(half-1)+")")/2);
 	var y = yCenter - (getMaxHeight(selector+":gt("+(half-1)+")"));
+	var overflow = getTotalWidth(selector+":gt("+(half-1)+")")>canvas.width;
+	var squeeze = canvas.width/getTotalWidth(selector+":gt("+(half-1)+")");
+	
 	
 	$(selector+":gt("+(half-1)+")").each(function(index) {
 	  $(this).css('left',x);
 	  $(this).css('top',y);
-	  x = x + $(this).width();
+	  if(overflow){
+	  	x = x+(squeeze*$(this).width());
+	  }else{
+	  	x = x + $(this).width();
+	  }
 	});
 }
 
@@ -1375,17 +1339,24 @@ function arrangeInOneVertLine(selector){
 	var canvas = document.getElementById('canvas-stage');
 	//console.log("canvas height = "+canvas.height);
 	//console.log("canvas width = "+canvas.width);
-	var xCenter = canvas.width/2;
-	var yCenter = canvas.height/2;
+	var xCenter = (canvas.width/2)+130;
+	var yCenter = (canvas.height/2)+100;
 
 	var x = xCenter - (getMaxWidth(selector)/2);
-	var y = yCenter - (getTotalHeight(selector)/2);
-	console.log("initial (x,y) = " + x + "," + y);
+	var y = 30;//yCenter - (getTotalHeight(selector)/4);
+	//console.log("initial (x,y) = " + x + "," + y);
+	var overflow = getTotalHeight(selector)>canvas.height;
+	var squeeze = canvas.height/getTotalHeight(selector);
+	
 
 	$(selector).each(function(index) {
 	  $(this).css('left',x);
 	  $(this).css('top',y);
-	  y = y + $(this).height();
+	  if(overflow){
+	  	y = y+(squeeze*$(this).height());
+	  }else{
+	  	y = y + $(this).height();
+	  }
 	});
 }
 
@@ -1394,31 +1365,74 @@ function arrangeInTwoVertLines(selector){
 	//console.log("canvas height = "+canvas.height);
 	//console.log("canvas width = "+canvas.width);
 
-	var xCenter = canvas.width/2;
-	var yCenter = canvas.height/2;
+	var xCenter = (canvas.width/2)+130;
+	var yCenter = (canvas.height/2)+100;
 
 	half = Math.floor($(selector).length/2);
-	console.log("half = "+half);
+	//console.log("half = "+half);
 
 	var x = xCenter + (getMaxWidth(selector+":lt("+half+")"));
-	var y = yCenter - (getTotalHeight(selector+":lt("+half+")")/2);
-	console.log("initial (x,y) = " + x + "," + y);
+	var y = 30;//yCenter - (getTotalHeight(selector+":lt("+half+")")/2);
+	//console.log("initial (x,y) = " + x + "," + y);
+	var overflow = getTotalHeight(selector+":lt("+half+")")>canvas.height;
+	var squeeze = canvas.height/getTotalHeight(selector+":lt("+half+")");
+	
 
 	$(selector+":lt("+half+")").each(function(index) {
 	  $(this).css('left',x);
 	  $(this).css('top',y);
-	  y = y + $(this).height();
+	  if(overflow){
+	  	y = y+(squeeze*$(this).height());
+	  }else{
+	  	y = y + $(this).height();
+	  }
 	});
 
 	var x = xCenter - (getMaxWidth(selector+":gt("+(half-1)+")"));
-	var y = yCenter - (getTotalHeight(selector+":gt("+(half-1)+")")/2);
+	var y = 30;//yCenter - (getTotalHeight(selector+":gt("+(half-1)+")")/2);
+	var overflow = getTotalHeight(selector+":gt("+(half-1)+")")>canvas.height;
+	var squeeze = canvas.height/getTotalHeight(selector+":gt("+(half-1)+")");
 	
 	$(selector+":gt("+(half-1)+")").each(function(index) {
 	  $(this).css('left',x);
 	  $(this).css('top',y);
-	  y = y + $(this).height();
+	  if(overflow){
+	  	y = y+(squeeze*$(this).height());
+	  }else{
+	  	y = y + $(this).height();
+	  }
 	});
 }
+
+function arrangeInCircle(selector){
+	var canvas = document.getElementById('canvas-stage');
+	var xCenter = (canvas.width/2)+80;
+	var yCenter = (canvas.height/2);
+	
+	var radius = 200;
+	// var circumference = Math.PI*2*radius;
+	// var avgTotDiameter = (getTotalHeight(selector)+getTotalWidth(selector))/2;
+
+	// //console.log("initial (x,y) = " + x + "," + y);
+	// var squeeze = circumference/avgTotDiameter;
+
+	var t = 0;
+	var x = (radius*Math.cos(t))+ xCenter;
+    var y = (radius*Math.sin(t))+ yCenter;
+
+	$(selector).each(function(index) {
+	  $(this).css('left',x);
+	  $(this).css('top',y);
+	  t = t + (Math.PI*2/$(selector).length);//($(this).height()+$(this).width()));
+	  x = (radius*Math.cos(t))+ xCenter;
+      y = (radius*Math.sin(t))+ yCenter;
+
+	  console.log(t);
+	  console.log("x="+x);
+	  console.log("y="+y);
+	});
+}
+
 
 
 function getMaxHeight(selector){

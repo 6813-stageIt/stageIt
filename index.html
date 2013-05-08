@@ -12,20 +12,22 @@
 	<script src="http://www.parsecdn.com/js/parse-1.2.7.min.js"></script>
 	<script>
   $(function(){
-      Parse.initialize("61JEjzEt8GyaXUNUmt80f9BKJWRQD8TZXb6FZcqt", "tkGBjxWtIgmIIcQk5X4h1vxYQj9E8Fbfrnqgi2kG");
-  var currentUser = Parse.User.current();
-  if(currentUser){
-    var username = currentUser.getUsername();
-    $('#username').html(username);
-  }
-  else{
-  	window.location = "home.html";
-  }
-  $('#logout').click(function(){
-        Parse.User.logOut();
-        // var currentUser = Parse.User.current();
-        window.location = "home.html";
-      })
+		Parse.initialize("61JEjzEt8GyaXUNUmt80f9BKJWRQD8TZXb6FZcqt", "tkGBjxWtIgmIIcQk5X4h1vxYQj9E8Fbfrnqgi2kG");
+		var Formation = Parse.Object.extend("Formation");
+		var currentUser = Parse.User.current();
+		if(currentUser){
+			var username = currentUser.getUsername();
+			$('#username').html(username);
+		} else {
+			window.location = "home.html";
+		}
+		$('#logout').click(function(){
+			Parse.User.logOut();
+			window.location = "home.html";
+		});
+
+
+
 });
       </script>
 </head>
@@ -59,6 +61,11 @@
       </div>
     </div>
   <!-- </div> -->
+  <div style="display:none;" id="project"></div>
+<!-- 	<div class="alert" id="alert">
+	<button type="button" class="close" data-dismiss="alert">&times;</button>
+	X dancers added.
+	</div> -->
 
 	<div id="outerWrapper" class="animated fadeIn">
 		<div id="wrapper">
@@ -70,7 +77,13 @@
 					<li class="active"><a id="undo" class="enabled-button"><img src="img/arrow_undo.png" class="img-nav"/> Undo</a></li>
 					<li class="active"><a id="redo" class="enabled-button"><img src="img/arrow_redo.png" class="img-nav" /> Redo</a></li>
 					<li class="active"><a id="save" class="enabled-button"><img src="img/save.png" class="img-nav"/> Save</a></li>
+					<li class="active dropdown"><a id="settings" class="enabled-button dropdown-toggle" data-toggle="dropdown" href="#"><img src="img/gear_blue.png" class="img-nav"/> Project Settings <b class="caret"></b></a>
+						<ul class="dropdown-menu">
+							<li><a id="rename">Rename Project</a></li>
+						</ul>
+					</li>
 				</ul>
+
 				
 			</div>
 			<div id="content">
@@ -83,6 +96,7 @@
 					<li><a id="save" class="enabled-button"><img src="img/save.png" class="img-nav"/> Save</a></li>
 				</ul>
 				</div> -->
+
 				<div id="sidebarActions">
 					<div class="labelContainer">
 					<label><h5><i class="icon-tasks"></i> Tasks</h5></label></div>
@@ -279,6 +293,7 @@
 	<script src="js/bootstrap.min.js"></script>
 	<script src="js/bootbox.min.js"></script>
 	<script src="js/javascript.js"></script>
+	<script src="js/backend.js"></script>
 	<script src="http://d3lp1msu2r81bx.cloudfront.net/kjs/js/lib/kinetic-v4.4.3.min.js"></script>
 	<script>
 	var debug = true;
@@ -288,6 +303,12 @@
 					$('#chooseStage').modal();
 				}	
 		$('.tool').tooltip();
+		// window.setTimeout(function() {
+		//     $(".alert").slideUp(500, function(){
+		//         $(this).remove(); 
+		//     });
+		// }, 5000);
+		// $('.alert').alert();
 		var canvas = document.getElementById('arrow-canvas');
 		// Make it visually fill the positioned parent
 		//canvas.style.width ='100%';
