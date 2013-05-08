@@ -97,6 +97,7 @@ function getFormations(projectName){
 		formationCounter = results.length;
 		populateTable(results);
 		renderStage(results[0]);
+		$('#formations tr:first').find("a").addClass("current");
     }
   },
   error: function(error) {
@@ -297,7 +298,21 @@ function saveCurrentFormation(){
 		formation.set("name", formationName);
 		formation.set("contents", divContents);
 		formation.set("project", project);
-		formation.save();
+		formation.save(null, {
+			success: function(formation) {
+				console.log("saved successfully");
+			},
+			error: function(object, error) {
+				console.log(error);
+			}
+		});
+	
+		},
+		error: function(object, error) {
+		// The object was not retrieved successfully.
+		// error is a Parse.Error with an error code and description.
+		}
+	});
 }
 }
 
@@ -319,7 +334,24 @@ $('#save').click(function(){
 		formation.set("name", formationName);
 		formation.set("contents", divContents);
 		formation.set("project", project);
-		formation.save();
+		formation.save(null, {
+			success: function(formation) {
+				// console.log("saved successfully");
+				formation.set("contents",$('#canvasWrapper').html());
+				formation.save();
+				// alert(formation.get("contents"));
+			},
+			error: function(object, error) {
+				console.log(error);
+			}
+		});
+	
+		},
+		error: function(object, error) {
+		// The object was not retrieved successfully.
+		// error is a Parse.Error with an error code and description.
+		}
+	});
 }
 });
 
