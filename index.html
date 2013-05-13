@@ -336,8 +336,10 @@
 		canvas.height = canvas.offsetHeight;
 		
 		var canvas = document.getElementById('canvas-stage');
-		canvas.width  = canvas.offsetWidth-100;
-		canvas.height = canvas.offsetHeight-100;
+		canvas.width  = canvas.offsetWidth;
+		canvas.height = canvas.offsetHeight;
+		canvas.style.width =canvas.width;
+		canvas.style.height=canvas.height;
 	});
 
 	</script>
