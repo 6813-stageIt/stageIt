@@ -783,8 +783,9 @@ function showFeedback(type){
 			$('#showFeedback').text = "Save Successful.";
 			window.setTimeout("closeFeedbackDiv();", 5000);
 			break;
-		}
+	}
 }
+
 function closeFeedbackDiv(){
 	document.getElementById("showFeedback").style.display=" none";
 }
