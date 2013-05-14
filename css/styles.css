@@ -668,7 +668,7 @@ li.color-selected > img , li.arrangement-selected > img{
     border:1px solid gray;
 }
 
-#stages li, #props li, ul#dancers li {
+#stages li, #props li, ul#dancers li, #arrangement li {
     /*display: inline-block;*/
     float: left;
     cursor: pointer;
@@ -692,7 +692,7 @@ li.color-selected > img , li.arrangement-selected > img{
 
 
 /****************** modal form for dancers ***********/
-ul#dancers, ul#colors, ul#props{
+ul#dancers, ul#colors, ul#props, ul#arrangement{
 	list-style-type: none;
 }
 
