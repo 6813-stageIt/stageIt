@@ -775,19 +775,21 @@ function changeColorOfImage(color){
 	}
 }
 
-
-// feedback:
+// show feedback:
 function showFeedback(type){
 	switch(type){
 		case 'save':
-			$('#showFeedback').text = "Save Successful.";
-			window.setTimeout("closeFeedbackDiv();", 5000);
+			document.getElementById('showFeedback').innerText = "Save Successful.";
+			document.getElementById("savedIcon").src = "img/yes.png";
 			break;
 	}
+	$( ".feedback" ).show('slide', {}, 500, eraseFeedbackLabel());			
 }
 
-function closeFeedbackDiv(){
-	document.getElementById("showFeedback").style.display=" none";
+function eraseFeedbackLabel(){
+	setTimeout(function() {
+        $( ".feedback" ).fadeOut();
+      }, 5000 );
 }
 
 
