@@ -110,10 +110,17 @@ function clearCanvas(clearDancers){
 	path_context.clearRect(0, 0, path_canvas.width, path_canvas.height);
 	arrowStage.removeAllChildren(); //deletes all the paths in the canvas
 	$('#notes > textarea').val("");
-	
+	drawPath='none';
+	startDrawPath=false;
 	listOfPaths=[];
 	undoStack=[];
 	redoStack=[];
+	arrowstartX = 0; //used to keep track of an arrow object beginning and end
+	arrowstartY=0;
+	arrowendX = 0;
+	arrowendY=0;
+	tempDrag=new Object();
+	tempResize=new Object();
 	createNewFormation();
 }
 
@@ -191,7 +198,16 @@ $('#undo').click( function(){
 		var action = undoStack.pop();
 		console.log(action.undoType);
 		switch(action.undoType){
-			case "arrow": //means arrow
+			case "multAdd":
+				for(var i = 0; i<action.count; i++){
+					loopAction = undoStack.pop();
+					//console.log(loopAction);
+					div = loopAction.object;
+					div.remove();
+					redoStack.push(loopAction);
+				}
+				break;
+			case "arrow": 
 				action.object=listOfPaths.pop();
 				redrawPaths();
 				break;
@@ -315,6 +331,20 @@ $('#redo').click( function(){
 		var action = redoStack.pop();
 		//console.log(action.undoType);
 		switch(action.undoType){
+			case "multAdd":
+				for(var i = 0; i<action.count; i++){
+					loopAction = redoStack.pop();
+					//console.log(loopAction);
+					div = loopAction.object;
+					div=reAddObject(div, action);
+					//this is QUICKFIX, TODO:fix this image
+						
+					//end quickfix
+					$("#canvasWrapper").append(div);
+					undoStack.push(loopAction);
+					
+				}
+				break;
 			case "arrow": //means arrow
 				listOfPaths.push(action.object);
 				redrawPaths();
@@ -745,18 +775,24 @@ function changeColorOfImage(color){
 	}
 }
 
-
-// feedback:
+// show feedback:
 function showFeedback(type){
 	switch(type){
 		case 'save':
-			$('#showFeedback').text = "Save Successful.";
-			window.setTimeout("closeFeedbackDiv();", 5000);
+			$('#showFeedback').text("Save Successful");
+			$('#savedIcon').attr('src', 'img/yes.png');
+			// document.getElementById('showFeedback').innerText = "Save Successful.";
+			// document.getElementById("savedIcon").src = "img/yes.png";
 			break;
+	}
+	$( ".feedback" ).show('slide', {}, 500, eraseFeedbackLabel());			
 }
-}
-function closeFeedbackDiv(){
-	document.getElementById("showFeedback").style.display=" none";
+
+
+function eraseFeedbackLabel(){
+	setTimeout(function() {
+        $( ".feedback" ).fadeOut();
+      }, 5000 );
 }
 
 
@@ -843,7 +879,7 @@ function drawSemiCircleStage(){
 	var ctxt = canvas.getContext('2d');
 	ctxt.clearRect(0, 0, canvas.width, canvas.height);
 	ctxt.beginPath();
-	var x = canvas.width-285;
+	var x = canvas.width-325;
 	var y = 0;
 	var radius = canvas.width/2-10;
 	var startAngle = 0; endAngle = Math.PI;
@@ -862,8 +898,8 @@ function drawCircleStage(){
 	ctxt.beginPath();
 	var x = canvas.width/2;
 	var y = canvas.height/2;
-	var radius = canvas.width/4;
-	var startAngle = 0; endAngle = Math.PI*2;
+	var radius = canvas.height/2;
+	var startAngle = 0; endAngle = 2*Math.PI;
 	ctxt.arc(x,y,radius, startAngle,endAngle, false);
 	ctxt.closePath();
 	ctxt.lineWidth = 1;
@@ -1121,6 +1157,10 @@ function addDancers(){
 			addObjectAt(wrap, x,y, 'shape');
 			y+=60; //wont work for large amounts, add handling.
 		}
+		action=new Object();
+		action.undoType='multAdd';
+		action.count=numDancers;
+		undoStack.push(action);
 
 	}	 
 

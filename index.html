@@ -124,9 +124,10 @@
 								<img src="img/select_tool.png" class="img-tool"/>
 									<label class="inline">Select</label>
 					</a></li>
+					<li><div class="feedback"><img id="savedIcon" src='' class='img-tool' style="margin-left:100px"/><label id="showFeedback" style="margin-top:10px;font-size:13px;color:green;" class="inline"></label></div>
+					</li>
 					
 				</ul>
-				<div id="showFeedback" style="display:none;color:green" class="pull-left">Save Successful.</div>
 				</div>
 
 				<div id="sidebarActions">
@@ -288,8 +289,8 @@
 	<!-- ArrangeDancers modal -->
 	<div id="arrangeDancersModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="arrangeDancersLabel" aria-hidden="false" data-backdrop="static">
 	  <div class="modal-header">
-	    <button type="button" class="close" data-dismiss="modal" aria-hidden="false"><i class="icon-remove"></i></button>
-	    <h4 id="arrangeDancersLabel">Arrange Dancers on the Stage</h4>
+	    <button type="button" class="close hidden" data-dismiss="modal" aria-hidden="false"><i class="icon-remove"></i></button>
+	    <h4 id="arrangeDancersLabel">Arrange Dancers on the Stage.</h4>
 	  </div>
 	  <div class="modal-body">
 	  	<label for="arrangement">Select an automatic arrangement:</label>
@@ -305,6 +306,7 @@
 		    <li id="circle"><img src="img/circle.png" alt="Circle" /></li>
 		</ul>
 	  </div>
+
 	  <div class="modal-footer">
 	  <p id="arrangementHelper" style="display:none;color:red" class="pull-left">Please select an arrangement.</p>
 	  	<button class="btn btn-primary" onclick="arrangeDancers()">Arrange</button>
@@ -336,8 +338,10 @@
 		canvas.height = canvas.offsetHeight;
 		
 		var canvas = document.getElementById('canvas-stage');
-		canvas.width  = canvas.offsetWidth-100;
-		canvas.height = canvas.offsetHeight-100;
+		canvas.width  = canvas.offsetWidth;
+		canvas.height = canvas.offsetHeight;
+		canvas.style.width =canvas.width;
+		canvas.style.height=canvas.height;
 	});
 
 	</script>
