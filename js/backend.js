@@ -390,9 +390,10 @@ $('#projectName').click(function(){
 	bootbox.prompt("Enter a name for the formation", function(result){
 		if(result!=null){
 			$('#projectName').text(result.trim()).removeClass("default");
-			// $('#formation'+formationCounter).find('label').text(result);
-			// var id = $('.current.formation-name').attr("data-id");
+			 $('#formation'+formationCounter).find('label').text(result);
+			var id = $('.current.formation-name').attr("data-id");
 			if(currentUser){
+				console.log("currentUser, and saved")
 				var query = new Parse.Query(Formation);
 				query.get(id, {
 					success: function(formation){
