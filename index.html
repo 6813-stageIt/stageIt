@@ -105,6 +105,11 @@
 						  <a class="btn btn-small" id="resizeOff">Off</a>
 						</div>
 					</li>
+					<li><a id="selectTool" class="toolButton tool" onclick="drawSelectPrompt()" 
+							data-toggle="tooltip" title="Select multiple objects" data-placement="bottom" data-container="body">
+								<img src="img/select_tool.png" class="img-tool"/>
+									<label class="inline">Select</label>
+					</a></li>
 					<li><a id="straightPathTool" class="toolButton tool" onclick="drawPathPrompt()" data-toggle="tooltip" title="Draw a straight arrow on the stage" data-placement="bottom" data-container="body">
 						<img src="img/straight_arrow.png" class="img-tool"/><label class="inline">Draw Straight Arrow</label>
 
@@ -119,11 +124,7 @@
 								<img src="img/move_arrow.png" class="img-tool"/>
 									<label class="inline">Move Arrow</label>
 					</a></li>
-					<li><a id="selectTool" class="toolButton tool" onclick="drawSelectPrompt()" 
-							data-toggle="tooltip" title="Select multiple objects" data-placement="bottom" data-container="body">
-								<img src="img/select_tool.png" class="img-tool"/>
-									<label class="inline">Select</label>
-					</a></li>
+					
 					<li><div class="feedback"><img id="savedIcon" src='' class='img-tool' style="margin-left:100px"/><label id="showFeedback" style="margin-top:10px;font-size:13px;color:green;" class="inline"></label></div>
 					</li>
 					
