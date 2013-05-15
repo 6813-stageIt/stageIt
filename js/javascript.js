@@ -754,6 +754,7 @@ function showFeedback(type){
 			window.setTimeout("closeFeedbackDiv();", 5000);
 			break;
 }
+}
 function closeFeedbackDiv(){
 	document.getElementById("showFeedback").style.display=" none";
 }

@@ -215,6 +215,31 @@ function renderStage(formation){
 
 }
 
+function drawStageShape(stage){
+	switch(stage){
+		case 'rectangle':
+			drawRectangleStage();
+			break;
+		case 'semicircle':
+			drawSemiCircleStage();
+			break;
+		case 'circle':
+			drawCircleStage();
+			break;
+		case 'oval':
+			drawOvalStage();
+			break;
+		case 'trapezoidSmallFront':
+			drawTrapezoidSmallFrontStage();
+			break;
+		case 'trapezoidBigFront':
+			drawTrapezoidBigFrontStage();
+			break;
+	}
+	saveStage = stage;
+	saveStagetoParse(stage);
+}
+
 function renameProjectonParse(oldName, newName){
 	var Project = Parse.Object.extend("Project");
   var query = new Parse.Query(Project);
